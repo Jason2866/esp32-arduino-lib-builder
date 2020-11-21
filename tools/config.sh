@@ -6,7 +6,7 @@ IDF_TOOLCHAIN_LINUX_ARMEL="https://dl.espressif.com/dl/xtensa-esp32-elf-linux-ar
 IDF_TOOLCHAIN_LINUX32="https://dl.espressif.com/dl/xtensa-esp32-elf-linux32-1.22.0-97-gc752ad5-5.2.0.tar.gz"
 IDF_TOOLCHAIN_LINUX64="https://dl.espressif.com/dl/xtensa-esp32-elf-linux64-1.22.0-97-gc752ad5-5.2.0.tar.gz"
 IDF_TOOLCHAIN_WIN32="https://dl.espressif.com/dl/xtensa-esp32-elf-win32-1.22.0-97-gc752ad5-5.2.0.zip"
-IDF_TOOLCHAIN_MACOS="https://dl.espressif.com/dl/xtensa-esp32-elf-osx-1.22.0-97-gc752ad5-5.2.0.tar.gz"
+IDF_TOOLCHAIN_MACOS="https://dl.espressif.com/dl/xtensa-esp32-elf-macos-1.22.0-97-gc752ad5-5.2.0.tar.gz "
 
 if [ -z $IDF_BRANCH ]; then
 	IDF_BRANCH="release/v3.3"
