@@ -23,7 +23,7 @@ if [ -d "out" ]; then
     echo "$AR_BRANCH_SUFFIX"
     AR_BRANCH_SUFFIX=${AR_BRANCH_SUFFIX%"-solo1"}
     echo "$AR_BRANCH_SUFFIX"
-    git clone https://github.com/tasmota/arduino-esp32 -b $AR_BRANCH_SUFFIX
+    git clone https://github.com/tasmota/arduino-esp32  --single-branch -b $AR_BRANCH_SUFFIX
     rm -rf arduino-esp32/tools/sdk
     rm -rf arduino-esp32/docs
     cp -Rf tools/sdk arduino-esp32/tools/sdk
