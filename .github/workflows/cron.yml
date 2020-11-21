@@ -38,22 +38,3 @@ jobs:
       with:
         name: esp32-arduino
         path: dist
-    - uses: actions/download-artifact@v2
-      with:
-        name: esp32-arduino
-        path: ./esp32-arduino
-    - name: Display structure of downloaded files
-      run: ls -R
-      working-directory: ./esp32-arduino       
-    - name: Commit files  # transfer the builded files back into the repository
-      run: |
-        git config --local user.name "esp32-arduino-lib-builder"
-        git rm -r --cached .
-        git add -f ./esp32-arduino/*.*
-        git commit -m "esp32-arduino"
-    - name: Push changes  # push the firmware files to branch esp32-arduino-lib-builder-IDF33
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: 'esp32-arduino-lib-builder-IDF33'
-        force: true
