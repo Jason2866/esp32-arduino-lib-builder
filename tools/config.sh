@@ -6,7 +6,7 @@ IDF_TOOLCHAIN_LINUX_ARMEL="https://dl.espressif.com/dl/xtensa-esp32-elf-linux-ar
 IDF_TOOLCHAIN_LINUX32="https://dl.espressif.com/dl/xtensa-esp32-elf-linux32-1.22.0-97-gc752ad5-5.2.0.tar.gz"
 IDF_TOOLCHAIN_LINUX64="https://dl.espressif.com/dl/xtensa-esp32-elf-linux64-1.22.0-97-gc752ad5-5.2.0.tar.gz"
 IDF_TOOLCHAIN_WIN32="https://dl.espressif.com/dl/xtensa-esp32-elf-win32-1.22.0-97-gc752ad5-5.2.0.zip"
-IDF_TOOLCHAIN_MACOS="https://dl.espressif.com/dl/xtensa-esp32-elf-macos-1.22.0-97-gc752ad5-5.2.0.tar.gz "
+IDF_TOOLCHAIN_MACOS="https://dl.espressif.com/dl/xtensa-esp32-elf-macos-1.22.0-97-gc752ad5-5.2.0.tar.gz"
 
 if [ -z $IDF_BRANCH ]; then
 	IDF_BRANCH="release/v3.3"
@@ -18,7 +18,7 @@ AR_USER="espressif"
 # The full name of the repository
 AR_REPO="$AR_USER/arduino-esp32"
 
-IDF_REPO_URL="https://github.com/Jason2866/esp-idf.git"
+IDF_REPO_URL="https://github.com/espressif/esp-idf.git"
 CAMERA_REPO_URL="https://github.com/espressif/esp32-camera.git"
 FACE_REPO_URL="https://github.com/espressif/esp-face.git"
 AR_REPO_URL="https://github.com/$AR_REPO.git"
@@ -36,9 +36,9 @@ AR_PLATFORMIO_PY="$AR_TOOLS/platformio-build.py"
 AR_ESPTOOL_PY="$AR_TOOLS/esptool.py"
 AR_GEN_PART_PY="$AR_TOOLS/gen_esp32part.py"
 AR_SDK="$AR_TOOLS/sdk"
+OSBITS=`uname -m`
 
 function get_os(){
-  	OSBITS=`arch`
   	if [[ "$OSTYPE" == "linux"* ]]; then
         if [[ "$OSBITS" == "i686" ]]; then
         	echo "linux32"
@@ -62,13 +62,16 @@ function get_os(){
 }
 
 AR_OS=`get_os`
+echo "OSTYPE: $OSTYPE, OSBITS: $OSBITS, OS: $AR_OS"
 
+export AWK="awk"
 export SED="sed"
 export SSTAT="stat -c %s"
 
 if [[ "$AR_OS" == "macos" ]]; then
 	export SED="gsed"
 	export SSTAT="stat -f %z"
+	export AWK="gawk"
 fi
 
 function git_commit_exists(){ #git_commit_exists <repo-path> <commit-message>
@@ -104,4 +107,3 @@ function git_create_pr(){ # git_create_pr <branch> <title>
 	local done_pr=`echo "$git_create_pr_res" | jq -r '.title'`
 	if [ ! "$done_pr" == "" ] && [ ! "$done_pr" == "null" ]; then echo 1; else echo 0; fi
 }
-
