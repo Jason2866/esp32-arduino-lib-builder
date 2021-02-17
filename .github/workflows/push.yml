@@ -3,7 +3,7 @@ name: ESP32 Arduino Libs CI
 on:
   push:
     branches:
-    - release/v3.3-solo1
+    - release/v3.3
   pull_request:
 
 jobs:
