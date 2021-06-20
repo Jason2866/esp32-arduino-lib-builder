@@ -1,9 +1,9 @@
-name: ESP32 Arduino
+name: ESP32 Arduino IDF 4.4 with mod LittleFS
 
 on:
   push:
     branches:
-    - master
+    - mod_littlefs
 
 jobs:
   build-libs:
