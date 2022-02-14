@@ -29,6 +29,9 @@ AR_USER="espressif"
 # The full name of the repository
 AR_REPO="$AR_USER/arduino-esp32"
 
+# Arduino branch to use
+AR_BRANCH="esp32-s3-support"
+
 AR_REPO_URL="https://github.com/$AR_REPO.git"
 if [ -n $GITHUB_TOKEN ]; then
 	AR_REPO_URL="https://$GITHUB_TOKEN@github.com/$AR_REPO.git"
