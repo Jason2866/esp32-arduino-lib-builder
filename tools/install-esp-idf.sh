@@ -21,10 +21,11 @@ if [ -z "$IDF_PATH" ]; then
 	export IDF_PATH="$AR_ROOT/esp-idf"
 fi
 
-if [ "$IDF_COMMIT" ]; then
-    git -C "$IDF_PATH" checkout "$IDF_COMMIT"
-    commit_predefined="1"
-fi
+# Next lines redirects ALWAYS to espressif git since this sha1 only exists there!!!
+#if [ "$IDF_COMMIT" ]; then
+#    git -C "$IDF_PATH" checkout "$IDF_COMMIT"
+#    commit_predefined="1"
+#fi
 
 export IDF_COMMIT=$(git -C "$IDF_PATH" rev-parse --short HEAD)
 export IDF_BRANCH=$(git -C "$IDF_PATH" symbolic-ref --short HEAD)
