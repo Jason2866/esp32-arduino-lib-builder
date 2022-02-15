@@ -38,7 +38,12 @@
 			"bootloaders":[
 				["qio","120m"],
 				["qio","80m"],
+				["qout","120m"],
+				["qout","80m"],
+				["dio","120m"],
 				["dio","80m"],
+				["dout","120m"],
+				["dout","80m"],
 				["opi_flash","opi_ram","80m"]
 			],
 			"mem_variants":[
