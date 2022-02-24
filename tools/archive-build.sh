@@ -13,13 +13,12 @@ mkdir -p dist && rm -rf "$archive_path" "$build_archive_path"
 cd out
 echo "Show files from folder out"
 ls
-cd ..
 echo "Show Arduino directory"
-ls components/arduino
+ls ../components/arduino
 echo "Creating framework-arduinoespressif32"
 #git clone https://github.com/tasmota/arduino-esp32
 #git clone https://github.com/tasmota/arduino-esp32 -b esp32-s3-support arduino-esp32
-cp -rf components/arduino arduino-esp32
+cp -rf ../components/arduino arduino-esp32
 rm -rf arduino-esp32/docs
 rm -rf arduino-esp32/package
 rm -rf arduino-esp32/tools/sdk
