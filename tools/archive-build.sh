@@ -14,14 +14,13 @@ if [ -d "out" ]; then
     cd out
     echo "Show files from folder out"
     ls
-    cd ..
-    echo "Show current directory"
+    cd ../components
+    echo "Show components directory"
     ls
     echo "Creating framework-arduinoespressif32"
     #git clone https://github.com/tasmota/arduino-esp32
     #git clone https://github.com/tasmota/arduino-esp32 -b esp32-s3-support arduino-esp32
-    echo "$AR_COMPS/arduino"
-    cp -rf "$AR_COMPS/arduino" arduino-esp32
+    cp -rf components/arduino arduino-esp32
     rm -rf arduino-esp32/docs
     rm -rf arduino-esp32/package
     rm -rf arduino-esp32/tools/sdk
