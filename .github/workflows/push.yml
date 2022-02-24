@@ -1,4 +1,4 @@
-name: ESP32 Arduino S3 new builder
+name: ESP32-solo1 Arduino new builder
 
 on:
   workflow_dispatch:  # Manually start a workflow
