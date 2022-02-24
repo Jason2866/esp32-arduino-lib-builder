@@ -14,9 +14,9 @@ if [ -d "out" ]; then
     cd out
     echo "Show files from folder out"
     ls
-    cd ../components
-    echo "Show components directory"
-    ls
+    cd ..
+    echo "Show Arduino directory"
+    ls components/arduino
     echo "Creating framework-arduinoespressif32"
     #git clone https://github.com/tasmota/arduino-esp32
     #git clone https://github.com/tasmota/arduino-esp32 -b esp32-s3-support arduino-esp32
