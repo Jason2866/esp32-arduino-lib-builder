@@ -158,7 +158,7 @@ for target_json in `jq -c '.targets[]' configs/builds.json`; do
 done
 
 # archive the build
-if [ "$TARGET" = "all" ] && [ "$BUILD_TYPE" = "all" ]; then
+if [ "$BUILD_TYPE" = "all" ]; then
     ./tools/archive-build.sh
     if [ $? -ne 0 ]; then exit 1; fi
 fi
