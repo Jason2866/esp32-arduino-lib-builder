@@ -10,7 +10,7 @@ if ! [ -x "$(command -v git)" ]; then
     exit 1
 fi
 
-TARGET="all"
+TARGET="esp32"
 BUILD_TYPE="all"
 SKIP_ENV=0
 COPY_OUT=0
@@ -177,7 +177,7 @@ for target_json in `jq -c '.targets[]' configs/builds.json`; do
 done
 
 # archive the build
-if [ "$TARGET" = "all" ] && [ "$BUILD_TYPE" = "all" ]; then
+if [ "$BUILD_TYPE" = "all" ]; then
     ./tools/archive-build.sh
     if [ $? -ne 0 ]; then exit 1; fi
 fi
