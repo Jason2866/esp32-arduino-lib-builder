@@ -1,4 +1,4 @@
-name: ESP32 Arduino builder
+name: ESP32 Arduino builder branch PSRAM
 
 on:
   workflow_dispatch:  # Manually start a workflow
