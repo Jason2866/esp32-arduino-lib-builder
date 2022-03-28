@@ -17,6 +17,11 @@ if [ ! -d "$IDF_PATH" ]; then
 	echo "git clone $IDF_REPO_URL -b $IDF_BRANCH"
 	git clone $IDF_REPO_URL -b $IDF_BRANCH
 	idf_was_installed="1"
+	if ! [ -d esp-idf ]; then
+                echo "git clone $IDF_REPO_URL -b $IDF_BRANCH"
+		git clone $IDF_REPO_URL -b $IDF_BRANCH
+	fi
+	export IDF_PATH="$AR_ROOT/esp-idf"
 fi
 
 # Next lines redirects ALWAYS to espressif git since this sha1 only exists there!!!
