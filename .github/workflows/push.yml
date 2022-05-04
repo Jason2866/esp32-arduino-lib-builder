@@ -1,4 +1,4 @@
-name: ESP32 builder v4.4.1
+name: ESP32 builder solo1 v4.4.1
 
 on:
   workflow_dispatch:  # Manually start a workflow
