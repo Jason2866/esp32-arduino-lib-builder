@@ -6,7 +6,7 @@ if [ -z $IDF_PATH ]; then
 fi
 
 if [ -z $IDF_BRANCH ]; then
-	IDF_BRANCH="v4.4_dev"
+	IDF_BRANCH="v4.4.1"
 fi
 
 if [ -z $AR_PR_TARGET_BRANCH ]; then
@@ -34,7 +34,7 @@ AR_USER="tasmota"
 AR_REPO="$AR_USER/arduino-esp32"
 
 # Arduino branch to use
-AR_BRANCH="work"
+AR_BRANCH="release_203"
 
 AR_REPO_URL="https://github.com/$AR_REPO.git"
 if [ -n $GITHUB_TOKEN ]; then
