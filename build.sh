@@ -17,7 +17,7 @@ COPY_OUT=0
 DEPLOY_OUT=0
 
 function print_help() {
-    echo "Usage: build.sh [-s] [-A arduino_branch] [-I idf_branch] [-i idf_commit] [-c path] [-t <target>] [-b <build|menuconfig|idf_libs|copy_bootloader|mem_variant>] [config ...]"
+    echo "Usage: build.sh [-s] [-A <arduino_branch>] [-I <idf_branch>] [-i <idf_commit>] [-c <path>] [-t <target>] [-b <build|menuconfig|idf_libs|copy_bootloader|mem_variant>] [config ...]"
     echo "       -s     Skip installing/updating of ESP-IDF and all components"
     echo "       -A     Set which branch of arduino-esp32 to be used for compilation"
     echo "       -I     Set which branch of ESP-IDF to be used for compilation"
@@ -122,7 +122,18 @@ fi
 
 rm -rf build sdkconfig out
 
-echo $(git -C $AR_COMPS/arduino describe --all --long) > version.txt
+# Add components version info
+mkdir -p "$AR_TOOLS/sdk" && rm -rf version.txt && rm -rf "$AR_TOOLS/sdk/versions.txt"
+component_version="esp-idf: "$(git -C "$IDF_PATH" symbolic-ref --short HEAD)" "$(git -C "$IDF_PATH" rev-parse --short HEAD)
+echo $component_version >> version.txt && echo $component_version >> "$AR_TOOLS/sdk/versions.txt"
+for component in `ls "$AR_COMPS"`; do
+    if [ -d "$AR_COMPS/$component/.git" ] || [ -d "$AR_COMPS/$component/.github" ]; then
+        component_version="$component: "$(git -C "$AR_COMPS/$component" symbolic-ref --short HEAD)" "$(git -C "$AR_COMPS/$component" rev-parse --short HEAD)
+        echo $component_version >> version.txt && echo $component_version >> "$AR_TOOLS/sdk/versions.txt"
+    fi
+done
+component_version="tinyusb: "$(git -C "$AR_COMPS/arduino_tinyusb/tinyusb" symbolic-ref --short HEAD)" "$(git -C "$AR_COMPS/arduino_tinyusb/tinyusb" rev-parse --short HEAD)
+echo $component_version >> version.txt && echo $component_version >> "$AR_TOOLS/sdk/versions.txt"
 
 #targets_count=`jq -c '.targets[] | length' configs/builds.json`
 for target_json in `jq -c '.targets[]' configs/builds.json`; do
