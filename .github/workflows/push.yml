@@ -1,4 +1,4 @@
-name: ESP32 builder IDF 4.4.3 "443_new_wifilibs" branch
+name: ESP32 builder IDF 4.4.3 S3 try
 
 on:
   workflow_dispatch:  # Manually start a workflow
