@@ -2,7 +2,7 @@
 	"mem_variants_files":[
 		{
 			"file":"libspi_flash.a",
-			"src":"build/bootloader/esp-idf/spi_flash/libspi_flash.a",
+			"src":"build/esp-idf/spi_flash/libspi_flash.a",
 			"out":"lib/libspi_flash.a",
 			"targets":["esp32","esp32c3","esp32s2","esp32s3"]
 		},
@@ -14,19 +14,19 @@
 		},
 		{
 			"file":"libesp_system.a",
-			"src":"build/bootloader/esp-idf/esp_system/libesp_system.a",
+			"src":"build/esp-idf/esp_system/libesp_system.a",
 			"out":"lib/libesp_system.a",
 			"targets":["esp32s3"]
 		},
 		{
 			"file":"libbootloader_support.a",
-			"src":"build/bootloader/esp-idf/bootloader_support/libbootloader_support.a",
+			"src":"build/esp-idf/bootloader_support/libbootloader_support.a",
 			"out":"lib/libbootloader_support.a",
 			"targets":["esp32s3"]
 		},
 		{
 			"file":"libesp_hw_support.a",
-			"src":"build/bootloader/esp-idf/esp_hw_support/libesp_hw_support.a",
+			"src":"build/esp-idf/esp_hw_support/libesp_hw_support.a",
 			"out":"lib/libesp_hw_support.a",
 			"targets":["esp32s3"]
 		},
