@@ -25,6 +25,48 @@
 			"targets":["esp32s3"]
 		},
 		{
+			"file":"libxtensa.a",
+			"src":"build/esp-idf/xtensa/libxtensa.a",
+			"out":"lib/libxtensa.a",
+			"targets":["esp32s3"]
+		},
+		{
+			"file":"libesp_common.a",
+			"src":"build/esp-idf/esp_commom/libesp_common.a",
+			"out":"lib/libesp_common.a",
+			"targets":["esp32s3"]
+		},
+		{
+			"file":"libesp_rom.a",
+			"src":"build/esp-idf/esp_rom/libesp_rom.a",
+			"out":"lib/libesp_rom.a",
+			"targets":["esp32s3"]
+		},
+		{
+			"file":"libhal.a",
+			"src":"build/esp-idf/hal/libhal.a",
+			"out":"lib/libhal.a",
+			"targets":["esp32s3"]
+		},
+		{
+			"file":"liblog.a",
+			"src":"build/esp-idf/log/liblog.a",
+			"out":"lib/liblog.a",
+			"targets":["esp32s3"]
+		},
+		{
+			"file":"libmain.a",
+			"src":"build/esp-idf/main/libmain.a",
+			"out":"lib/libmain.a",
+			"targets":["esp32s3"]
+		},
+		{
+			"file":"libsoc.a",
+			"src":"build/esp-idf/soc/libsoc.a",
+			"out":"lib/libsoc.a",
+			"targets":["esp32s3"]
+		},
+		{
 			"file":"libesp_hw_support.a",
 			"src":"build/esp-idf/esp_hw_support/libesp_hw_support.a",
 			"out":"lib/libesp_hw_support.a",
