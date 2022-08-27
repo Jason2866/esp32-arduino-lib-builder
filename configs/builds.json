@@ -32,7 +32,7 @@
 		},
 		{
 			"file":"libesp_common.a",
-			"src":"build/esp-idf/esp_commom/libesp_common.a",
+			"src":"build/esp-idf/esp_common/libesp_common.a",
 			"out":"lib/libesp_common.a",
 			"targets":["esp32s3"]
 		},
