@@ -6,7 +6,7 @@ if [ -z $IDF_PATH ]; then
 fi
 
 if [ -z $IDF_BRANCH ]; then
-	IDF_BRANCH="443_new_wifilibs"
+	IDF_BRANCH="443_dev"
 fi
 
 if [ -z $AR_PR_TARGET_BRANCH ]; then
