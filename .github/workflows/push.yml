@@ -1,4 +1,4 @@
-name: ESP32 builder IPv6 IDF 4.4.3
+name: IDF_Arduino 4.4.3
 
 on:
   workflow_dispatch:  # Manually start a workflow
