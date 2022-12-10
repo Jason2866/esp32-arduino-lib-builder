@@ -36,6 +36,9 @@ AR_REPO="$AR_USER/arduino-esp32"
 # Arduino branch to use
 AR_BRANCH="ipv6"
 
+rm -rf release-info.txt
+echo "Framework built from IDF $IDF_REPO_URL branch $IDF_BRANCH and $AR_REPO branch $AR_BRANCH" >> release-info.txt
+
 AR_REPO_URL="https://github.com/$AR_REPO.git"
 if [ -n $GITHUB_TOKEN ]; then
 	AR_REPO_URL="https://$GITHUB_TOKEN@github.com/$AR_REPO.git"
