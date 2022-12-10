@@ -1,4 +1,4 @@
-name: Arduino branch IPv6
+name: Arduino IPv6
 
 on:
   workflow_dispatch:  # Manually start a workflow
@@ -13,11 +13,16 @@ jobs:
       run: bash ./tools/prepare-ci.sh
     - name: Build Arduino Libs
       run: bash ./build.sh
+    - name: Display files
+      run: ls -R ./*
     - name: Release
       uses: jason2866/action-gh-release@v1.2
       with:
         tag_name: ${{ github.run_number }}
+        body_path: release-info.txt
         prerelease: true
-        files: dist/framework*
+        files: |
+          dist/framework*
+          release-info.txt
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
