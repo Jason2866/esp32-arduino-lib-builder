@@ -6,7 +6,7 @@ if [ -z $IDF_PATH ]; then
 fi
 
 if [ -z $IDF_BRANCH ]; then
-	IDF_BRANCH="Tasmota/v4.4"
+	IDF_BRANCH="release/v4.4"
 fi
 
 if [ -z $AR_PR_TARGET_BRANCH ]; then
@@ -49,6 +49,12 @@ AR_PLATFORM_TXT="$AR_OUT/platform.txt"
 AR_ESPTOOL_PY="$AR_TOOLS/esptool.py"
 AR_GEN_PART_PY="$AR_TOOLS/gen_esp32part.py"
 AR_SDK="$AR_TOOLS/sdk/$IDF_TARGET"
+
+IDF_COMMIT=$(git -C "$IDF_PATH" rev-parse --short HEAD || echo "")
+AR_COMMIT=$(git -C "$AR_COMPS/arduino" rev-parse --short HEAD || echo "")
+
+rm -rf release-info.txt
+echo "Framework built from Tasmota IDF branch $IDF_BRANCH commit $IDF_COMMIT and $AR_REPO branch $AR_BRANCH commit $AR_COMMIT" >> release-info.txt
 
 function get_os(){
   	OSBITS=`arch`
