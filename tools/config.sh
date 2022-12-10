@@ -34,10 +34,7 @@ AR_USER="tasmota"
 AR_REPO="$AR_USER/arduino-esp32"
 
 # Arduino branch to use
-AR_BRANCH="ipv6"
-
-rm -rf release-info.txt
-echo "Framework built from Tasmota IDF branch $IDF_BRANCH and $AR_REPO branch $AR_BRANCH" >> release-info.txt
+AR_BRANCH="master"
 
 AR_REPO_URL="https://github.com/$AR_REPO.git"
 if [ -n $GITHUB_TOKEN ]; then
@@ -52,6 +49,12 @@ AR_PLATFORM_TXT="$AR_OUT/platform.txt"
 AR_ESPTOOL_PY="$AR_TOOLS/esptool.py"
 AR_GEN_PART_PY="$AR_TOOLS/gen_esp32part.py"
 AR_SDK="$AR_TOOLS/sdk/$IDF_TARGET"
+
+IDF_COMMIT=$(git -C "$IDF_PATH" rev-parse --short HEAD || echo "")
+AR_COMMIT=$(git -C "$AR_COMPS/arduino" rev-parse --short HEAD || echo "")
+
+rm -rf release-info.txt
+echo "Framework built from Tasmota IDF branch $IDF_BRANCH commit $IDF_COMMIT and $AR_REPO branch $AR_BRANCH commit $AR_COMMIT" >> release-info.txt
 
 function get_os(){
   	OSBITS=`arch`
