@@ -1,4 +1,4 @@
-name: IDF_Arduino 4.4.3
+name: Arduino IPv6
 
 on:
   workflow_dispatch:  # Manually start a workflow
