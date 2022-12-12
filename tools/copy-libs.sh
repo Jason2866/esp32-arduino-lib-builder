@@ -481,9 +481,6 @@ rm -rf platform_start.txt platform_mid.txt 1platform_mid.txt
 # sdkconfig
 cp -f "sdkconfig" "$AR_SDK/sdkconfig"
 
-# esptool.py
-cp "$IDF_COMPS/esptool_py/esptool/esptool.py" "$AR_ESPTOOL_PY"
-
 # gen_esp32part.py
 cp "$IDF_COMPS/partition_table/gen_esp32part.py" "$AR_GEN_PART_PY"
 
