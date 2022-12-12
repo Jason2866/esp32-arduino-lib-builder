@@ -1,7 +1,7 @@
 #!/bin/bash
 
 IDF_COMMIT=$(git -C "$IDF_PATH" rev-parse --short HEAD || echo "")
-IDF_BRANCH=$(git -C "$IDF_PATH" symbolic-ref --short HEAD || echo "")
+IDF_BRANCH=$(git -C "$IDF_PATH" symbolic-ref --short HEAD || git -C "$IDF_PATH" tag --points-at HEAD || echo "")
 
 idf_version_string=${IDF_BRANCH//\//_}"-$IDF_COMMIT"
 archive_path="dist/arduino-esp32-libs-$idf_version_string.tar.gz"
@@ -25,7 +25,6 @@ rm -rf arduino-esp32/platform.txt
 rm -rf arduino-esp32/package.json
 cp -f platform.txt arduino-esp32/
 cp -Rf tools/sdk arduino-esp32/tools/
-cp -f tools/esptool.py arduino-esp32/tools/
 cp -f tools/gen_esp32part.py arduino-esp32/tools/
 cp -f tools/platformio-build-*.py arduino-esp32/tools/
 cp ../package.json arduino-esp32/package.json

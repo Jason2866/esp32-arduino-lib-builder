@@ -46,4 +46,4 @@ cp "$IDF_PATH/components/esp32-camera/driver/private_include/cam_hal.h" "$IDF_PA
 
 source $IDF_PATH/export.sh
 export IDF_COMMIT=$(git -C "$IDF_PATH" rev-parse --short HEAD)
-export IDF_BRANCH=$(git -C "$IDF_PATH" symbolic-ref --short HEAD)
+export IDF_BRANCH=$(git -C "$IDF_PATH" symbolic-ref --short HEAD || git -C "$IDF_PATH" tag --points-at HEAD)
