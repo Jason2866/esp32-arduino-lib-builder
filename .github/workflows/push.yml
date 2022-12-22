@@ -1,4 +1,4 @@
-name: Arduino branch work
+name: IDF_Arduino 4.4.3 solo1
 
 on:
   workflow_dispatch:  # Manually start a workflow
