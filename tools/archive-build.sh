@@ -16,10 +16,14 @@ echo "Creating framework-arduinoespressif32-ITEAD"
 cp -rf ../components/arduino arduino-esp32
 rm -rf arduino-esp32/docs
 rm -rf arduino-esp32/tests
+rm -rf arduino-esp32/libraries/RainMaker
+rm -rf arduino-esp32/libraries/Insights
 rm -rf arduino-esp32/package
 rm -rf arduino-esp32/tools/sdk
 rm -rf arduino-esp32/tools/esptool.py
 rm -rf arduino-esp32/tools/gen_esp32part.py
+rm -rf arduino-esp32/tools/gen_insights_package.py
+rm -rf arduino-esp32/tools/gen_insights_package.exe
 rm -rf arduino-esp32/tools/platformio-build-*.py
 rm -rf arduino-esp32/platform.txt
 rm -rf arduino-esp32/package.json
