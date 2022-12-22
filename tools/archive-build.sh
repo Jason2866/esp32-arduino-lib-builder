@@ -20,6 +20,7 @@ rm -rf arduino-esp32/package
 rm -rf arduino-esp32/tools/sdk
 rm -rf arduino-esp32/tools/esptool.py
 rm -rf arduino-esp32/tools/gen_esp32part.py
+rm -rf arduino-esp32/tools/gen_insights_package.py
 rm -rf arduino-esp32/tools/platformio-build-*.py
 rm -rf arduino-esp32/platform.txt
 rm -rf arduino-esp32/package.json
