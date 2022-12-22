@@ -34,7 +34,7 @@ AR_USER="tasmota"
 AR_REPO="$AR_USER/arduino-esp32"
 
 # Arduino branch to use
-AR_BRANCH="master"
+AR_BRANCH="work_ipv6"
 
 AR_REPO_URL="https://github.com/$AR_REPO.git"
 if [ -n $GITHUB_TOKEN ]; then
@@ -46,7 +46,6 @@ AR_COMPS="$AR_ROOT/components"
 AR_OUT="$AR_ROOT/out"
 AR_TOOLS="$AR_OUT/tools"
 AR_PLATFORM_TXT="$AR_OUT/platform.txt"
-AR_ESPTOOL_PY="$AR_TOOLS/esptool.py"
 AR_GEN_PART_PY="$AR_TOOLS/gen_esp32part.py"
 AR_SDK="$AR_TOOLS/sdk/$IDF_TARGET"
 
@@ -86,6 +85,14 @@ export SED="sed"
 export SSTAT="stat -c %s"
 
 if [[ "$AR_OS" == "macos" ]]; then
+        if ! [ -x "$(command -v gsed)" ]; then
+		echo "ERROR: gsed is not installed! Please install gsed first. ex. brew install gsed"
+		exit 1
+	fi
+	if ! [ -x "$(command -v gawk)" ]; then
+		echo "ERROR: gawk is not installed! Please install gawk first. ex. brew install gawk"
+		exit 1
+	fi
 	export SED="gsed"
 	export SSTAT="stat -f %z"
 fi
