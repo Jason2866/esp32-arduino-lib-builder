@@ -2,13 +2,11 @@
 
 source ./tools/config.sh
 
-DL_REPO_URL="https://github.com/espressif/esp-dl.git"
-SR_REPO_URL="https://github.com/espressif/esp-sr.git"
-
 #
 # CLONE/UPDATE ARDUINO
 #
 
+echo "Updating ESP32 Arduino..."
 if [ ! -d "$AR_COMPS/arduino" ]; then
 	git clone $AR_REPO_URL "$AR_COMPS/arduino"
 fi
@@ -46,27 +44,3 @@ if [ "$AR_BRANCH" ]; then
 	git -C "$AR_COMPS/arduino" pull --ff-only
 fi
 if [ $? -ne 0 ]; then exit 1; fi
-
-#
-# CLONE/UPDATE ESP-DL
-#
-
-#if [ ! -d "$AR_COMPS/esp-dl" ]; then
-#	git clone $DL_REPO_URL "$AR_COMPS/esp-dl"
-#else
-#	git -C "$AR_COMPS/esp-dl" fetch && \
-#	git -C "$AR_COMPS/esp-dl" pull --ff-only
-#fi
-#if [ $? -ne 0 ]; then exit 1; fi
-
-#
-# CLONE/UPDATE ESP-SR
-#
-
-#if [ ! -d "$AR_COMPS/esp-sr" ]; then
-#	git clone $SR_REPO_URL "$AR_COMPS/esp-sr"
-#else
-#	git -C "$AR_COMPS/esp-sr" fetch && \
-#	git -C "$AR_COMPS/esp-sr" pull --ff-only
-#fi
-#if [ $? -ne 0 ]; then exit 1; fi
