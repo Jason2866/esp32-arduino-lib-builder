@@ -2,9 +2,6 @@ name: ESP32 Arduino Libs CI
 
 on:
   push:
-    branches:
-    - master
-  pull_request:
 
 concurrency:
   group: esp-idf-libs-${{github.event.pull_request.number || github.ref}}
