@@ -1,0 +1,28 @@
+name: Arduino IDF 5.x
+
+on:
+  workflow_dispatch:  # Manually start a workflow
+
+jobs:
+  build-libs:
+    name: Build Arduino Libs
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: bash ./tools/prepare-ci.sh
+    - name: Build Arduino Libs
+      run: bash ./build.sh
+    - name: Display files
+      run: ls -R ./*
+    - name: Release
+      uses: jason2866/action-gh-release@v1.2
+      with:
+        tag_name: ${{ github.run_number }}
+        body_path: release-info.txt
+        prerelease: true
+        files: |
+          dist/framework*
+          release-info.txt
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
