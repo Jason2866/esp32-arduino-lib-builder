@@ -11,7 +11,7 @@ fi
 # CLONE ESP-IDF
 #
 
-IDF_REPO_URL="https://github.com/tasmota/esp-idf.git"
+IDF_REPO_URL="https://github.com/espressif/esp-idf.git"
 if [ ! -d "$IDF_PATH" ]; then
 	echo "ESP-IDF is not installed! Installing local copy"
 	echo "git clone $IDF_REPO_URL -b $IDF_BRANCH"
@@ -37,8 +37,8 @@ fi
 #
 # Arduino needs cam_hal.h from esp32-camera in include folder
 #
-
-cp "$IDF_PATH/components/esp32-camera/driver/private_include/cam_hal.h" "$IDF_PATH/components/esp32-camera/driver/include/"
+# disable workaround for IDF 5.x
+# cp "$IDF_PATH/components/esp32-camera/driver/private_include/cam_hal.h" "$IDF_PATH/components/esp32-camera/driver/include/"
 
 #
 # SETUP ESP-IDF ENV
