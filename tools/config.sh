@@ -24,9 +24,6 @@ if [ -z $IDF_TARGET ]; then
 	fi
 fi
 
-IDF_COMPS="$IDF_PATH/components"
-IDF_TOOLCHAIN="xtensa-$IDF_TARGET-elf"
-
 # Owner of the target ESP32 Arduino repository
 AR_USER="tasmota"
 
