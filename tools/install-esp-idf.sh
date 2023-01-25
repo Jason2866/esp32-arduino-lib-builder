@@ -30,11 +30,6 @@ fi
 
 if [ ! -x $idf_was_installed ] || [ ! -x $commit_predefined ]; then
 	git -C $IDF_PATH submodule update --init --recursive
-	IDF_VERSION_MAJOR=5
-        IDF_VERSION_MINOR=1
-        IDF_VERSION_PATCH=0
-        export IDF_VERSION="$IDF_VERSION_MAJOR.$IDF_VERSION_MINOR.$IDF_VERSION_PATCH"
-	echo "IDF_VERSION $IDF_VERSION"
 	$IDF_PATH/install.sh
 fi
 
