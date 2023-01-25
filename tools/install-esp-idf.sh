@@ -30,7 +30,6 @@ fi
 
 if [ ! -x $idf_was_installed ] || [ ! -x $commit_predefined ]; then
 	git -C $IDF_PATH submodule update --init --recursive
-	rm -rf /home/runner/.espressif/python_env
 	$IDF_PATH/install.sh
 fi
 
