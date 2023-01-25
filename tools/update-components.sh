@@ -5,8 +5,6 @@ source ./tools/config.sh
 CAMERA_REPO_URL="https://github.com/espressif/esp32-camera.git"
 DL_REPO_URL="https://github.com/espressif/esp-dl.git"
 SR_REPO_URL="https://github.com/espressif/esp-sr.git"
-RMAKER_REPO_URL="https://github.com/espressif/esp-rainmaker.git"
-INSIGHTS_REPO_URL="https://github.com/espressif/esp-insights.git"
 DSP_REPO_URL="https://github.com/espressif/esp-dsp.git"
 LITTLEFS_REPO_URL="https://github.com/joltwallet/esp_littlefs.git"
 TINYUSB_REPO_URL="https://github.com/hathach/tinyusb.git"
@@ -63,10 +61,6 @@ else
 	git -C "$AR_COMPS/esp32-camera" fetch && \
 	git -C "$AR_COMPS/esp32-camera" pull --ff-only
 fi
-#this is a temp measure to fix build issue
-# if [ -f "$AR_COMPS/esp32-camera/idf_component.yml" ]; then
-# 	rm -rf "$AR_COMPS/esp32-camera/idf_component.yml"
-# fi
 if [ $? -ne 0 ]; then exit 1; fi
 
 #
@@ -98,6 +92,18 @@ fi
 if [ $? -ne 0 ]; then exit 1; fi
 
 #
+# CLONE/UPDATE ESP-DSP
+#
+echo "Updating ESP-DSP..."
+if [ ! -d "$AR_COMPS/esp-dsp" ]; then
+	git clone $DSP_REPO_URL "$AR_COMPS/esp-dsp"
+else
+	git -C "$AR_COMPS/esp-dsp" fetch && \
+	git -C "$AR_COMPS/esp-dsp" pull --ff-only
+fi
+if [ $? -ne 0 ]; then exit 1; fi
+
+#
 # CLONE/UPDATE ESP-LITTLEFS
 #
 echo "Updating ESP-LITTLEFS..."
@@ -108,46 +114,6 @@ else
 	git -C "$AR_COMPS/esp_littlefs" fetch && \
 	git -C "$AR_COMPS/esp_littlefs" pull --ff-only && \
     git -C "$AR_COMPS/esp_littlefs" submodule update --init --recursive
-fi
-if [ $? -ne 0 ]; then exit 1; fi
-
-#
-# CLONE/UPDATE ESP-RAINMAKER
-#
-echo "Updating ESP-RainMaker..."
-if [ ! -d "$AR_COMPS/esp-rainmaker" ]; then
-    git clone $RMAKER_REPO_URL "$AR_COMPS/esp-rainmaker" && \
-    git -C "$AR_COMPS/esp-rainmaker" submodule update --init --recursive
-else
-	git -C "$AR_COMPS/esp-rainmaker" fetch && \
-	git -C "$AR_COMPS/esp-rainmaker" pull --ff-only && \
-    git -C "$AR_COMPS/esp-rainmaker" submodule update --init --recursive
-fi
-if [ $? -ne 0 ]; then exit 1; fi
-
-#
-# CLONE/UPDATE ESP-INSIGHTS
-#
-echo "Updating ESP-Insights..."
-if [ ! -d "$AR_COMPS/esp-insights" ]; then
-    git clone $INSIGHTS_REPO_URL "$AR_COMPS/esp-insights" && \
-    git -C "$AR_COMPS/esp-insights" submodule update --init --recursive
-else
-	git -C "$AR_COMPS/esp-insights" fetch && \
-	git -C "$AR_COMPS/esp-insights" pull --ff-only && \
-    git -C "$AR_COMPS/esp-insights" submodule update --init --recursive
-fi
-if [ $? -ne 0 ]; then exit 1; fi
-
-#
-# CLONE/UPDATE ESP-DSP
-#
-echo "Updating ESP-DSP..."
-if [ ! -d "$AR_COMPS/esp-dsp" ]; then
-	git clone $DSP_REPO_URL "$AR_COMPS/esp-dsp"
-else
-	git -C "$AR_COMPS/esp-dsp" fetch && \
-	git -C "$AR_COMPS/esp-dsp" pull --ff-only
 fi
 if [ $? -ne 0 ]; then exit 1; fi
 

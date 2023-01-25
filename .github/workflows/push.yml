@@ -1,31 +1,32 @@
-name: ESP32 Arduino Libs CI
+name: Arduino IDF 5.x
 
 on:
-  push:
-    branches:
-    - master
-  pull_request:
-
-concurrency:
-  group: esp-idf-libs-${{github.event.pull_request.number || github.ref}}
-  cancel-in-progress: true
+  workflow_dispatch:  # Manually start a workflow
 
 jobs:
   build-libs:
-    name: Build Libs for ${{ matrix.target }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target: [esp32, esp32s2, esp32s3, esp32c3]
-      fail-fast: false
+    name: Build Arduino Libs
+    runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.7'
     - name: Install dependencies
       run: bash ./tools/prepare-ci.sh
-    - name: Build Libs for ${{ matrix.target }}
-      run: bash ./build.sh -t ${{ matrix.target }}
-    - name: Upload archive
-      uses: actions/upload-artifact@v1
+    - name: Build Arduino Libs
+      run: bash ./build.sh
+    - name: Display files
+      run: ls -R ./*
+    - name: Release
+      uses: jason2866/action-gh-release@v1.2
       with:
-        name: artifacts-${{ matrix.target }}
-        path: dist
+        tag_name: ${{ github.run_number }}
+        body_path: release-info.txt
+        prerelease: true
+        files: |
+          dist/framework*
+          release-info.txt
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
