@@ -57,7 +57,7 @@
 		},
 		{
 			"target": "esp32s2",
-			"features":["qio_ram"],
+			"features":["qio"],
 			"idf_libs":["dio","80m"],
 			"bootloaders":[
 				["qio","80m"],
@@ -85,7 +85,7 @@
 		},
 		{
 			"target": "esp32",
-			"features":["qio_ram"],
+			"features":["qio"],
 			"idf_libs":["dio","40m"],
 			"bootloaders":[
 				["qio","80m"],
