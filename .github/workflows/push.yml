@@ -9,6 +9,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.7.10'
     - name: Install dependencies
       run: bash ./tools/prepare-ci.sh
     - name: Build Arduino Libs
