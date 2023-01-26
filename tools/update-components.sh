@@ -136,12 +136,15 @@ if [ $? -ne 0 ]; then exit 1; fi
 echo "Updating mDNS from ESP-PROTOCOLS..."
 if [ ! -d "$AR_ROOT/esp-protocols" ]; then
 	git clone $ESP_PROTOCOLS_REPO_URL "$AR_ROOT/esp-protocols"
-	rm -rf "$AR_COMPS/esp-protocols"
-	cp "$AR_ROOT/esp-protocols/components/mdns/" "$AR_COMPS/esp-protocols"
+	rm -rf "$AR_COMPS/mdns"
+	mkdir "$AR_COMPS/mdns"
+	cp -r "$AR_ROOT/esp-protocols/components/mdns/" "$AR_COMPS/mdns/"
 else
 	git -C "$AR_ROOT/esp-protocols" fetch && \
 	git -C "$AR_ROOT/esp-protocols" pull --ff-only
-	rm -rf "$AR_COMPS/esp-protocols"
-	cp "$AR_ROOT/esp-protocols/components/mdns/" "$AR_COMPS/esp-protocols"
+	rm -rf "$AR_COMPS/mdns"
+	mkdir "$AR_COMPS/mdns"
+	cp -r "$AR_ROOT/esp-protocols/components/mdns/" "$AR_COMPS/mdns/"
 fi
 if [ $? -ne 0 ]; then exit 1; fi
+
