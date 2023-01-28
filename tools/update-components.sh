@@ -8,7 +8,7 @@ SR_REPO_URL="https://github.com/espressif/esp-sr.git"
 DSP_REPO_URL="https://github.com/espressif/esp-dsp.git"
 LITTLEFS_REPO_URL="https://github.com/joltwallet/esp_littlefs.git"
 TINYUSB_REPO_URL="https://github.com/hathach/tinyusb.git"
-ESP_PROTOCOLS_REPO_URL="https://github.com/espressif/esp-protocols.git"
+#ESP_PROTOCOLS_REPO_URL="https://github.com/espressif/esp-protocols.git"
 
 #
 # CLONE/UPDATE ARDUINO
@@ -133,18 +133,17 @@ if [ $? -ne 0 ]; then exit 1; fi
 #
 # CLONE/UPDATE mDNS from esp-protocols
 #
-echo "Updating mDNS from ESP-PROTOCOLS..."
-if [ ! -d "$AR_ROOT/esp-protocols" ]; then
-	git clone $ESP_PROTOCOLS_REPO_URL "$AR_ROOT/esp-protocols"
-	rm -rf "$AR_COMPS/mdns"
-	mkdir "$AR_COMPS/mdns"
-	cp -r "$AR_ROOT/esp-protocols/components/mdns/" "$AR_COMPS/mdns/"
-else
-	git -C "$AR_ROOT/esp-protocols" fetch && \
-	git -C "$AR_ROOT/esp-protocols" pull --ff-only
-	rm -rf "$AR_COMPS/mdns"
-	mkdir "$AR_COMPS/mdns"
-	cp -r "$AR_ROOT/esp-protocols/components/mdns/" "$AR_COMPS/mdns/"
-fi
-if [ $? -ne 0 ]; then exit 1; fi
-
+#echo "Updating mDNS from ESP-PROTOCOLS..."
+#if [ ! -d "$AR_ROOT/esp-protocols" ]; then
+#	git clone $ESP_PROTOCOLS_REPO_URL "$AR_ROOT/esp-protocols"
+#	rm -rf "$AR_COMPS/mdns"
+#	mkdir "$AR_COMPS/mdns"
+#	cp -r "$AR_ROOT/esp-protocols/components/mdns/" "$AR_COMPS/mdns/"
+#else
+#	git -C "$AR_ROOT/esp-protocols" fetch && \
+#	git -C "$AR_ROOT/esp-protocols" pull --ff-only
+#	rm -rf "$AR_COMPS/mdns"
+#	mkdir "$AR_COMPS/mdns"
+#	cp -r "$AR_ROOT/esp-protocols/components/mdns/" "$AR_COMPS/mdns/"
+#fi
+#if [ $? -ne 0 ]; then exit 1; fi
