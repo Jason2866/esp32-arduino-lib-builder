@@ -4,15 +4,15 @@ IDF_COMMIT=$(git -C "$IDF_PATH" rev-parse --short HEAD || echo "")
 IDF_BRANCH=$(git -C "$IDF_PATH" symbolic-ref --short HEAD || git -C "$IDF_PATH" tag --points-at HEAD || echo "")
 
 idf_version_string=${IDF_BRANCH//\//_}"-$IDF_COMMIT"
-archive_path="dist/arduino-esp32-libs-ITEAD-$idf_version_string.tar.gz"
-build_archive_path="dist/arduino-esp32-build-ITEAD-$idf_version_string.tar.gz"
-pio_archive_path="dist/framework-arduinoespressif32-ITEAD-$idf_version_string.tar.gz"
-pio_zip_archive_path="dist/framework-arduinoespressif32-ITEAD-$idf_version_string.zip"
+archive_path="dist/arduino-esp32-libs-solo1-$idf_version_string.tar.gz"
+build_archive_path="dist/arduino-esp32-build-solo1-$idf_version_string.tar.gz"
+pio_archive_path="dist/framework-arduinoespressif32-solo1-$idf_version_string.tar.gz"
+pio_zip_archive_path="dist/framework-arduinoespressif32-solo1-$idf_version_string.zip"
 
 mkdir -p dist && rm -rf "$archive_path" "$build_archive_path"
 
 cd out
-echo "Creating PlatformIO Tasmota framework-arduinoespressif32-ITEAD"
+echo "Creating PlatformIO Tasmota framework-arduinoespressif32-solo1"
 cp -rf ../components/arduino arduino-esp32
 rm -rf arduino-esp32/docs
 rm -rf arduino-esp32/tests
