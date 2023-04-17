@@ -12,7 +12,7 @@ pio_zip_archive_path="dist/framework-arduinoespressif32-ITEAD-$idf_version_strin
 mkdir -p dist && rm -rf "$archive_path" "$build_archive_path"
 
 cd out
-echo "Creating PlatformIO Tasmota framework-arduinoespressif32"
+echo "Creating PlatformIO Tasmota framework-arduinoespressif32-ITEAD"
 cp -rf ../components/arduino arduino-esp32
 rm -rf arduino-esp32/docs
 rm -rf arduino-esp32/tests
