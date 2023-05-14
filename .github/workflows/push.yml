@@ -1,4 +1,4 @@
-name: Arduino IDF 4.4.4
+name: Arduino IDF 4.4.4 more optimize
 
 on:
   workflow_dispatch:  # Manually start a workflow
