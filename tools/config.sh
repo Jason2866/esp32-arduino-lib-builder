@@ -10,7 +10,7 @@ IDF_REPO_URL="https://github.com/tasmota/esp-idf.git"
 
 # The IDF branch to use
 if [ -z $IDF_BRANCH ]; then
-	IDF_BRANCH="lwip_timeout"
+	IDF_BRANCH="lwip_fs"
 fi
 
 if [ -z $AR_PR_TARGET_BRANCH ]; then
