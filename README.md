@@ -14,10 +14,10 @@ cd esp32-arduino-lib-builder
 Look in release and download a version. There is the Info of the used commits of IDF / Arduino.
 
 ### Stable Platformio Platform release including ESP32solo1
-based on Arduino Core 2.0.8 and can be used with Platformio for the ESP32/ESP32solo1, ESP32C3, ESP32S2 and ESP32S3
+based on Arduino Core 2.0.9 and can be used with Platformio for the ESP32/ESP32solo1, ESP32C3, ESP32S2 and ESP32S3
 ```                  
 [platformio]
-platform = https://github.com/tasmota/platform-espressif32/releases/download/2023.04.02/platform-espressif32.zip
+platform = https://github.com/tasmota/platform-espressif32/releases/download/2023.05.00/platform-espressif32.zip
 framework = arduino, espidf
 ```
 to use the ESP32 Solo1 Arduino framework add in your env
