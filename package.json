@@ -1,7 +1,7 @@
 {
-  "name": "framework-arduinoespressif32 ITEAD",
+  "name": "framework-arduinoespressif32",
   "version": "2.0.9",
-  "description": "Tasmota Arduino Framework for the Espressif ESP32 of SoC",
+  "description": "Tasmota Arduino Framework for the Espressif ESP32, ESP32-S and ESP32-C series of SoCs",
   "keywords": [
     "tasmota",
     "framework",
