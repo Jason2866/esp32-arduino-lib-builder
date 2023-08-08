@@ -1,4 +1,4 @@
-name: Arduino IDF 5.1 with C2
+name: Arduino IDF 5.1 without DSP and MP3
 
 on:
   workflow_dispatch:  # Manually start a workflow
