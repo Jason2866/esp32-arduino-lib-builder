@@ -48,6 +48,12 @@ fi
 if [ $? -ne 0 ]; then exit 1; fi
 
 #
+# remove libraries not needed for Tasmota
+#
+rm -rf "$AR_COMPS/arduino/libraries/RainMaker"
+rm -rf "$AR_COMPS/arduino/libraries/Insights"
+
+#
 # CLONE/UPDATE ESP32-ARDUINO-LIBS
 #
 if [ ! -d "$IDF_LIBS_DIR" ]; then
