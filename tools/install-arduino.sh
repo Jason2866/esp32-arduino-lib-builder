@@ -54,6 +54,8 @@ rm -rf "$AR_COMPS/arduino/libraries/RainMaker"
 rm -rf "$AR_COMPS/arduino/libraries/Insights"
 rm -rf "$AR_COMPS/arduino/libraries/BLE"
 rm -rf "$AR_COMPS/arduino/libraries/SimpleBLE"
+rm -rf "$AR_COMPS/arduino/libraries/WiFiProv"
+
 #
 # CLONE/UPDATE ESP32-ARDUINO-LIBS
 #
