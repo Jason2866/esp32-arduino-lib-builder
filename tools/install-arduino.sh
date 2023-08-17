@@ -53,7 +53,7 @@ if [ $? -ne 0 ]; then exit 1; fi
 rm -rf "$AR_COMPS/arduino/libraries/RainMaker"
 rm -rf "$AR_COMPS/arduino/libraries/Insights"
 rm -rf "$AR_COMPS/arduino/libraries/BLE"
-
+rm -rf "$AR_COMPS/arduino/libraries/SimpleBLE"
 #
 # CLONE/UPDATE ESP32-ARDUINO-LIBS
 #
