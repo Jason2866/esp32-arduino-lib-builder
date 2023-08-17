@@ -18,6 +18,7 @@ rm -rf arduino-esp32/docs
 rm -rf arduino-esp32/tests
 rm -rf arduino-esp32/libraries/RainMaker
 rm -rf arduino-esp32/libraries/Insights
+rm -rf arduino-esp32/libraries/BLE
 rm -rf arduino-esp32/package
 rm -rf arduino-esp32/tools/esp32-arduino-libs
 rm -rf arduino-esp32/tools/esptool.py
