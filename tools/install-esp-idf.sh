@@ -37,11 +37,6 @@ if [ ! -x $idf_was_installed ] || [ ! -x $commit_predefined ]; then
 fi
 
 #
-# Arduino needs cam_hal.h from esp32-camera in include folder
-#
-cp "AR_COMPS$/esp32-camera/driver/private_include/cam_hal.h" "AR_COMPS$/esp32-camera/driver/include/"
-
-#
 # SETUP ESP-IDF ENV
 #
 
