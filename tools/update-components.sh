@@ -19,6 +19,11 @@ fi
 if [ $? -ne 0 ]; then exit 1; fi
 
 #
+# Arduino needs cam_hal.h from esp32-camera in include folder
+#
+cp "AR_COMPS$/esp32-camera/driver/private_include/cam_hal.h" "AR_COMPS$/esp32-camera/driver/include/"
+
+#
 # CLONE/UPDATE ESP-LITTLEFS
 #
 echo "Updating ESP-LITTLEFS..."
