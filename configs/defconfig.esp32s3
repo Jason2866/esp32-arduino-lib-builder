@@ -10,11 +10,9 @@ CONFIG_FREERTOS_TIMER_TASK_STACK_DEPTH=3120
 CONFIG_ESP_SYSTEM_MEMPROT_FEATURE=n
 
 #
-# S3 Display fix shift -> https://espressif-docs.readthedocs-hosted.com/projects/esp-faq/en/latest/software-framework/peripherals/lcd.html
+# S3 Display shift fix -> https://espressif-docs.readthedocs-hosted.com/projects/esp-faq/en/latest/software-framework/peripherals/lcd.html
 #
 CONFIG_LCD_RGB_RESTART_IN_VSYNC=y
-CONFIG_SPIRAM_FETCH_INSTRUCTIONS=y
-CONFIG_SPIRAM_RODATA=y
 
 #
 # Bluetooth
