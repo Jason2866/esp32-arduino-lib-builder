@@ -18,6 +18,7 @@ rm -rf arduino-esp32/docs
 rm -rf arduino-esp32/tests
 rm -rf arduino-esp32/libraries/RainMaker
 rm -rf arduino-esp32/libraries/Insights
+rm -rf arduino-esp32/libraries/ESP_I2S
 rm -rf arduino-esp32/libraries/SPIFFS
 rm -rf arduino-esp32/libraries/BLE
 rm -rf arduino-esp32/libraries/SimpleBLE
