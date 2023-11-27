@@ -1,0 +1,12 @@
+diff --git a/components/bt/host/nimble/nimble/nimble/host/services/gap/include/services/gap/ble_svc_gap.h b/components/bt/host/nimble/nimble/nimble/host/services/gap/include/services/gap/ble_svc_gap.h
+index a1f84f1d6..f748d6494 100644
+--- a/components/bt/host/nimble/nimble/nimble/host/services/gap/include/services/gap/ble_svc_gap.h
++++ b/components/bt/host/nimble/nimble/nimble/host/services/gap/include/services/gap/ble_svc_gap.h
+@@ -20,6 +20,7 @@
+ #ifndef H_BLE_SVC_GAP_
+ #define H_BLE_SVC_GAP_
+ 
++#include "syscfg/syscfg.h"
+ #include <inttypes.h>
+ #if MYNEWT_VAL(ENC_ADV_DATA)
+ #include "host/ble_ead.h"
