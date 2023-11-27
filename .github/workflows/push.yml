@@ -1,4 +1,5 @@
-name: IDF v5.1
+name: Arduino IDF 5.1 solo1
+
 on:
   workflow_dispatch:  # Manually start a workflow
 
