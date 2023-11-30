@@ -11,9 +11,9 @@ if [ "$AR_BRANCH" ]; then
         git clone -b "$AR_BRANCH" --recursive --depth 1 --shallow-submodule $AR_REPO_URL "$AR_COMPS/arduino"
 fi
 
-#if [ ! -d "$AR_COMPS/arduino" ]; then
-#	git clone $AR_REPO_URL "$AR_COMPS/arduino"
-#fi
+if [ ! -d "$AR_COMPS/arduino" ]; then
+	git clone $AR_REPO_URL "$AR_COMPS/arduino"
+fi
 
 if [ -z $AR_BRANCH ]; then
 	if [ -z $GITHUB_HEAD_REF ]; then
