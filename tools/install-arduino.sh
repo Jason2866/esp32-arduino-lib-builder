@@ -6,9 +6,14 @@ source ./tools/config.sh
 # CLONE/UPDATE ARDUINO
 #
 echo "Updating ESP32 Arduino..."
-if [ ! -d "$AR_COMPS/arduino" ]; then
-	git clone $AR_REPO_URL "$AR_COMPS/arduino"
+if [ "$AR_BRANCH" ]; then
+	echo "AR_BRANCH='$AR_BRANCH'"
+        git -C "$AR_COMPS/arduino" clone -b "$AR_BRANCH" --recursive --depth 1 --shallow-submodule $AR_REPO_URL
 fi
+
+#if [ ! -d "$AR_COMPS/arduino" ]; then
+#	git clone $AR_REPO_URL "$AR_COMPS/arduino"
+#fi
 
 if [ -z $AR_BRANCH ]; then
 	if [ -z $GITHUB_HEAD_REF ]; then
@@ -39,12 +44,6 @@ if [ -z $AR_BRANCH ]; then
 	fi
 fi
 
-if [ "$AR_BRANCH" ]; then
-	echo "AR_BRANCH='$AR_BRANCH'"
-	git -C "$AR_COMPS/arduino" checkout "$AR_BRANCH" && \
-	git -C "$AR_COMPS/arduino" fetch && \
-	git -C "$AR_COMPS/arduino" pull --ff-only
-fi
 if [ $? -ne 0 ]; then exit 1; fi
 
 #
