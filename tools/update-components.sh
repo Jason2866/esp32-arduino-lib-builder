@@ -12,7 +12,12 @@ TINYUSB_REPO_DIR="$AR_COMPS/arduino_tinyusb/tinyusb"
 #
 echo "Updating ESP32 Camera..."
 if [ ! -d "$AR_COMPS/esp32-camera" ]; then
-	git clone -b master --recursive --depth 1 --shallow-submodule $CAMERA_REPO_URL "$AR_COMPS/esp32-camera"
+       git clone -b master --recursive --depth 1 --shallow-submodule $CAMERA_REPO_URL "$AR_COMPS/esp32-camera"
+else
+       cd "$AR_COMPS/esp32-camera"
+       git fetch --depth 1 origin \
+       git reset --hard FETCH_HEAD \
+       git submodule update --depth 1 --recursive --init
 fi
 if [ $? -ne 0 ]; then exit 1; fi
 
@@ -42,9 +47,10 @@ cp "$AR_COMPS/esp32-camera/driver/private_include/cam_hal.h" "$AR_COMPS/esp32-ca
 #
 echo "Updating TinyUSB..."
 if [ ! -d "$TINYUSB_REPO_DIR" ]; then
-    git clone "$TINYUSB_REPO_URL" "$TINYUSB_REPO_DIR"
+       git clone -b master --depth 1 "$TINYUSB_REPO_URL" "$TINYUSB_REPO_DIR"
 else
-    git -C "$TINYUSB_REPO_DIR" fetch && \
-    git -C "$TINYUSB_REPO_DIR" pull --ff-only
+       cd $TINYUSB_REPO_DIR
+       git fetch --depth 1 origin \
+       git reset --hard FETCH_HEAD
 fi
 if [ $? -ne 0 ]; then exit 1; fi
