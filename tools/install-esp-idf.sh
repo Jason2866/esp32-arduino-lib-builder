@@ -10,8 +10,15 @@ fi
 #
 # CLONE ESP-IDF
 #
-
+if [ "$IDF_TAG" ] || [ "$IDF_COMMIT" ]; then
+        # full clone needed to check out commit or tag
+	echo "ESP-IDF is not installed! Installing with full clone from $IDF_REPO_URL branch $IDF_BRANCH"
+        git clone $IDF_REPO_URL -b $IDF_BRANCH
+	idf_was_installed="1"
+fi
+ 
 if [ ! -d "$IDF_PATH" ]; then
+        # for using a branch we need no full clone
 	echo "ESP-IDF is not installed! Installing from $IDF_REPO_URL branch $IDF_BRANCH"
 	git clone -b $IDF_BRANCH --recursive --depth 1 --shallow-submodule $IDF_REPO_URL
 	idf_was_installed="1"
