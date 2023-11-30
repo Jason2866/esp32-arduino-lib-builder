@@ -12,7 +12,8 @@ TINYUSB_REPO_DIR="$AR_COMPS/arduino_tinyusb/tinyusb"
 #
 echo "Updating ESP32 Camera..."
 if [ ! -d "$AR_COMPS/esp32-camera" ]; then
-	git clone -b master --recursive --depth 1 --shallow-submodule $CAMERA_REPO_URL "$AR_COMPS/esp32-camera" 
+	git clone -b master --recursive --depth 1 --shallow-submodule $CAMERA_REPO_URL "$AR_COMPS/esp32-camera"
+fi
 if [ $? -ne 0 ]; then exit 1; fi
 
 #
