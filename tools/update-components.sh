@@ -17,6 +17,7 @@ else
        git fetch --depth 1 origin \
        git reset --hard FETCH_HEAD \
        git submodule update --depth 1 --recursive --init
+       cd -
 fi
 if [ $? -ne 0 ]; then exit 1; fi
 
