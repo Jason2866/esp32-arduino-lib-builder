@@ -13,8 +13,7 @@ fi
 
 if [ ! -d "$IDF_PATH" ]; then
 	echo "ESP-IDF is not installed! Installing from $IDF_REPO_URL branch $IDF_BRANCH"
-        # git clone -b v5.1.1 --recursive --depth 1 --shallow-submodule https://github.com/espressif/esp-idf.git
-	git clone --recursive --depth 1 --shallow-submodule $IDF_REPO_URL -b $IDF_BRANCH
+	git clone -b $IDF_BRANCH --recursive --depth 1 --shallow-submodule $IDF_REPO_URL
 	idf_was_installed="1"
 fi
 
@@ -31,8 +30,7 @@ fi
 #
 
 if [ ! -x $idf_was_installed ] || [ ! -x $commit_predefined ]; then
-	# git submodule update --depth 1 --recursive --init
-        git -C $IDF_PATH submodule update --depth 1 --recursive --init
+        git submodule update --depth 1 --recursive --init
 	$IDF_PATH/install.sh
 	export IDF_COMMIT=$(git -C "$IDF_PATH" rev-parse --short HEAD)
 	export IDF_BRANCH=$(git -C "$IDF_PATH" symbolic-ref --short HEAD || git -C "$IDF_PATH" tag --points-at HEAD)
