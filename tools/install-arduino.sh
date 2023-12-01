@@ -23,6 +23,7 @@ fi
 
 if [ ! -d "$AR_COMPS/arduino" ]; then
         # we need a full clone since no branch was set
+	echo "Full cloning of repo '$AR_REPO_URL'"
 	git clone $AR_REPO_URL "$AR_COMPS/arduino"
 else
         # update existing branch
