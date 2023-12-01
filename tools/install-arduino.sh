@@ -5,9 +5,8 @@ source ./tools/config.sh
 #
 # CLONE/UPDATE ARDUINO
 #
-echo "Updating ESP32 Arduino..."
 if [ "$AR_BRANCH" ]; then
-	echo "AR_BRANCH='$AR_BRANCH'"
+	echo "Installing Arduino from branch '$AR_BRANCH'"
         if [ ! -d "$AR_COMPS/arduino" ]; then
                 # for using a branch we need no full clone
                 git clone -b "$AR_BRANCH" --recursive --depth 1 --shallow-submodule $AR_REPO_URL "$AR_COMPS/arduino"
@@ -25,13 +24,14 @@ fi
 
 if [ ! -d "$AR_COMPS/arduino" ]; then
         # we need a full clone since no branch was set
-	echo "Full cloning of repo '$AR_REPO_URL'"
+	echo "Full cloning of ESP32 Arduino repo '$AR_REPO_URL'"
 	git clone $AR_REPO_URL "$AR_COMPS/arduino"
 else
         if [ "$AR_BRANCH" ]; then
-	        echo "ESP32 Arduino already up to date"
+	        echo "ESP32 Arduino is up to date"
         else
 	        # update existing branch
+	        echo "Updating ESP32 Arduino"
 	        cd "$AR_COMPS/arduino"
                 git fetch origin \
                 git reset --hard FETCH_HEAD \
