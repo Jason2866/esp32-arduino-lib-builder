@@ -10,30 +10,30 @@ if [ "$AR_BRANCH" ]; then
     if [ ! -d "$AR_COMPS/arduino" ]; then
     	# for using a branch we need no full clone
         git clone -b "$AR_BRANCH" --recursive --depth 1 --shallow-submodule $AR_REPO_URL "$AR_COMPS/arduino"
-	else
+    else
         # update existing branch
-	    cd "$AR_COMPS/arduino"
+	cd "$AR_COMPS/arduino"
         git pull
         git reset --hard $AR_BRANCH
-		# -ff is for cleaning untracked files as well as submodules
+	# -ff is for cleaning untracked files as well as submodules
         git clean -ffdx
         cd -
     fi
 fi
 
 if [ ! -d "$AR_COMPS/arduino" ]; then
-    # we need a full clone since no branch was set
+        # we need a full clone since no branch was set
 	echo "Full cloning of ESP32 Arduino repo '$AR_REPO_URL'"
 	git clone $AR_REPO_URL "$AR_COMPS/arduino"
 else
     if [ "$AR_BRANCH" ]; then
-		echo "ESP32 Arduino is up to date"
+	echo "ESP32 Arduino is up to date"
     else
-	    # update existing branch
-	    echo "Updating ESP32 Arduino"
-	    cd "$AR_COMPS/arduino"
+	# update existing branch
+	echo "Updating ESP32 Arduino"
+	cd "$AR_COMPS/arduino"
         git pull
-	    # -ff is for cleaning untracked files as well as submodules
+	# -ff is for cleaning untracked files as well as submodules
         git clean -ffdx
         cd -
 	fi
