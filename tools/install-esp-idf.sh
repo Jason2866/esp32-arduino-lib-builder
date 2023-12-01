@@ -46,7 +46,6 @@ else
         git clean -ffdx
         cd -
 	idf_was_installed="1"
-        fi
 fi
 
 if [ "$IDF_TAG" ]; then
