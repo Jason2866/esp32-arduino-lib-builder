@@ -17,6 +17,8 @@ if [ "$AR_BRANCH" ]; then
                 git fetch --depth 1 origin \
                 git reset --hard FETCH_HEAD \
                 git submodule update --depth 1 --recursive --init
+		# -ff is for cleaning untracked files as well as submodules
+                git clean -ffdx
                 cd -
         fi
 fi
@@ -31,6 +33,8 @@ else
         git fetch --depth 1 origin \
         git reset --hard FETCH_HEAD \
         git submodule update --depth 1 --recursive --init
+	# -ff is for cleaning untracked files as well as submodules
+        git clean -ffdx
         cd -
 fi
 
