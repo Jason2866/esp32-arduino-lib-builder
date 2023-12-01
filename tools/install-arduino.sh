@@ -29,7 +29,7 @@ if [ ! -d "$AR_COMPS/arduino" ]; then
 	git clone $AR_REPO_URL "$AR_COMPS/arduino"
 else
         if [ "$AR_BRANCH" ]; then
-	        # already up to date
+	        echo "ESP32 Arduino already up to date"
         else
 	        # update existing branch
 	        cd "$AR_COMPS/arduino"
