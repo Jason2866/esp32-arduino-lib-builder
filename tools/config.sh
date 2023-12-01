@@ -14,11 +14,6 @@ if [ -z $AR_BRANCH ]; then
     AR_BRANCH="main"
 fi
 
-if [ -z $AR_PR_TARGET_BRANCH ]; then
-    # Temporary to get CI working. original is master
-    AR_PR_TARGET_BRANCH="esp-idf-v5.1-libs"
-fi
-
 if [ -z $IDF_TARGET ]; then
     if [ -f sdkconfig ]; then
         IDF_TARGET=`cat sdkconfig | grep CONFIG_IDF_TARGET= | cut -d'"' -f2`
@@ -34,7 +29,7 @@ fi
 AR_USER="tasmota"
 
 # IDF commit to use
-#IDF_COMMIT="ec31b4d09d3da05001648eaa58aa582c5cc923c8"
+#IDF_COMMIT=""
 
 # Arduino commit to use
 #AR_COMMIT=""
