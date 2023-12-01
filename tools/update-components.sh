@@ -16,7 +16,7 @@ else
        cd "$AR_COMPS/esp32-camera"
        git fetch --depth 1 origin \
        git reset --hard FETCH_HEAD \
-       git submodule update --depth 1 --recursive --init
+       git submodule update --depth 1 --recursive --init \
        # -ff is for cleaning untracked files as well as submodules
        git clean -ffdx
        cd -
@@ -37,7 +37,7 @@ if [ ! -d "$TINYUSB_REPO_DIR" ]; then
 else
        cd $TINYUSB_REPO_DIR
        git fetch --depth 1 origin \
-       git reset --hard FETCH_HEAD
+       git reset --hard FETCH_HEAD \
        # -ff is for cleaning untracked files as well as submodules
        git clean -ffdx
 fi
