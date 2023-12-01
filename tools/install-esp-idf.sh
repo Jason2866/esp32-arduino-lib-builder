@@ -11,10 +11,22 @@ fi
 # CLONE ESP-IDF
 #
 if [ "$IDF_TAG" ] || [ "$IDF_COMMIT" ]; then
-        # full clone needed to check out commit or tag
-	echo "ESP-IDF is not installed! Installing with full clone from $IDF_REPO_URL branch $IDF_BRANCH"
-        git clone $IDF_REPO_URL -b $IDF_BRANCH
-	idf_was_installed="1"
+        if [ ! -d "$IDF_PATH" ]; then
+                # full clone needed to check out tag or commit
+	        echo "ESP-IDF is not installed! Installing with full clone from $IDF_REPO_URL branch $IDF_BRANCH"
+                git clone $IDF_REPO_URL -b $IDF_BRANCH
+	        idf_was_installed="1"
+        else
+                # update existing branch
+		cd $IDF_PATH
+                git fetch --depth 1 origin \
+                git reset --hard FETCH_HEAD \
+                git submodule update --depth 1 --recursive --init
+		# -ff is for cleaning untracked files as well as submodules
+                git clean -ffdx
+                cd -
+		idf_was_installed="1"
+        fi
 fi
  
 if [ ! -d "$IDF_PATH" ]; then
@@ -22,6 +34,17 @@ if [ ! -d "$IDF_PATH" ]; then
 	echo "ESP-IDF is not installed! Installing from $IDF_REPO_URL branch $IDF_BRANCH"
 	git clone -b $IDF_BRANCH --recursive --depth 1 --shallow-submodule $IDF_REPO_URL
 	idf_was_installed="1"
+else
+        # update existing branch
+	cd $IDF_PATH
+        git fetch --depth 1 origin \
+        git reset --hard FETCH_HEAD \
+        git submodule update --depth 1 --recursive --init \
+	# -ff is for cleaning untracked files as well as submodules
+        git clean -ffdx
+        cd -
+	idf_was_installed="1"
+        fi
 fi
 
 if [ "$IDF_TAG" ]; then
