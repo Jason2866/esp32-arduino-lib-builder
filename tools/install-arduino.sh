@@ -16,7 +16,7 @@ if [ "$AR_BRANCH" ]; then
 		cd "$AR_COMPS/arduino"
                 git fetch --depth 1 origin \
                 git reset --hard FETCH_HEAD \
-                git submodule update --depth 1 --recursive --init
+                git submodule update --depth 1 --recursive --init \
 		# -ff is for cleaning untracked files as well as submodules
                 git clean -ffdx
                 cd -
@@ -30,9 +30,9 @@ if [ ! -d "$AR_COMPS/arduino" ]; then
 else
         # update existing branch
 	cd "$AR_COMPS/arduino"
-        git fetch --depth 1 origin \
+        git fetch origin \
         git reset --hard FETCH_HEAD \
-        git submodule update --depth 1 --recursive --init
+        git submodule update --recursive --init \
 	# -ff is for cleaning untracked files as well as submodules
         git clean -ffdx
         cd -
