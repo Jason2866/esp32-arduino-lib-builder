@@ -28,14 +28,18 @@ if [ ! -d "$AR_COMPS/arduino" ]; then
 	echo "Full cloning of repo '$AR_REPO_URL'"
 	git clone $AR_REPO_URL "$AR_COMPS/arduino"
 else
-        # update existing branch
-	cd "$AR_COMPS/arduino"
-        git fetch origin \
-        git reset --hard FETCH_HEAD \
-        git submodule update --recursive --init \
-	# -ff is for cleaning untracked files as well as submodules
-        git clean -ffdx
-        cd -
+        if [ "$AR_BRANCH" ]; then
+	        # already up to date
+        else
+	        # update existing branch
+	        cd "$AR_COMPS/arduino"
+                git fetch origin \
+                git reset --hard FETCH_HEAD \
+                git submodule update --recursive --init \
+	        # -ff is for cleaning untracked files as well as submodules
+                git clean -ffdx
+                cd -
+	fi
 fi
 
 if [ -z $AR_BRANCH ]; then
