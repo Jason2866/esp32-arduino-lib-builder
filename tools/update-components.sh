@@ -14,9 +14,8 @@ if [ ! -d "$AR_COMPS/esp32-camera" ]; then
        git clone -b master --recursive --depth 1 --shallow-submodule $CAMERA_REPO_URL "$AR_COMPS/esp32-camera"
 else
        cd "$AR_COMPS/esp32-camera"
-       git fetch --depth 1 origin \
-       git reset --hard FETCH_HEAD \
-       git submodule update --depth 1 --recursive --init \
+       git pull
+       git submodule update --depth 1
        # -ff is for cleaning untracked files as well as submodules
        git clean -ffdx
        cd -
@@ -36,8 +35,7 @@ if [ ! -d "$TINYUSB_REPO_DIR" ]; then
        git clone -b master --depth 1 "$TINYUSB_REPO_URL" "$TINYUSB_REPO_DIR"
 else
        cd $TINYUSB_REPO_DIR
-       git fetch --depth 1 origin \
-       git reset --hard FETCH_HEAD \
+       git pull
        # -ff is for cleaning untracked files as well as submodules
        git clean -ffdx
 fi

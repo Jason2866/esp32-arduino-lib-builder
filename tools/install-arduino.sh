@@ -7,38 +7,35 @@ source ./tools/config.sh
 #
 if [ "$AR_BRANCH" ]; then
 	echo "Installing Arduino from branch '$AR_BRANCH'"
-        if [ ! -d "$AR_COMPS/arduino" ]; then
-                # for using a branch we need no full clone
-                git clone -b "$AR_BRANCH" --recursive --depth 1 --shallow-submodule $AR_REPO_URL "$AR_COMPS/arduino"
+    if [ ! -d "$AR_COMPS/arduino" ]; then
+    	# for using a branch we need no full clone
+        git clone -b "$AR_BRANCH" --recursive --depth 1 --shallow-submodule $AR_REPO_URL "$AR_COMPS/arduino"
 	else
-                # update existing branch
-		cd "$AR_COMPS/arduino"
-                git fetch --depth 1 origin \
-                git reset --hard FETCH_HEAD \
-                git submodule update --depth 1 --recursive --init \
+        # update existing branch
+	    cd "$AR_COMPS/arduino"
+        git pull
+        git reset --hard $AR_BRANCH
 		# -ff is for cleaning untracked files as well as submodules
-                git clean -ffdx
-                cd -
-        fi
+        git clean -ffdx
+        cd -
+    fi
 fi
 
 if [ ! -d "$AR_COMPS/arduino" ]; then
-        # we need a full clone since no branch was set
+    # we need a full clone since no branch was set
 	echo "Full cloning of ESP32 Arduino repo '$AR_REPO_URL'"
 	git clone $AR_REPO_URL "$AR_COMPS/arduino"
 else
-        if [ "$AR_BRANCH" ]; then
-	        echo "ESP32 Arduino is up to date"
-        else
-	        # update existing branch
-	        echo "Updating ESP32 Arduino"
-	        cd "$AR_COMPS/arduino"
-                git fetch origin \
-                git reset --hard FETCH_HEAD \
-                git submodule update --recursive --init \
-	        # -ff is for cleaning untracked files as well as submodules
-                git clean -ffdx
-                cd -
+    if [ "$AR_BRANCH" ]; then
+		echo "ESP32 Arduino is up to date"
+    else
+	    # update existing branch
+	    echo "Updating ESP32 Arduino"
+	    cd "$AR_COMPS/arduino"
+        git pull
+	    # -ff is for cleaning untracked files as well as submodules
+        git clean -ffdx
+        cd -
 	fi
 fi
 
