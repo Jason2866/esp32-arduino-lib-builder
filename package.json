@@ -1,5 +1,5 @@
 {
-  "name": "framework-arduinoespressif32",
+  "name": "framework-arduinoespressif32-ITEAD",
   "version": "3.0.0",
   "description": "Tasmota Arduino Framework for the Espressif ESP32, ESP32-S and ESP32-C series of SoCs",
   "keywords": [
