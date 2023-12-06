@@ -14,11 +14,6 @@ if [ -z $AR_BRANCH ]; then
     AR_BRANCH="main"
 fi
 
-if [ -z $AR_PR_TARGET_BRANCH ]; then
-    # Temporary to get CI working. original is master
-    AR_PR_TARGET_BRANCH="esp-idf-v5.1-libs"
-fi
-
 if [ -z $IDF_TARGET ]; then
     if [ -f sdkconfig ]; then
         IDF_TARGET=`cat sdkconfig | grep CONFIG_IDF_TARGET= | cut -d'"' -f2`
@@ -34,7 +29,7 @@ fi
 AR_USER="tasmota"
 
 # IDF commit to use
-#IDF_COMMIT="ec31b4d09d3da05001648eaa58aa582c5cc923c8"
+#IDF_COMMIT=""
 
 # Arduino commit to use
 #AR_COMMIT=""
@@ -176,8 +171,9 @@ function git_create_pr(){ # git_create_pr <branch> <title>
     local pr_branch="$1"
     local pr_title="$2"
     local pr_target="$3"
-    local pr_body=""
+    local pr_body="\`\`\`\r\n"
     while read -r line; do pr_body+=$line"\r\n"; done < "$AR_TOOLS/esp32-arduino-libs/versions.txt"
+    pr_body+="\`\`\`\r\n"
     local pr_data="{\"title\": \"$pr_title\", \"body\": \"$pr_body\", \"head\": \"$AR_USER:$pr_branch\", \"base\": \"$pr_target\"}"
     git_create_pr_res=`echo "$pr_data" | curl -k -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3.raw+json" --data @- "https://api.github.com/repos/$AR_REPO/pulls"`
     local done_pr=`echo "$git_create_pr_res" | jq -r '.title'`

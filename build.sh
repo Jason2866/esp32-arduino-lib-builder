@@ -63,11 +63,11 @@ while getopts ":A:I:i:c:t:b:sde" opt; do
             ;;
         b )
             b=$OPTARG
-            if [ "$b" != "build" ] && 
-               [ "$b" != "menuconfig" ] && 
-               [ "$b" != "reconfigure" ] && 
-               [ "$b" != "idf_libs" ] && 
-               [ "$b" != "copy_bootloader" ] && 
+            if [ "$b" != "build" ] &&
+               [ "$b" != "menuconfig" ] &&
+               [ "$b" != "reconfigure" ] &&
+               [ "$b" != "idf_libs" ] &&
+               [ "$b" != "copy_bootloader" ] &&
                [ "$b" != "mem_variant" ]; then
                 print_help
             fi
@@ -114,7 +114,7 @@ if [ "$BUILD_TYPE" != "all" ]; then
         print_help
     fi
     configs="configs/defconfig.common;configs/defconfig.$TARGET"
-    
+
     # Target Features Configs
     for target_json in `jq -c '.targets[]' configs/builds.json`; do
         target=$(echo "$target_json" | jq -c '.target' | tr -d '"')
@@ -145,13 +145,6 @@ rm -rf release-info.txt
 IDF_Commit_short=$(git -C "$IDF_PATH" rev-parse --short HEAD || echo "")
 AR_Commit_short=$(git -C "$AR_COMPS/arduino" rev-parse --short HEAD || echo "")
 echo "Framework built from $IDF_REPO branch $IDF_BRANCH commit $IDF_Commit_short and $AR_REPO branch $AR_BRANCH commit $AR_Commit_short" >> release-info.txt
-
-# Add release-info
-rm -rf release-info.txt
-IDF_Commit_short=$(git -C "$IDF_PATH" rev-parse --short HEAD || echo "")
-AR_Commit_short=$(git -C "$AR_COMPS/arduino" rev-parse --short HEAD || echo "")
-echo "Framework built from $IDF_REPO branch $IDF_BRANCH commit $IDF_Commit_short and $AR_REPO branch $AR_BRANCH commit $AR_Commit_short" >> release-info.txt
-
 
 #targets_count=`jq -c '.targets[] | length' configs/builds.json`
 for target_json in `jq -c '.targets[]' configs/builds.json`; do
