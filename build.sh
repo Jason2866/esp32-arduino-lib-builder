@@ -260,7 +260,7 @@ fi
 
 # Generate core_version.h
 rm -rf "$AR_ROOT/core_version.h"
-AR_VERSION_UNDERSCORE=echo "$AR_VERSION" | tr . _
+AR_VERSION_UNDERSCORE=`echo "$AR_VERSION" | tr . _`
 echo "* Arduino Version with _ : $AR_VERSION_UNDERSCORE"
 
 echo "#define ARDUINO_ESP32_GIT_VER $IDF_Commit_short
