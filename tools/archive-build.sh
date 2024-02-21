@@ -2,15 +2,15 @@
 
 idf_version_string=${IDF_BRANCH//\//_}"-$IDF_COMMIT"
 
-archive_path="dist/arduino-esp32-libs-$idf_version_string.tar.gz"
-build_archive_path="dist/arduino-esp32-build-$idf_version_string.tar.gz"
-pio_archive_path="dist/framework-arduinoespressif32-$idf_version_string.tar.gz"
-pio_zip_archive_path="dist/framework-arduinoespressif32-$idf_version_string.zip"
+archive_path="dist/arduino-esp32-libs-solo1-$idf_version_string.tar.gz"
+build_archive_path="dist/arduino-esp32-build-solo1-$idf_version_string.tar.gz"
+pio_archive_path="dist/framework-arduinoespressif32-solo1-$idf_version_string.tar.gz"
+pio_zip_archive_path="dist/framework-arduinoespressif32-solo1-$idf_version_string.zip"
 
 mkdir -p dist && rm -rf "$archive_path" "$build_archive_path"
 
 cd out
-echo "Creating PlatformIO Tasmota framework-arduinoespressif32"
+echo "Creating PlatformIO Tasmota framework-arduinoespressif32-solo1"
 mkdir -p arduino-esp32/cores/esp32
 mkdir -p arduino-esp32/tools/partitions
 cp -rf ../components/arduino/tools arduino-esp32
@@ -21,6 +21,7 @@ cp -f ../components/arduino/CMa* arduino-esp32
 cp -f ../components/arduino/idf* arduino-esp32
 cp -f ../components/arduino/Kco* arduino-esp32
 cp -f ../components/arduino/pac* arduino-esp32
+rm -rf arduino-esp32/idf_component_examples
 rm -rf arduino-esp32/docs
 rm -rf arduino-esp32/tests
 rm -rf arduino-esp32/idf_component_examples
@@ -52,6 +53,9 @@ rm -rf arduino-esp32/*.md
 cp -Rf tools/esp32-arduino-libs arduino-esp32/tools/
 cp ../package.json arduino-esp32/package.json
 cp ../core_version.h arduino-esp32/cores/esp32/core_version.h
+# Replace "framework-arduinoespressif32" with "framework-arduino-solo1"
+gawk -i inplace  -v cuv1="framework-arduinoespressif32" -v cuv2="framework-arduino-solo1" '{gsub(cuv1,cuv2); print;}' "arduino-esp32/tools/esp32-arduino-libs/esp32/platformio-build.py"
+gawk -i inplace  -v cuv1="framework-arduinoespressif32" -v cuv2="framework-arduino-solo1" '{gsub(cuv1,cuv2); print;}' "arduino-esp32/tools/platformio-build.py"
 mv arduino-esp32/ framework-arduinoespressif32/
 cd framework-arduinoespressif32/libraries
 rm -rf **/examples
