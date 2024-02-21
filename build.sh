@@ -250,9 +250,11 @@ if [ "$BUILD_TYPE" = "all" ]; then
     if [ $? -ne 0 ]; then exit 1; fi
 fi
 
+AR_VERSION=$(jq -c '.version' "$AR_COMPS/arduino/package.json" | tr -d '"')
+AR_VERSION_UNDERSCORE=`echo "$AR_VERSION" | tr . _`
+
 # Generate PlatformIO framework manifest file
 rm -rf "$AR_ROOT/package.json"
-AR_VERSION=$(jq -c '.version' "$AR_COMPS/arduino/package.json" | tr -d '"')
 if [ "$BUILD_TYPE" = "all" ]; then
     python3 ./tools/gen_pio_frmwk_manifest.py -o "$AR_ROOT/" -s "v$AR_VERSION" -c "$IDF_COMMIT"
     if [ $? -ne 0 ]; then exit 1; fi
@@ -260,9 +262,6 @@ fi
 
 # Generate core_version.h
 rm -rf "$AR_ROOT/core_version.h"
-AR_VERSION_UNDERSCORE=`echo "$AR_VERSION" | tr . _`
-echo "* Arduino Version with _ : $AR_VERSION_UNDERSCORE"
-
 echo "#define ARDUINO_ESP32_GIT_VER 0x$IDF_Commit_short
 #define ARDUINO_ESP32_GIT_DESC $AR_VERSION
 #define ARDUINO_ESP32_RELEASE_$AR_VERSION_UNDERSCORE
