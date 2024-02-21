@@ -258,6 +258,13 @@ if [ "$BUILD_TYPE" = "all" ]; then
     if [ $? -ne 0 ]; then exit 1; fi
 fi
 
+# Generate core_version.h
+rm -rf "$AR_ROOT/core_version.h"
+echo "#define ARDUINO_ESP32_GIT_VER $IDF_Commit_short
+#define ARDUINO_ESP32_GIT_DESC $AR_VERSION
+#define ARDUINO_ESP32_RELEASE_$AR_VERSION_UNDERSCORE
+#define ARDUINO_ESP32_RELEASE "$AR_VERSION_UNDERSCORE"" >> "$AR_ROOT/core_version.h"
+
 # copy everything to arduino-esp32 installation
 if [ $COPY_OUT -eq 1 ] && [ -d "$ESP32_ARDUINO" ]; then
     ./tools/copy-to-arduino.sh
