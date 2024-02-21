@@ -49,8 +49,8 @@ def main(dst_dir, version_string, commit_hash):
 
     manifest_file_path = os.path.join(dst_dir, "package.json")
     with open(manifest_file_path, "w", encoding="utf8") as fp:
-        MANIFEST_DATA["version"] = f"3.0.0+sha.{commit_hash}"
-        #MANIFEST_DATA["version"] = f"{converted_version}+sha.{commit_hash}"
+        #MANIFEST_DATA["version"] = f"3.0.0+sha.{commit_hash}"
+        MANIFEST_DATA["version"] = f"{converted_version}+sha.{commit_hash}"
         json.dump(MANIFEST_DATA, fp, indent=2)
 
     print(
