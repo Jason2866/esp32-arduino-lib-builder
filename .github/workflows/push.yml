@@ -5,19 +5,22 @@ on:
 jobs:
   build-libs:
     name: Build Arduino Libs
-    runs-on: ubuntu-22.04
+    runs-on: macos-14
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
+        python-version: '3.11'
     - name: Install dependencies
       run: bash ./tools/prepare-ci.sh
+    - name: Get current branch
+      run: |
+        echo "GIT_BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
     - name: Build Arduino Libs
       run: bash ./build.sh
     - name: Release
-      uses: jason2866/action-gh-release@v1.2
+      uses: jason2866/action-gh-release@v1.3
       with:
         tag_name: ${{ github.run_number }}
         body_path: release-info.txt

@@ -59,7 +59,7 @@ if __name__ == '__main__':
         if tool_name.endswith('-elf'):
             tool_name += '-gcc'
         print('Found {0}, version: {1}'.format(tool_name, tool_version))
-        
+
         if simple_output == False:
             dep_found = False
             dep_skip = False

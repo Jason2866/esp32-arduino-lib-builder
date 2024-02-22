@@ -6,7 +6,7 @@ if [ -z $IDF_PATH ]; then
 fi
 
 if [ -z $IDF_BRANCH ]; then
-    IDF_BRANCH="release/v5.1"
+    export IDF_BRANCH="release/v5.1"
 fi
 
 # Arduino branch to use
@@ -60,17 +60,20 @@ TOOLS_JSON_OUT="$AR_TOOLS/esp32-arduino-libs"
 IDF_LIBS_DIR="$AR_ROOT/../esp32-arduino-libs"
 
 if [ "$IDF_COMMIT" ]; then
-    	echo "Using IDF commit $IDF_COMMIT"
 	export IDF_COMMIT
-elif [ -d "$IDF_PATH" ]; then
-	export IDF_COMMIT=$(git -C "$IDF_PATH" rev-parse --short HEAD)
-	export IDF_BRANCH=$(git -C "$IDF_PATH" symbolic-ref --short HEAD || git -C "$IDF_PATH" tag --points-at HEAD)
 fi
 
+if [ -d "$IDF_PATH" ]; then
+    export IDF_COMMIT=$(git -C "$IDF_PATH" rev-parse --short HEAD)
+fi
+
+echo "Using IDF branch $IDF_BRANCH"
+echo "Using IDF commit $IDF_COMMIT"
+
 if [ "$AR_COMMIT" ]; then
-    echo "Using commit $AR_COMMIT for Arduino"
+    echo "Using Arduino commit $AR_COMMIT"
 else
-    AR_COMMIT=$(git -C "$AR_COMPS/arduino" rev-parse --short HEAD || echo "")
+    export AR_COMMIT=$(git -C "$AR_COMPS/arduino" rev-parse --short HEAD || echo "")
 fi
 
 #rm -rf release-info.txt
@@ -103,6 +106,7 @@ function get_os(){
 AR_OS=`get_os`
 
 export SED="sed"
+export AWK="awk"
 export SSTAT="stat -c %s"
 
 if [[ "$AR_OS" == "macos" ]]; then
@@ -115,6 +119,7 @@ if [[ "$AR_OS" == "macos" ]]; then
         exit 1
     fi
     export SED="gsed"
+    export AWK="gawk"
     export SSTAT="stat -f %z"
 fi
 
