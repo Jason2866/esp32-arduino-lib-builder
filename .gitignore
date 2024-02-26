@@ -21,3 +21,6 @@ version.txt
 dependencies.lock
 managed_components/
 target/
+core_version.h
+package.json
+release-info.txt
