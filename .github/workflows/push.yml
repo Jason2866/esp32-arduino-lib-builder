@@ -1,4 +1,4 @@
-name: IDF v5.1
+name: IDF v5.1 TRY_ALLOCATE_WIFI_LWIP ESP32
 on:
   workflow_dispatch:  # Manually start a workflow
 
