@@ -10,7 +10,7 @@ if ! [ -x "$(command -v git)" ]; then
     exit 1
 fi
 
-TARGET="all"
+export TARGET="all"
 BUILD_TYPE="all"
 SKIP_ENV=0
 COPY_OUT=0
