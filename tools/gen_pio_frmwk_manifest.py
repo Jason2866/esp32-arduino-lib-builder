@@ -48,8 +48,10 @@ def main(dst_dir, version_string, commit_hash):
         return -1
 
     manifest_file_path = os.path.join(dst_dir, "package.json")
+    build_date = $(date -I)
     with open(manifest_file_path, "w", encoding="utf8") as fp:
         MANIFEST_DATA["version"] = f"{converted_version}+sha.{commit_hash}"
+        MANIFEST_DATA["date"] = f"{build_date}"
         json.dump(MANIFEST_DATA, fp, indent=2)
 
     print(
