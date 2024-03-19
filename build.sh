@@ -10,7 +10,7 @@ if ! [ -x "$(command -v git)" ]; then
     exit 1
 fi
 
-TARGET="all"
+export TARGET="all"
 BUILD_TYPE="all"
 SKIP_ENV=0
 COPY_OUT=0
@@ -246,7 +246,7 @@ fi
 
 # Generate PlatformIO library manifest file
 if [ "$BUILD_TYPE" = "all" ]; then
-    python3 ./tools/gen_pio_lib_manifest.py -o "$TOOLS_JSON_OUT/" -s "$IDF_BRANCH" -c "$IDF_COMMIT"
+    python3 ./tools/gen_pio_lib_manifest.py -o "$TOOLS_JSON_OUT/" -s "v$IDF_VERSION" -c "$IDF_COMMIT"
     if [ $? -ne 0 ]; then exit 1; fi
 fi
 

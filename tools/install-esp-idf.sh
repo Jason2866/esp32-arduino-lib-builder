@@ -37,7 +37,7 @@ if [ ! -d "$IDF_PATH" ]; then
     idf_was_installed="1"
 else
     # update existing branch
-    echo "ESP-IDF is already installed, updating branch '$IDF_BRANCH'"
+    echo "ESP-IDF is already installed, updating branch $IDF_BRANCH"
     cd $IDF_PATH
     git pull
     git reset --hard $IDF_BRANCH
@@ -68,6 +68,12 @@ if [ ! -x $idf_was_installed ] || [ ! -x $commit_predefined ]; then
 	cd $IDF_PATH
 	patch -p1 -N -i ../patches/esp32s2_i2c_ll_master_init.diff
 	cd -
+
+        # Get the exact IDF version from file "version.txt"
+	cd $IDF_PATH
+	export IDF_VERSION=$(<version.txt)
+        echo "IDF version: $IDF_VERSION"
+	cd -  
 fi
 
 #
