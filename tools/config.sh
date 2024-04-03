@@ -76,11 +76,8 @@ else
     export AR_COMMIT=$(git -C "$AR_COMPS/arduino" rev-parse --short HEAD || echo "")
 fi
 
-#rm -rf release-info.txt
-#echo "Framework built from Tasmota IDF branch $IDF_BRANCH commit $IDF_COMMIT and $AR_REPO branch $AR_BRANCH commit $AR_COMMIT" >> release-info.txt
-
 function get_os(){
-    OSBITS=`arch`
+    OSBITS=`uname -m`
     if [[ "$OSTYPE" == "linux"* ]]; then
         if [[ "$OSBITS" == "i686" ]]; then
             echo "linux32"
