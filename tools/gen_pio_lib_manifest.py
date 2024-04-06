@@ -6,7 +6,7 @@ import sys
 
 MANIFEST_DATA = {
     "name": "framework-arduinoespressif32-libs",
-    "description": "Precompiled libraries for Arduino Wiring-based Framework for the Espressif ESP32-ITEAD",
+    "description": "Precompiled libraries for Arduino Wiring-based Framework for the Espressif ESP32-solo1",
     "keywords": ["framework", "tasmota", "arduino", "espressif", "esp32"],
     "license": "LGPL-2.1-or-later",
     "repository": {

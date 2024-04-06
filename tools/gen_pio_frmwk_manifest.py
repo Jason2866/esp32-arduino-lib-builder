@@ -6,8 +6,8 @@ import sys
 import datetime
 
 MANIFEST_DATA = {
-    "name": "framework-arduinoespressif32-ITEAD",
-    "description": "Platformio Tasmota Arduino framework for the Espressif ESP32-ITEAD",
+    "name": "framework-arduinoespressif32-solo1",
+    "description": "Platformio Tasmota Arduino framework for the Espressif ESP32-solo1",
     "keywords": ["framework", "tasmota", "arduino", "espressif", "esp32"],
     "license": "LGPL-2.1-or-later",
     "repository": {
