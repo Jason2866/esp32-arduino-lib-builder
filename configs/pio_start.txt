@@ -30,7 +30,7 @@ from SCons.Script import DefaultEnvironment
 
 env = DefaultEnvironment()
 
-FRAMEWORK_DIR = env.PioPlatform().get_package_dir("framework-arduinoespressif32")
+FRAMEWORK_DIR = env.PioPlatform().get_package_dir("framework-arduino-ITEAD")
 FRAMEWORK_SDK_DIR = join(FRAMEWORK_DIR, "tools", "esp32-arduino-libs")
 
 board_config = env.BoardConfig()
