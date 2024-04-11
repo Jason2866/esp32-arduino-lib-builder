@@ -56,7 +56,9 @@ cp ../core_version.h arduino-esp32/cores/esp32/core_version.h
 mv arduino-esp32/ framework-arduinoespressif32/
 cd framework-arduinoespressif32/libraries
 rm -rf **/examples
-cd ../../
+cd ../tools/esp32-arduino-libs
+rm -rf **/flags
+cd ../../../
 # If the framework is needed as tar.gz uncomment next line
 # tar --exclude=.* -zcf ../$pio_archive_path framework-arduinoespressif32/
 7z a -mx=9 -tzip -xr'!.*' ../$pio_zip_archive_path framework-arduinoespressif32/
