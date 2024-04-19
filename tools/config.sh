@@ -11,7 +11,7 @@ fi
 
 # Arduino branch to use
 if [ -z $AR_BRANCH ]; then
-    AR_BRANCH="feature/ppp_modem_support"
+    AR_BRANCH="main"
 fi
 
 if [ -z $IDF_TARGET ]; then
