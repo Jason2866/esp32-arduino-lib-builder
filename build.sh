@@ -14,10 +14,8 @@ export TARGET="all"
 BUILD_TYPE="all"
 SKIP_ENV=0
 COPY_OUT=0
-ARCHIVE_OUT=0
-if [ -z $DEPLOY_OUT ]; then
-    DEPLOY_OUT=0
-fi
+ARCHIVE_OUT=1
+DEPLOY_OUT=0
 
 function print_help() {
     echo "Usage: build.sh [-s] [-A <arduino_branch>] [-I <idf_branch>] [-i <idf_commit>] [-c <path>] [-t <target>] [-b <build|menuconfig|reconfigure|idf-libs|copy-bootloader|mem-variant>] [config ...]"
@@ -26,8 +24,6 @@ function print_help() {
     echo "       -I     Set which branch of ESP-IDF to be used for compilation"
     echo "       -i     Set which commit of ESP-IDF to be used for compilation"
     echo "       -e     Archive the build to dist"
-    echo "       -d     Deploy the build to github arduino-esp32"
-    echo "       -c     Set the arduino-esp32 folder to copy the result to. ex. '$HOME/Arduino/hardware/espressif/esp32'"
     echo "       -t     Set the build target(chip) ex. 'esp32s3' or select multiple targets(chips) by separating them with comma ex. 'esp32,esp32s3,esp32c3'"
     echo "       -b     Set the build type. ex. 'build' to build the project and prepare for uploading to a board"
     echo "       ...    Specify additional configs to be applied. ex. 'qio 80m' to compile for QIO Flash@80MHz. Requires -b"
@@ -39,15 +35,8 @@ while getopts ":A:I:i:c:t:b:sde" opt; do
         s )
             SKIP_ENV=1
             ;;
-        d )
-            DEPLOY_OUT=1
-            ;;
         e )
             ARCHIVE_OUT=1
-            ;;
-        c )
-            export ESP32_ARDUINO="$OPTARG"
-            COPY_OUT=1
             ;;
         A )
             export AR_BRANCH="$OPTARG"
@@ -259,6 +248,9 @@ for component in `ls "$AR_COMPS"`; do
         echo $component_version >> "$AR_TOOLS/esp32-arduino-libs/versions.txt"
     fi
 done
+# esp32-camera version
+component_version="esp32-camera: "$(git -C "$AR_COMPS/esp32-camera" symbolic-ref --short HEAD || git -C "$AR_COMPS/esp32-camera" tag --points-at HEAD)" "$(git -C "$AR_COMPS/esp32-camera" rev-parse --short HEAD)
+echo $component_version >> "$AR_TOOLS/esp32-arduino-libs/versions.txt"
 # TinyUSB version
 component_version="tinyusb: "$(git -C "$AR_COMPS/arduino_tinyusb/tinyusb" symbolic-ref --short HEAD || git -C "$AR_COMPS/arduino_tinyusb/tinyusb" tag --points-at HEAD)" "$(git -C "$AR_COMPS/arduino_tinyusb/tinyusb" rev-parse --short HEAD)
 echo $component_version >> "$AR_TOOLS/esp32-arduino-libs/versions.txt"
@@ -274,13 +266,6 @@ for component in `ls "$AR_MANAGED_COMPS"`; do
 done
 
 export IDF_COMMIT=$(git -C "$IDF_PATH" rev-parse --short HEAD)
-
-# update package_esp32_index.template.json
-if [ "$BUILD_TYPE" = "all" ]; then
-    python3 ./tools/gen_tools_json.py -i "$IDF_PATH" -j "$AR_COMPS/arduino/package/package_esp32_index.template.json" -o "$AR_OUT/"
-    python3 ./tools/gen_tools_json.py -i "$IDF_PATH" -o "$TOOLS_JSON_OUT/"
-    if [ $? -ne 0 ]; then exit 1; fi
-fi
 
 # Generate PlatformIO library manifest file
 if [ "$BUILD_TYPE" = "all" ]; then
@@ -305,20 +290,8 @@ echo "#define ARDUINO_ESP32_GIT_VER 0x$AR_Commit_short
 #define ARDUINO_ESP32_RELEASE_$AR_VERSION_UNDERSCORE
 #define ARDUINO_ESP32_RELEASE \"$AR_VERSION_UNDERSCORE\"" >> "$AR_ROOT/core_version.h"
 
-# copy everything to arduino-esp32 installation
-if [ $COPY_OUT -eq 1 ] && [ -d "$ESP32_ARDUINO" ]; then
-    ./tools/copy-to-arduino.sh
-    if [ $? -ne 0 ]; then exit 1; fi
-fi
-
-# push changes to esp32-arduino-libs and create pull request into arduino-esp32
-if [ $DEPLOY_OUT -eq 1 ]; then
-    ./tools/push-to-arduino.sh
-    if [ $? -ne 0 ]; then exit 1; fi
-fi
-
 # archive the build
-if [ "$BUILD_TYPE" = "all" ]; then
-    ./tools/archive-build.sh
+if [ $ARCHIVE_OUT -eq 1 ]; then
+    ./tools/archive-build.sh "$TARGET"
     if [ $? -ne 0 ]; then exit 1; fi
 fi
