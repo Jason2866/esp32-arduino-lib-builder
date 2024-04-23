@@ -1,4 +1,4 @@
-name: IDF v5.1 ESP32-S3 120Mhz
+name: IDF v5.1 ESP32-S3 OPI tweaks
 on:
   workflow_dispatch:  # Manually start a workflow
 
