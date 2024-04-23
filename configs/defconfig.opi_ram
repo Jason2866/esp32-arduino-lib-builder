@@ -1,3 +1,12 @@
 CONFIG_SPIRAM_MODE_OCT=y
 CONFIG_SPIRAM_IGNORE_NOTFOUND=y
 # CONFIG_SPIRAM_MEMTEST is not set
+CONFIG_LCD_RGB_ISR_IRAM_SAFE=y
+CONFIG_GDMA_CTRL_FUNC_IN_IRAM=y
+# bounce buffer mode relies on GDMA EOF interrupt to be service-able
+CONFIG_GDMA_ISR_IRAM_SAFE=y
+# place non-ISR FreeRTOS functions in Flash
+CONFIG_FREERTOS_PLACE_FUNCTIONS_INTO_FLASH=y
+# Enable the XIP-PSRAM feature, so the ext-mem cache won't be disabled when SPI1 is operating the main flash
+CONFIG_SPIRAM_FETCH_INSTRUCTIONS=y
+CONFIG_SPIRAM_RODATA=y
