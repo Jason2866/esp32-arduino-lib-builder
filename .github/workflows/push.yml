@@ -1,4 +1,4 @@
-name: IDF v5.1 PPP
+name: IDF v5.1
 on:
   workflow_dispatch:  # Manually start a workflow
 
