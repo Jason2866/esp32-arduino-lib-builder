@@ -532,6 +532,13 @@ for item; do
 	done
 done
 
+for lib in "openthread" "espressif__esp-tflite-micro" "bt"; do
+	if [ -f "$AR_SDK/lib/lib$lib.a" ]; then
+		echo "Stripping $AR_SDK/lib/lib$lib.a"
+		"$TOOLCHAIN-strip" -g "$AR_SDK/lib/lib$lib.a"
+	fi
+done
+
 # Handle Mem Variants
 mkdir -p "$AR_SDK/$MEMCONF/include"
 mv "$PWD/build/config/sdkconfig.h" "$AR_SDK/$MEMCONF/include/sdkconfig.h"
