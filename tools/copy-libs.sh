@@ -441,6 +441,8 @@ done
 
 set -- $LD_LIB_FILES
 for item; do
+	#echo "***** Stripping $item"
+	"$TOOLCHAIN-strip" -g "$item"
 	cp "$item" "$AR_SDK/lib/"
 done
 
@@ -528,13 +530,6 @@ for item; do
 	for lib in `find "$item" -name '*.a'`; do
 		copy_precompiled_lib "$lib"
 	done
-done
-
-for lib; do
-	if [ -f "$AR_SDK/lib/lib$lib.a" ]; then
-		echo "Stripping $AR_SDK/lib/lib$lib.a"
-		"$TOOLCHAIN-strip" -g "$AR_SDK/lib/lib$lib.a"
-	fi
 done
 
 # Handle Mem Variants
