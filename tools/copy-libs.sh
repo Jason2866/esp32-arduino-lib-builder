@@ -71,6 +71,13 @@ PIO_LD_FLAGS=""
 PIO_LD_FUNCS=""
 PIO_LD_SCRIPTS=""
 
+TOOLCHAIN_PREFIX=""
+if [ "$IS_XTENSA" = "y" ]; then
+	TOOLCHAIN="xtensa-$IDF_TARGET-elf"
+else
+	TOOLCHAIN="riscv32-esp-elf"
+fi
+
 #collect includes, defines and c-flags
 str=`cat build/compile_commands.json | grep arduino-lib-builder-gcc.c | grep command | cut -d':' -f2 | cut -d',' -f1`
 str="${str:2:${#str}-1}" #remove leading space and quotes
@@ -402,13 +409,13 @@ for item; do
 			mkdir -p "$out_cpath$rel_p"
 			cp -n $f "$out_cpath$rel_p/"
 		done
-                for f in `find "$item" -name '*.inc'`; do
+		for f in `find "$item" -name '*.inc'`; do
 			rel_f=${f#*$item}
 			rel_p=${rel_f%/*}
 			mkdir -p "$out_cpath$rel_p"
 			cp -n $f "$out_cpath$rel_p/"
 		done
-  		# Temporary measure to fix issues caused by https://github.com/espressif/esp-idf/commit/dc4731101dd567cc74bbe4d0f03afe52b7db9afb#diff-1d2ce0d3989a80830fdf230bcaafb3117f32046d16cf46616ac3d55b4df2a988R17
+		# Temporary measure to fix issues caused by https://github.com/espressif/esp-idf/commit/dc4731101dd567cc74bbe4d0f03afe52b7db9afb#diff-1d2ce0d3989a80830fdf230bcaafb3117f32046d16cf46616ac3d55b4df2a988R17
 		if [[ "$fname" == "bt" && "$out_sub" == "/include/$IDF_TARGET/include" && -f "$ipath/controller/$IDF_TARGET/esp_bt_cfg.h" ]]; then
 			mkdir -p "$AR_SDK/include/$fname/controller/$IDF_TARGET"
 			cp -n "$ipath/controller/$IDF_TARGET/esp_bt_cfg.h" "$AR_SDK/include/$fname/controller/$IDF_TARGET/esp_bt_cfg.h"
@@ -434,6 +441,8 @@ done
 
 set -- $LD_LIB_FILES
 for item; do
+	#echo "***** Stripping $item"
+	"$TOOLCHAIN-strip" -g "$item"
 	cp "$item" "$AR_SDK/lib/"
 done
 
@@ -507,6 +516,7 @@ function copy_precompiled_lib(){
 	lib_file="$1"
 	lib_name="$(basename $lib_file)"
 	if [[ $LD_LIBS_SEARCH == *"$lib_name"* ]]; then
+		"$TOOLCHAIN-strip" -g "$lib_file"
 		cp "$lib_file" "$AR_SDK/ld/"
 	fi
 }
@@ -521,6 +531,13 @@ for item; do
 	for lib in `find "$item" -name '*.a'`; do
 		copy_precompiled_lib "$lib"
 	done
+done
+
+for lib in "openthread" "espressif__esp-tflite-micro" "bt" "espressif__esp_modem" "espressif__esp-zboss-lib" "espressif__esp-zigbee-lib" "espressif__mdns" "espressif__esp-dsp" "joltwallet__littlefs"; do
+	if [ -f "$AR_SDK/lib/lib$lib.a" ]; then
+		echo "Stripping $AR_SDK/lib/lib$lib.a"
+		"$TOOLCHAIN-strip" -g "$AR_SDK/lib/lib$lib.a"
+	fi
 done
 
 # Handle Mem Variants
@@ -538,6 +555,7 @@ for mem_variant in `jq -c '.mem_variants_files[]' configs/builds.json`; do
 		file=$(echo "$mem_variant" | jq -c '.file' | tr -d '"')
 		out=$(echo "$mem_variant" | jq -c '.out' | tr -d '"')
 		mv "$AR_SDK/$out" "$AR_SDK/$MEMCONF/$file"
+		"$TOOLCHAIN-strip" -g "$AR_SDK/$MEMCONF/$file"
 	fi
 done;
 
