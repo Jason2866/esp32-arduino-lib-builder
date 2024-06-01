@@ -555,7 +555,7 @@ for mem_variant in `jq -c '.mem_variants_files[]' configs/builds.json`; do
 		file=$(echo "$mem_variant" | jq -c '.file' | tr -d '"')
 		out=$(echo "$mem_variant" | jq -c '.out' | tr -d '"')
 		mv "$AR_SDK/$out" "$AR_SDK/$MEMCONF/$file"
-		"$TOOLCHAIN-strip" -g "$file"
+		"$TOOLCHAIN-strip" -g "$AR_SDK/$MEMCONF/$file"
 	fi
 done;
 
