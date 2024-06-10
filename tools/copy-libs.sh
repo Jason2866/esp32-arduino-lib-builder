@@ -503,7 +503,7 @@ if [ -d "managed_components/espressif__esp-zboss-lib/lib/$IDF_TARGET/" ]; then
 fi
 
 if [ -d "managed_components/espressif__esp32-camera/driver/private_include/" ]; then
-	cp -r "managed_components/espressif__esp32-camera/driver/private_include/cam_hal.h" "$AR_SDK/include/espressif__esp32-cameradriver/include/"
+	cp -r "managed_components/espressif__esp32-camera/driver/private_include/cam_hal.h" "$AR_SDK/include/espressif__esp32-camera/driver/include/"
 fi
 
 # sdkconfig
