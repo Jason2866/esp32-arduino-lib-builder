@@ -533,7 +533,7 @@ for item; do
 	done
 done
 
-for lib in "openthread" "espressif__esp-tflite-micro" "bt" "espressif__esp_modem" "espressif__esp-zboss-lib" "espressif__esp-zigbee-lib" "espressif__mdns" "espressif__esp-dsp" "joltwallet__littlefs"; do
+for lib in "openthread" "espressif__esp-tflite-micro" "bt" "espressif__esp_modem" "espressif__esp-zboss-lib" "espressif__esp-zigbee-lib" "espressif__mdns" "espressif__esp-dsp" "espressif__esp32-camera" "joltwallet__littlefs"; do
 	if [ -f "$AR_SDK/lib/lib$lib.a" ]; then
 		echo "Stripping $AR_SDK/lib/lib$lib.a"
 		"$TOOLCHAIN-strip" -g "$AR_SDK/lib/lib$lib.a"
