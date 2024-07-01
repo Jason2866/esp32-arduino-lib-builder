@@ -4,7 +4,7 @@
 			"file":"libspi_flash.a",
 			"src":"build/esp-idf/spi_flash/libspi_flash.a",
 			"out":"lib/libspi_flash.a",
-			"targets":["esp32","esp32c3","esp32s2","esp32s3","esp32c6","esp32h2","esp32c2"]
+			"targets":["esp32","esp32c2","esp32c3","esp32s2","esp32s3","esp32c6","esp32h2"]
 		},
 		{
 			"file":"libesp_psram.a",
@@ -131,26 +131,19 @@
 		{
 			"target": "esp32s3",
 			"features":[],
-			"idf_libs":["qio","80m","opi_ram"],
+			"idf_libs":["qio","80m","qio_ram"],
 			"bootloaders":[
 				["qio","120m","qio_ram"],
-				["qio","120m","opi_ram"],
 				["qio","80m","qio_ram"],
-                                ["qio","80m","opi_ram"],
-				["opi","120m","qio_ram"],
-				["opi","120m","opi_ram"],
-				["opi","80m","qio_ram"],
+				["dio","80m","qio_ram"],
 				["opi","80m","opi_ram"]
 			],
 			"mem_variants":[
-				["qio","120m","qio_ram"],
-				["qio","120m","opi_ram"],
-				["qio","80m","qio_ram"],
-                                ["qio","80m","opi_ram"],
-				["opi","120m","qio_ram"],
-				["opi","120m","opi_ram"],
-				["opi","80m","qio_ram"],
-				["opi","80m","opi_ram"]
+				["qio","80m","opi_ram"],
+				["dio","80m","qio_ram"],
+				["dio","80m","opi_ram"],
+				["opi","80m","opi_ram"],
+				["opi","80m","qio_ram"]
 			]
 		}
 	]
