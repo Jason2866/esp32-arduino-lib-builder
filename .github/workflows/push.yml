@@ -1,4 +1,4 @@
-name: IDF v5.1
+name: IDF v5.2
 on:
   workflow_dispatch:  # Manually start a workflow
 
