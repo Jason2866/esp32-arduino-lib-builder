@@ -76,7 +76,10 @@ extern "C" {
 /* COMMON CONFIGURATION */
 /*                      */
 
-#define CFG_TUSB_MCU				OPT_MCU_ESP32S2
+#idef CFG_TUSB_MCU
+#undef CFG_TUSB_MCU
+#endif
+#define CFG_TUSB_MCU				        OPT_MCU_ESP32S2
 #define CFG_TUSB_RHPORT0_MODE       OPT_MODE_DEVICE
 #define CFG_TUSB_OS                 OPT_OS_FREERTOS
 
