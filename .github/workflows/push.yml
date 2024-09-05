@@ -1,4 +1,4 @@
-name: IDF v5.3 with P4
+name: IDF v5.3 fix WPA3
 on:
   workflow_dispatch:  # Manually start a workflow
 
