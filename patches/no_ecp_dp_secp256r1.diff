@@ -1,4 +1,4 @@
-diff --git a/include/mbedtls/mbedtls_config.h b/include/mbedtls/mbedtls_config.h
+diff --git a/components/mbedtls/mbedtls/include/mbedtls/mbedtls_config.h b/components/mbedtls/mbedtls/include/mbedtls/mbedtls_config.h
 index 35921412c6e6..d3abe4007b83 100644
 --- a/include/mbedtls/mbedtls_config.h
 +++ b/include/mbedtls/mbedtls_config.h
