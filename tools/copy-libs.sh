@@ -63,7 +63,7 @@ LD_LIBS_SEARCH=""
 LD_SCRIPTS=""
 LD_SCRIPT_DIRS=""
 
-PIO_CC_FLAGS=""
+PIO_CC_FLAGS="-flto=auto "
 PIO_C_FLAGS=""
 PIO_CXX_FLAGS="-flto=auto "
 PIO_AS_FLAGS=""
