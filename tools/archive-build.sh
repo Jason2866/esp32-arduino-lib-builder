@@ -25,6 +25,16 @@ rm -rf arduino-esp32/idf_component_examples
 rm -rf arduino-esp32/docs
 rm -rf arduino-esp32/tests
 rm -rf arduino-esp32/idf_component_examples
+rm -rf arduino-esp32/cores/esp32/chip-debug-report.cpp
+rm -rf arduino-esp32/cores/esp32/chip-debug-report.h
+rm -rf arduino-esp32/cores/esp32/esp32-hal-tinyusb.c
+rm -rf arduino-esp32/cores/esp32/esp32-hal-tinyusb.h
+rm -rf arduino-esp32/cores/esp32/USB.cpp
+rm -rf arduino-esp32/cores/esp32/USB.h
+rm -rf arduino-esp32/cores/esp32/USBCDC.cpp
+rm -rf arduino-esp32/cores/esp32/USBCDC.h
+rm -rf arduino-esp32/cores/esp32/USBMSC.cpp
+rm -rf arduino-esp32/cores/esp32/USBMSC.h
 rm -rf arduino-esp32/libraries/RainMaker
 rm -rf arduino-esp32/libraries/Insights
 rm -rf arduino-esp32/libraries/ESP_I2S
