@@ -1,10 +1,8 @@
-
+import argparse
 import os
+import sys
 import shutil
 from os.path import join
-
-
-def check_entry_s2_sdkconfig():
 
 
 def main(dir):
@@ -17,7 +15,18 @@ def main(dir):
     with open(s2_sdkconfig_path) as src:
         line = src.readline()
         if line.startswith("# CONFIG_TINYUSB_ENABLED is not set"):
-
+            print("*** removing USB Source code, since TinyUSB is disabled ***")
+            rm -rf arduino-esp32/cores/esp32/esp32-hal-tinyusb.c
+            rm -rf arduino-esp32/cores/esp32/esp32-hal-tinyusb.h
+            rm -rf arduino-esp32/cores/esp32/USB.cpp
+            rm -rf arduino-esp32/cores/esp32/USB.h
+            rm -rf arduino-esp32/cores/esp32/USBCDC.cpp
+            rm -rf arduino-esp32/cores/esp32/USBCDC.h
+            rm -rf arduino-esp32/cores/esp32/USBMSC.cpp
+            rm -rf arduino-esp32/cores/esp32/USBMSC.h
+            
+            rm -rf arduino-esp32/libraries/USB
+    
     return 0
 
 
