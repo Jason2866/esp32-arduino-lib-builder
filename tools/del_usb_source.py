@@ -24,6 +24,8 @@ def main(dir):
             os.remove("arduino-esp32/cores/esp32/USBMSC.cpp")
             os.remove("arduino-esp32/cores/esp32/USBMSC.h")
             shutil.rmtree("arduino-esp32/libraries/USB", ignore_errors=True)
+        else:
+            print("*** TinyUSB is enabled, do no changes to USB source code ***")
         return 0
     return
 
