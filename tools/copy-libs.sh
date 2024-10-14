@@ -64,7 +64,7 @@ LD_SCRIPTS=""
 LD_SCRIPT_DIRS=""
 
 PIO_CC_FLAGS="-flto=auto "
-PIO_C_FLAGS=""
+PIO_C_FLAGS="-flto=auto"
 PIO_CXX_FLAGS="-flto=auto "
 PIO_AS_FLAGS=""
 PIO_LD_FLAGS="-flto "
