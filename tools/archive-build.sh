@@ -38,6 +38,7 @@ rm -rf arduino-esp32/libraries/ESP_SR
 rm -rf arduino-esp32/libraries/ESP_NOW
 rm -rf arduino-esp32/libraries/TFLiteMicro
 rm -rf arduino-esp32/libraries/OpenThread
+rm -rf arduino-esp32/libraries/Zigbee
 rm -rf arduino-esp32/libraries/ESP32
 rm -rf arduino-esp32/package
 rm -rf arduino-esp32/tools/esp32-arduino-libs
