@@ -1,3 +1,6 @@
+# temp disable tinyusb for P4 since compile fails
+# CONFIG_TINYUSB_ENABLED is not set
+
 CONFIG_IDF_EXPERIMENTAL_FEATURES=y
 
 # Enable LP Core
