@@ -10,7 +10,7 @@ TINYUSB_REPO_DIR="$AR_COMPS/arduino_tinyusb/tinyusb"
 #
 echo "Updating TinyUSB..."
 if [ ! -d "$TINYUSB_REPO_DIR" ]; then
-       git clone -b master --depth 1 "$TINYUSB_REPO_URL" "$TINYUSB_REPO_DIR"
+       git clone -b master "$TINYUSB_REPO_URL" "$TINYUSB_REPO_DIR"
        cd "$TINYUSB_REPO_DIR"
        git checkout a4fb8354e41b2604f66e7da22afa292b1a44f0a2
        cd -
