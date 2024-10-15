@@ -6,7 +6,7 @@ from os.path import join
 
 
 def main(dir_out):
-    s2_sdkconfig_path = os.path.join(dir_out, "arduino-esp32", "tools", "esp32-arduino-libs", "esp32s2", "bin", "sdkconfig")
+    s2_sdkconfig_path = os.path.join(dir_out, "arduino-esp32", "tools", "esp32-arduino-libs", "esp32s2", "sdkconfig")
     if os.path.exists(s2_sdkconfig_path) == False:
       print("*** sdkconfig file for esp32s2 not found, no changes done ***")
       return
