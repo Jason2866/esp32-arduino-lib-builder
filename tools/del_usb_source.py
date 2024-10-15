@@ -12,6 +12,7 @@ def main(dir_out):
       return
 
     esp32_dir = os.path.join(dir_out, "arduino-esp32", "cores", "esp32")
+    print("esp32s2 sdkconfig path", s2_sdkconfig_path)
 
     with open(s2_sdkconfig_path) as src:
         line = src.readline()
@@ -33,10 +34,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-d",
-        "--dir",
+        "--dir-out",
         dest="dir_out",
         required=True,
-        help="Path to out folder",
+        help="Path to out directory",
     )
     args = parser.parse_args()
 
