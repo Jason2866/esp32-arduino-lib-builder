@@ -36,7 +36,7 @@ if __name__ == "__main__":
         "--dir",
         dest="dir_out",
         required=True,
-        help="Directory folder where the esp32-s2 'sdkonfig' file is located",
+        help="Path to out folder",
     )
     args = parser.parse_args()
 
