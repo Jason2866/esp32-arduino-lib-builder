@@ -52,6 +52,9 @@ rm -rf arduino-esp32/programmers.txt
 rm -rf arduino-esp32/boards.txt
 rm -rf arduino-esp32/package.json
 rm -rf arduino-esp32/*.md
+
+python3 ./tools/del_usb_source.py -d "$AR_OUT"
+
 cp -Rf tools/esp32-arduino-libs arduino-esp32/tools/
 cp ../package.json arduino-esp32/package.json
 cp ../core_version.h arduino-esp32/cores/esp32/core_version.h
