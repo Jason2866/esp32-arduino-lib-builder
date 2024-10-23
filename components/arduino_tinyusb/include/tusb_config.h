@@ -72,6 +72,10 @@ extern "C" {
 #   define CONFIG_TINYUSB_VENDOR_ENABLED 0
 #endif
 
+#ifndef CONFIG_TINYUSB_NCM_ENABLED
+#   define CONFIG_TINYUSB_NCM_ENABLED 0
+#endif
+
 /*                      */
 /* COMMON CONFIGURATION */
 /*                      */
@@ -96,11 +100,18 @@ extern "C" {
 #   define CFG_TUSB_MEM_ALIGN       TU_ATTR_ALIGNED(4)
 #endif
 
+#if CONFIG_IDF_TARGET_ESP32P4
+#define CFG_TUD_MAX_SPEED OPT_MODE_HIGH_SPEED
+#else
+#define CFG_TUD_MAX_SPEED OPT_MODE_FULL_SPEED
+#endif
+
 /*                      */
 /* DRIVER CONFIGURATION */
 /*                      */
 
 #define CFG_TUD_MAINTASK_SIZE 		4096
+#define CFG_TUD_ENDOINT_SIZE 		(TUD_OPT_HIGH_SPEED ? 512 : 64)
 #define CFG_TUD_ENDOINT0_SIZE 		64
 
 // Enabled Drivers
@@ -113,6 +124,7 @@ extern "C" {
 #define CFG_TUD_DFU_RUNTIME			CONFIG_TINYUSB_DFU_RT_ENABLED
 #define CFG_TUD_DFU					CONFIG_TINYUSB_DFU_ENABLED
 #define CFG_TUD_VENDOR 				CONFIG_TINYUSB_VENDOR_ENABLED
+#define CFG_TUD_NCM 				CONFIG_TINYUSB_NCM_ENABLED
 
 // CDC FIFO size of TX and RX
 #define CFG_TUD_CDC_RX_BUFSIZE 		CONFIG_TINYUSB_CDC_RX_BUFSIZE
