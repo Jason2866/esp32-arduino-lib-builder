@@ -316,7 +316,7 @@ static void dfifo_write_packet(uint8_t rhport, uint8_t fifo_num, uint8_t const* 
 //--------------------------------------------------------------------
 // Endpoint
 //--------------------------------------------------------------------
-#if TU_CHECK_MCU(OPT_MCU_ESP32S2, OPT_MCU_ESP32S3)
+#if defined(TUP_USBIP_DWC2_ESP32)
 // Keep count of how many FIFOs are in use
 static uint8_t _allocated_fifos = 1; //FIFO0 is always in use
 
@@ -344,7 +344,7 @@ static void edpt_activate(uint8_t rhport, tusb_desc_endpoint_t const * p_endpoin
   if (dir == TUSB_DIR_IN) {
     //epctl |= (epnum << DIEPCTL_TXFNUM_Pos);
     uint8_t fifo_num = epnum;
-#if TU_CHECK_MCU(OPT_MCU_ESP32S2, OPT_MCU_ESP32S3)
+#if defined(TUP_USBIP_DWC2_ESP32)
     // Special Case for EP5, which is used by CDC but not actually called by the driver
     // we can give it a fake FIFO
     if (epnum == 5) {
@@ -866,7 +866,7 @@ void dcd_edpt_close_all(uint8_t rhport) {
     }
   }
 
-#if TU_CHECK_MCU(OPT_MCU_ESP32S2, OPT_MCU_ESP32S3)
+#if defined(TUP_USBIP_DWC2_ESP32)
   _allocated_fifos = 1;
 #endif
 
@@ -1216,7 +1216,7 @@ void dcd_int_handler(uint8_t rhport) {
   if (int_status & GINTSTS_USBRST) {
     // USBRST is start of reset.
     dwc2->gintsts = GINTSTS_USBRST;
-#if TU_CHECK_MCU(OPT_MCU_ESP32S2, OPT_MCU_ESP32S3)
+#if defined(TUP_USBIP_DWC2_ESP32)
     _allocated_fifos = 1;
 #endif
     bus_reset(rhport);
@@ -1252,7 +1252,7 @@ void dcd_int_handler(uint8_t rhport) {
     dwc2->gintsts = GINTSTS_USBSUSP;
     //dcd_event_bus_signal(rhport, DCD_EVENT_SUSPEND, true);
     dcd_event_bus_signal(rhport, DCD_EVENT_UNPLUGGED, true);
-#if TU_CHECK_MCU(OPT_MCU_ESP32S2, OPT_MCU_ESP32S3)
+#if defined(TUP_USBIP_DWC2_ESP32)
     _allocated_fifos = 1;
 #endif
   }
@@ -1271,7 +1271,7 @@ void dcd_int_handler(uint8_t rhport) {
 
     if (otg_int & GOTGINT_SEDET) {
       dcd_event_bus_signal(rhport, DCD_EVENT_UNPLUGGED, true);
-#if TU_CHECK_MCU(OPT_MCU_ESP32S2, OPT_MCU_ESP32S3)
+#if defined(TUP_USBIP_DWC2_ESP32)
       _allocated_fifos = 1;
 #endif
     }
