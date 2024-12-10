@@ -318,8 +318,8 @@ done
 
 mkdir -p "$AR_SDK"
 
-# start generation of platformio-build.py
-AR_PLATFORMIO_PY="$AR_SDK/platformio-build.py"
+# start generation of pioarduino-build.py
+AR_PLATFORMIO_PY="$AR_SDK/pioarduino-build.py"
 cat configs/pio_start.txt > "$AR_PLATFORMIO_PY"
 
 echo "    ASFLAGS=[" >> "$AR_PLATFORMIO_PY"
