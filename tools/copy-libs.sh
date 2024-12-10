@@ -36,8 +36,8 @@ fi
 if [ -e "$AR_SDK/$MEMCONF" ]; then
 	rm -rf "$AR_SDK/$MEMCONF"
 fi
-if [ -e "$AR_SDK/platformio-build.py" ]; then
-	rm -rf "$AR_SDK/platformio-build.py"
+if [ -e "$AR_SDK/pioarduino-build.py" ]; then
+	rm -rf "$AR_SDK/pioarduino-build.py"
 fi
 
 mkdir -p "$AR_SDK"
