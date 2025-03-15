@@ -7,5 +7,6 @@ CONFIG_GDMA_CTRL_FUNC_IN_IRAM=y
 # I2S_ISR_IRAM_SAFE has to be set!! Done in common config
 CONFIG_GDMA_ISR_IRAM_SAFE=y
 # Enable the XIP-PSRAM feature, so the ext-mem cache won't be disabled when SPI1 is operating the main flash
+CONFIG_SPIRAM_XIP_FROM_PSRAM=y
 CONFIG_SPIRAM_FETCH_INSTRUCTIONS=y
 CONFIG_SPIRAM_RODATA=y
