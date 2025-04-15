@@ -20,5 +20,6 @@ else
        # -ff is for cleaning untracked files as well as submodules
        git clean -ffdx
        git checkout 6689a0142dfbb2cf2bb8f7f7e4f4ae8d019648a9
+       cd -
 fi
 if [ $? -ne 0 ]; then exit 1; fi
