@@ -134,9 +134,6 @@ for item in "${@:2:${#@}-5}"; do
 	fi
 done
 
-# Remove -std=gnu++2b from PIO_CXX_FLAGS
-PIO_CXX_FLAGS="${PIO_CXX_FLAGS/-std=gnu++2b/}"
-
 #collect asm-flags
 str=`cat build/compile_commands.json | grep arduino-lib-builder-as.S | grep command | cut -d':' -f2 | cut -d',' -f1`
 str="${str:2:${#str}-1}" #remove leading space and quotes
@@ -314,6 +311,9 @@ for item; do
 		fi
 	fi
 done
+
+# Remove -std=gnu++2b from PIO_CXX_FLAGS
+PIO_CXX_FLAGS="${PIO_CXX_FLAGS/-std=gnu++2b/}"
 
 #
 # END OF DATA EXTRACTION FROM CMAKE
