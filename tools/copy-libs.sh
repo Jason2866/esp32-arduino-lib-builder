@@ -74,7 +74,7 @@ LD_SCRIPT_DIRS=""
 
 PIO_CC_FLAGS="-flto=auto "
 PIO_C_FLAGS="-flto=auto "
-PIO_CXX_FLAGS="-flto=auto "
+PIO_CXX_FLAGS="-flto=auto -std=gnu++2a "
 PIO_AS_FLAGS=""
 PIO_LD_FLAGS="-flto "
 PIO_LD_FUNCS=""
@@ -126,7 +126,9 @@ for item in "${@:2:${#@}-5}"; do
 			DEFINES+="$item "
 		fi
 	elif [ "$prefix" = "-O" ]; then
-		PIO_CC_FLAGS+="$item "
+                if [[ "$item" != "-std=gnu++2b" ]]; then
+		        PIO_CC_FLAGS+="$item "
+	        fi
 	elif [[ "$item" != "-Wall" && "$item" != "-Werror=all"  && "$item" != "-Wextra" ]]; then
 		if [[ "${item:0:23}" != "-mfix-esp32-psram-cache" && "${item:0:18}" != "-fmacro-prefix-map" && "${item:0:20}" != "-fdiagnostics-color=" && "${item:0:19}" != "-fdebug-prefix-map=" && "${item:0:8}" != "-fno-lto" ]]; then
 			C_FLAGS+="$item "
