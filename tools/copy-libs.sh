@@ -74,7 +74,8 @@ LD_SCRIPT_DIRS=""
 
 PIO_CC_FLAGS="-flto=auto "
 PIO_C_FLAGS="-flto=auto "
-PIO_CXX_FLAGS="-flto=auto -std=gnu++2a "
+PIO_CXX_FLAGS="-flto=auto "
+# PIO_CXX_FLAGS="-flto=auto -std=gnu++2a "
 PIO_AS_FLAGS=""
 PIO_LD_FLAGS="-flto "
 PIO_LD_FUNCS=""
@@ -313,7 +314,7 @@ for item; do
 done
 
 # Remove -std=gnu++2b from PIO_CXX_FLAGS
-PIO_CXX_FLAGS="${PIO_CXX_FLAGS/-std=gnu++2b/}"
+# PIO_CXX_FLAGS="${PIO_CXX_FLAGS/-std=gnu++2b/}"
 
 #
 # END OF DATA EXTRACTION FROM CMAKE
