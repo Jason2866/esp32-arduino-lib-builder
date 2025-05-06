@@ -29,7 +29,7 @@ fi
 AR_USER="tasmota"
 
 # IDF commit to use
-#IDF_COMMIT=""
+IDF_COMMIT="f66a750af995f5467fc395ee4c8e496cc4bb7650"
 
 # Arduino commit to use
 #AR_COMMIT=""
