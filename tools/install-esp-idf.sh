@@ -52,7 +52,14 @@ if [ "$IDF_TAG" ]; then
     git -C "$IDF_PATH" checkout "tags/$IDF_TAG"
     idf_was_installed="1"
 elif [ "$IDF_COMMIT" ]; then
+    cd $IDF_PATH
     git -C "$IDF_PATH" checkout "$IDF_COMMIT"
+    git reset --hard $IDF_COMMIT
+    git submodule update --recursive
+    git rm -r $IDF_PATH/components/wifi_provisioning
+    git rm -r $IDF_PATH/components/spiffs
+    git commit -m "delete components SPIFFS and wifi-provisioning"
+    cd -
     commit_predefined="1"
 fi
 
