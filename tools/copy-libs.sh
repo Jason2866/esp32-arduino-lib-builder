@@ -421,11 +421,11 @@ for item; do
 		out_cpath="$AR_SDK/include/$fname$out_sub"
 		REL_INC+="-iwithprefixbefore $fname$out_sub "
 		if [ "$out_sub" = "" ]; then
-			echo "        join($PIO_SDK, \"include\", \"$fname\")," >> "$AR_PLATFORMIO_PY"
+			echo ""
 		else
 			pio_sub="${out_sub:1}"
 			pio_sub=`echo $pio_sub | sed 's/\//\\", \\"/g'`
-			echo "        join($PIO_SDK, \"include\", \"$fname\", \"$pio_sub\")," >> "$AR_PLATFORMIO_PY"
+			echo ""
 		fi
 		for f in `find "$item" -name '*.h'`; do
 			rel_f=${f#*$item}
@@ -452,6 +452,15 @@ for item; do
 		fi
 	fi
 done
+
+set -- $REL_INC
+for item; do
+	if [ "${item:0:17}" = "-iwithprefixbefore" ]; then
+		include_path="${item:18}"
+		echo "        join($PIO_SDK, \"include\", \"$include_path\")," >> "$AR_PLATFORMIO_PY"
+	fi
+done
+
 echo "        join($PIO_SDK, board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\")), \"include\")," >> "$AR_PLATFORMIO_PY"
 echo "        join(FRAMEWORK_DIR, \"cores\", board_config.get(\"build.core\"))" >> "$AR_PLATFORMIO_PY"
 echo "    ]," >> "$AR_PLATFORMIO_PY"
