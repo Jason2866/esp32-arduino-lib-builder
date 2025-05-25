@@ -446,7 +446,7 @@ for item; do
 	fi
 done
 
-echo "        join($PIO_SDK, \"flags\", \"includes\")," >> "$AR_PLATFORMIO_PY"
+echo "        \"@\" + join(\"/\", \"flags\", \"includes\")," >> "$AR_PLATFORMIO_PY"
 echo "        join($PIO_SDK, board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\")), \"include\")," >> "$AR_PLATFORMIO_PY"
 echo "        join(FRAMEWORK_DIR, \"cores\", board_config.get(\"build.core\"))" >> "$AR_PLATFORMIO_PY"
 echo "    ]," >> "$AR_PLATFORMIO_PY"
