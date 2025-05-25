@@ -420,13 +420,6 @@ for item; do
 		out_sub="${item#*$ipath}"
 		out_cpath="$AR_SDK/include/$fname$out_sub"
 		REL_INC+="-iwithprefixbefore $fname$out_sub "
-		if [ "$out_sub" = "" ]; then
-			echo ""
-		else
-			pio_sub="${out_sub:1}"
-			pio_sub=`echo $pio_sub | sed 's/\//\\", \\"/g'`
-			echo ""
-		fi
 		for f in `find "$item" -name '*.h'`; do
 			rel_f=${f#*$item}
 			rel_p=${rel_f%/*}
