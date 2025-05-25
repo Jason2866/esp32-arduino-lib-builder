@@ -455,8 +455,8 @@ done
 
 set -- $REL_INC
 for item; do
-	if [ "${item:0:17}" = "-iwithprefixbefore" ]; then
-		include_path="${item:18}"
+	if [ "${item:0:18}" = "-iwithprefixbefore" ]; then
+		include_path="${item:19}"
 		echo "        join($PIO_SDK, \"include\", \"$include_path\")," >> "$AR_PLATFORMIO_PY"
 	fi
 done
