@@ -447,13 +447,7 @@ for item; do
 done
 
 set -- $REL_INC
-for item; do
-	if [ "${item:0:18}" = "-iwithprefixbefore" ]; then
-		include_path="${item:19}"
-		echo "        join($PIO_SDK, \"include\", \"$include_path\")," >> "$AR_PLATFORMIO_PY"
-	fi
-done
-
+echo "        join($PIO_SDK, \"flags\", \"includes\")," >> "$AR_PLATFORMIO_PY"
 echo "        join($PIO_SDK, board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\")), \"include\")," >> "$AR_PLATFORMIO_PY"
 echo "        join(FRAMEWORK_DIR, \"cores\", board_config.get(\"build.core\"))" >> "$AR_PLATFORMIO_PY"
 echo "    ]," >> "$AR_PLATFORMIO_PY"
@@ -479,7 +473,6 @@ done
 echo "    LIBPATH=[" >> "$AR_PLATFORMIO_PY"
 echo "        join($PIO_SDK, \"lib\")," >> "$AR_PLATFORMIO_PY"
 echo "        join($PIO_SDK, \"ld\")," >> "$AR_PLATFORMIO_PY"
-echo "        join($PIO_SDK, \"include\")," >> "$AR_PLATFORMIO_PY"
 echo "        join($PIO_SDK, board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\")))" >> "$AR_PLATFORMIO_PY"
 echo "    ]," >> "$AR_PLATFORMIO_PY"
 echo "" >> "$AR_PLATFORMIO_PY"
