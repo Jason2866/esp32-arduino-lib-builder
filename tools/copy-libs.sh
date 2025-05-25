@@ -477,7 +477,8 @@ echo "    ]," >> "$AR_PLATFORMIO_PY"
 echo "" >> "$AR_PLATFORMIO_PY"
 
 echo "    LIBS=[" >> "$AR_PLATFORMIO_PY"
-echo "        $PIO_LIBS" >> "$AR_PLATFORMIO_PY"
+echo "        "@" + join($PIO_SDK, "flags", "ld_libs")" >> "$AR_PLATFORMIO_PY"
+# echo "        $PIO_LIBS" >> "$AR_PLATFORMIO_PY"
 echo "    ]," >> "$AR_PLATFORMIO_PY"
 echo "" >> "$AR_PLATFORMIO_PY"
 
