@@ -1,5 +1,3 @@
-CONFIG_NEWLIB_NANO_FORMAT=y
-
 #
 # Bluetooth
 #
