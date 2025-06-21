@@ -26,7 +26,6 @@ jobs:
       uses: jason2866/action-gh-release@v1.3
       with:
         tag_name: ${{ github.run_number }}
-        target_commitish: ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
         body_path: release-info.txt
         prerelease: true
         files: |
