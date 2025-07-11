@@ -58,9 +58,23 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-    - name: Download artifacts
+    - name: Download framework artifact
       uses: actions/download-artifact@v4
-
+      with:
+        name: framework
+        path: dist
+    - name: Download slave_firmware artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: slave_firmware
+        path: slave_firmware
+    - name: Add slave_firmware to framework zip
+      run: |
+        FRAMEWORK_ZIP=$(ls dist/framework*.zip | head -n 1)
+        unzip -q "$FRAMEWORK_ZIP" -d dist/unpacked
+        cp -r slave_firmware dist/unpacked/framework-arduinoespressif32/tools/
+        (cd dist/unpacked && zip -qr ../$(basename "$FRAMEWORK_ZIP") .)
+        cp dist/release-info.txt ./
     - name: Release
       uses: jason2866/action-gh-release@v1.3
       with:
@@ -68,7 +82,6 @@ jobs:
         body_path: release-info.txt
         prerelease: true
         files: |
-          wifi_copro_fw/*
           dist/framework*
           release-info.txt
       env:
