@@ -67,17 +67,17 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: slave_firmware
-        path: slave_firmware_temp
+        path: slave_firmware
     - name: Add slave_firmware to framework zip
       run: |
         echo "Listing current directory:"
         ls -la
-        echo "Listing slave_firmware_temp directory:"
-        ls -la slave_firmware_temp/ || echo "slave_firmware_temp directory not found"
+        echo "Listing slave_firmware directory:"
+        ls -la slave_firmware/ || echo "slave_firmware directory not found"
         FRAMEWORK_ZIP=$(ls dist/framework*.zip | head -n 1)
         unzip -q "$FRAMEWORK_ZIP" -d dist/unpacked
         mkdir -p dist/unpacked/framework-arduinoespressif32/tools/slave_firmware
-        cp -r slave_firmware_temp/* dist/unpacked/framework-arduinoespressif32/tools/slave_firmware/
+        cp -r slave_firmware/* dist/unpacked/framework-arduinoespressif32/tools/slave_firmware/
         (cd dist/unpacked && zip -qr ../$(basename "$FRAMEWORK_ZIP") .)
     - name: Release
       uses: jason2866/action-gh-release@v1.3
@@ -90,3 +90,4 @@ jobs:
           release-info.txt
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
