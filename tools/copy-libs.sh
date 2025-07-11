@@ -90,7 +90,7 @@ fi
 # copy zigbee + zboss lib
 if [ -d "managed_components/espressif__esp-zigbee-lib/lib/$IDF_TARGET/" ]; then
 	cp -r "managed_components/espressif__esp-zigbee-lib/lib/$IDF_TARGET"/* "$AR_SDK/lib/"
-	EXCLUDE_LIBS+="esp_zb_api.ed;esp_zb_api.zczr;"
+	EXCLUDE_LIBS+="esp_zb_api_ed;"
 fi
 
 if [ -d "managed_components/espressif__esp-zboss-lib/lib/$IDF_TARGET/" ]; then
