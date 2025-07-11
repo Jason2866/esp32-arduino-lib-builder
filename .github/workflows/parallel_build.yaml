@@ -73,6 +73,12 @@ jobs:
         path: slave_firmware
     - name: Create complete framework
       run: |
+        echo "Listing current directory:"
+        ls -la
+        echo "Listing slave_firmware directory:"
+        ls -la slave_firmware/ || echo "slave_firmware directory not found"
+        echo "Listing dist directory:"
+        ls -la dist/ || echo "dist directory not found"
         mkdir -p out dist/framework-arduinoespressif32
         # Combine all target builds
         for zip_file in dist/artifacts-*/framework-arduinoespressif32-*.zip; do
