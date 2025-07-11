@@ -30,42 +30,6 @@ jobs:
         name: artifacts-${{ matrix.target }}
         path: dist
 
-  combine-artifacts:
-    name: Combine artifacts and create framework
-    needs: build-libs
-    runs-on: macos-14
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-    - name: Download artifacts
-      uses: actions/download-artifact@v4
-      with:
-        path: dist
-        pattern: artifacts-*
-        merge-multiple: true
-    - name: Combine artifacts into framework
-      run: |
-        mkdir -p out
-        find dist -name 'framework-arduinoespressif32-*.zip' -exec unzip -q {} -d out \;
-        cp out/package_esp32_index.template.json dist/package_esp32_index.template.json
-        rm -f out/package_esp32_index.template.json
-        # Create framework zip
-        mkdir -p dist/framework-arduinoespressif32
-        cp -r out/* dist/framework-arduinoespressif32/
-        (cd dist && zip -qr framework-arduinoespressif32.zip framework-arduinoespressif32)
-        # Create release info
-        echo "Framework built with parallel approach for all ESP32 targets" > dist/release-info.txt
-    - name: Upload framework artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: framework
-        path: |
-          dist/framework*
-          dist/release-info.txt
-
   build-slave_firmware:
     name: Build Slave Firmware
     runs-on: macos-14
@@ -86,9 +50,9 @@ jobs:
         name: slave_firmware
         path: wifi_copro_fw
 
-  release_framework:
-    name: Release Framework
-    needs: [combine-artifacts, build-slave_firmware]
+  combine-artifacts:
+    name: Combine artifacts and create framework
+    needs: [build-libs, build-slave_firmware]
     runs-on: macos-14
     steps:
     - uses: actions/checkout@v4
@@ -96,31 +60,63 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-    - name: Download framework artifact
+    - name: Download build artifacts
       uses: actions/download-artifact@v4
       with:
-        name: framework
-        path: .
-    - name: Download slave_firmware artifact
+        path: dist
+        pattern: artifacts-*
+        merge-multiple: true
+    - name: Download slave firmware
       uses: actions/download-artifact@v4
       with:
         name: slave_firmware
         path: slave_firmware
-    - name: Add slave_firmware to framework zip
+    - name: Create complete framework
       run: |
-        FRAMEWORK_ZIP=$(ls dist/framework*.zip | head -n 1)
-        unzip -q "$FRAMEWORK_ZIP" -d dist/unpacked
-        mkdir -p dist/unpacked/framework-arduinoespressif32/tools/slave_firmware
-        cp -r slave_firmware/* dist/unpacked/framework-arduinoespressif32/tools/slave_firmware/
-        (cd dist/unpacked && zip -qr ../$(basename "$FRAMEWORK_ZIP") .)
+        mkdir -p out dist/framework-arduinoespressif32 
+        # Combine all target builds
+        for zip_file in dist/artifacts-*/framework-arduinoespressif32-*.zip; do
+          echo "Processing $zip_file"
+          unzip -q "$zip_file" -d out
+        done    
+        # Copy framework files
+        cp -r out/* dist/framework-arduinoespressif32/
+        # Integrate slave firmware directly
+        mkdir -p dist/framework-arduinoespressif32/tools/slave_firmware
+        cp -r slave_firmware/* dist/framework-arduinoespressif32/tools/slave_firmware/
+        # Create final framework ZIP
+        (cd dist && zip -qr framework-arduinoespressif32.zip framework-arduinoespressif32)
+        # Create release info
+        echo "Framework built with parallel approach for all ESP32 targets" > dist/release-info.txt
+        echo "Targets: esp32, esp32s2, esp32s3, esp32c2, esp32c3, esp32c6, esp32h2, esp32p4" >> dist/release-info.txt
+        echo "Build date: $(date)" >> dist/release-info.txt
+    - name: Upload framework artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: framework
+        path: |
+          dist/framework*
+          dist/release-info.txt
+
+  release_framework:
+    name: Release Framework
+    needs: combine-artifacts
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download complete framework
+      uses: actions/download-artifact@v4
+      with:
+        name: framework
+        path: dist
     - name: Release
       uses: jason2866/action-gh-release@v1.3
       with:
         tag_name: ${{ github.run_number }}
-        body_path: release-info.txt
+        body_path: dist/release-info.txt
         prerelease: true
         files: |
           dist/framework*
-          release-info.txt
+          dist/release-info.txt
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
