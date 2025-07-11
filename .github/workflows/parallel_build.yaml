@@ -1,5 +1,5 @@
 name: IDF v5.4 parallel build
-description: Build ESP32 Arduino libraries in parallel for multiple targets and create a framework archive.
+
 on:
   workflow_dispatch:  # Manually start a workflow
 
