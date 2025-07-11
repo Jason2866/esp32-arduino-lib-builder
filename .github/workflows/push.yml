@@ -62,25 +62,19 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: framework
-        path: dist
-    - name: Move framework files to dist root
-      run: |
-        if [ -d dist/dist ]; then
-          mv dist/dist/* dist/
-          rmdir dist/dist
-        fi
+        path: .
     - name: Download slave_firmware artifact
       uses: actions/download-artifact@v4
       with:
         name: slave_firmware
-        path: slave_firmware
+        path: .
     - name: Add slave_firmware to framework zip
       run: |
         FRAMEWORK_ZIP=$(ls dist/framework*.zip | head -n 1)
         unzip -q "$FRAMEWORK_ZIP" -d dist/unpacked
-        cp -r slave_firmware dist/unpacked/framework-arduinoespressif32/tools/
+        cp -r wifi_copro_fw dist/unpacked/framework-arduinoespressif32/tools/slave_firmware
         (cd dist/unpacked && zip -qr ../$(basename "$FRAMEWORK_ZIP") .)
-        cp dist/release-info.txt ./
+        cp release-info.txt ./
     - name: Release
       uses: jason2866/action-gh-release@v1.3
       with:
