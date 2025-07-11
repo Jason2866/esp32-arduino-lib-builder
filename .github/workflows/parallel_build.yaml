@@ -1,4 +1,4 @@
-name: IDF v5.4 parallel build
+name: IDF v5.5 parallel build
 
 on:
   workflow_dispatch:  # Manually start a workflow
@@ -9,7 +9,7 @@ jobs:
     runs-on: macos-14
     strategy:
       matrix:
-        target: [esp32, esp32s2, esp32s3, esp32c2, esp32c3, esp32c6, esp32h2, esp32p4]
+        target: [esp32, esp32s2, esp32s3, esp32c2, esp32c3, esp32c5, esp32c6, esp32h2, esp32p4]
       fail-fast: true
     steps:
     - uses: actions/checkout@v4
