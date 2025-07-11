@@ -70,6 +70,10 @@ jobs:
         path: slave_firmware_temp
     - name: Add slave_firmware to framework zip
       run: |
+        echo "Listing current directory:"
+        ls -la
+        echo "Listing slave_firmware_temp directory:"
+        ls -la slave_firmware_temp/ || echo "slave_firmware_temp directory not found"
         FRAMEWORK_ZIP=$(ls dist/framework*.zip | head -n 1)
         unzip -q "$FRAMEWORK_ZIP" -d dist/unpacked
         mkdir -p dist/unpacked/framework-arduinoespressif32/tools/slave_firmware
