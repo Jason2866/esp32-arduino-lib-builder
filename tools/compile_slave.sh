@@ -11,10 +11,6 @@ echo "* Installing/Updating ESP-IDF and all components..."
 ./tools/update-components.sh
 if [ $? -ne 0 ]; then exit 1; fi
 
-# install arduino component
-./tools/install-arduino.sh
-if [ $? -ne 0 ]; then exit 1; fi
-
 # install esp-idf
 source ./tools/install-esp-idf.sh
 if [ $? -ne 0 ]; then exit 1; fi
