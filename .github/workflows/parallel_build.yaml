@@ -1,0 +1,126 @@
+name: IDF v5.4 parallel build
+description: Build ESP32 Arduino libraries in parallel for multiple targets and create a framework archive.
+on:
+  workflow_dispatch:  # Manually start a workflow
+
+jobs:
+  build-libs:
+    name: Build Libs for ${{ matrix.target }}
+    runs-on: macos-14
+    strategy:
+      matrix:
+        target: [esp32, esp32s2, esp32s3, esp32c2, esp32c3, esp32c6, esp32h2, esp32p4]
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      run: bash ./tools/prepare-ci.sh
+    - name: Get current branch
+      run: |
+        echo "GIT_BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
+    - name: Build Libs for ${{ matrix.target }}
+      run: bash ./build.sh -e -t ${{ matrix.target }}
+    - name: Upload artifacts for ${{ matrix.target }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: artifacts-${{ matrix.target }}
+        path: dist
+
+  combine-artifacts:
+    name: Combine artifacts and create framework
+    needs: build-libs
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: dist
+        pattern: artifacts-*
+        merge-multiple: true
+    - name: Combine artifacts into framework
+      run: |
+        mkdir -p out
+        find dist -name 'framework-arduinoespressif32-*.zip' -exec unzip -q {} -d out \;
+        cp out/package_esp32_index.template.json dist/package_esp32_index.template.json
+        rm -f out/package_esp32_index.template.json
+        # Create framework zip
+        mkdir -p dist/framework-arduinoespressif32
+        cp -r out/* dist/framework-arduinoespressif32/
+        (cd dist && zip -qr framework-arduinoespressif32.zip framework-arduinoespressif32)
+        # Create release info
+        echo "Framework built with parallel approach for all ESP32 targets" > dist/release-info.txt
+    - name: Upload framework artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: framework
+        path: |
+          dist/framework*
+          dist/release-info.txt
+
+  build-slave_firmware:
+    name: Build Slave Firmware
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      run: bash ./tools/prepare-ci.sh
+    - name: Build slave firmware
+      run: |
+        bash ./tools/compile_slave.sh
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: slave_firmware
+        path: |
+          wifi_copro_fw
+
+  release_framework:
+    name: Release Framework
+    needs: [combine-artifacts, build-slave_firmware]
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Download framework artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: framework
+        path: .
+    - name: Download slave_firmware artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: slave_firmware
+        path: .
+    - name: Add slave_firmware to framework zip
+      run: |
+        FRAMEWORK_ZIP=$(ls dist/framework*.zip | head -n 1)
+        unzip -q "$FRAMEWORK_ZIP" -d dist/unpacked
+        cp -r wifi_copro_fw dist/unpacked/framework-arduinoespressif32/tools/slave_firmware
+        (cd dist/unpacked && zip -qr ../$(basename "$FRAMEWORK_ZIP") .)
+    - name: Release
+      uses: jason2866/action-gh-release@v1.3
+      with:
+        tag_name: ${{ github.run_number }}
+        body_path: release-info.txt
+        prerelease: true
+        files: |
+          dist/framework*
+          release-info.txt
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
