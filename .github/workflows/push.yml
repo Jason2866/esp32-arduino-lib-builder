@@ -70,10 +70,6 @@ jobs:
         path: slave_firmware
     - name: Add slave_firmware to framework zip
       run: |
-        echo "Listing current directory:"
-        ls -la
-        echo "Listing slave_firmware directory:"
-        ls -la slave_firmware/ || echo "slave_firmware directory not found"
         FRAMEWORK_ZIP=$(ls dist/framework*.zip | head -n 1)
         unzip -q "$FRAMEWORK_ZIP" -d dist/unpacked
         mkdir -p dist/unpacked/framework-arduinoespressif32/tools/slave_firmware
@@ -90,4 +86,3 @@ jobs:
           release-info.txt
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

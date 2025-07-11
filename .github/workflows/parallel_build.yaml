@@ -84,8 +84,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: slave_firmware
-        path: |
-          wifi_copro_fw
+        path: slave_firmware
 
   release_framework:
     name: Release Framework
@@ -111,7 +110,8 @@ jobs:
       run: |
         FRAMEWORK_ZIP=$(ls dist/framework*.zip | head -n 1)
         unzip -q "$FRAMEWORK_ZIP" -d dist/unpacked
-        cp -r slave_firmware/wifi_copro_fw dist/unpacked/framework-arduinoespressif32/tools/slave_firmware
+        mkdir -p dist/unpacked/framework-arduinoespressif32/tools/slave_firmware
+        cp -r slave_firmware/* dist/unpacked/framework-arduinoespressif32/tools/slave_firmware/
         (cd dist/unpacked && zip -qr ../$(basename "$FRAMEWORK_ZIP") .)
     - name: Release
       uses: jason2866/action-gh-release@v1.3
