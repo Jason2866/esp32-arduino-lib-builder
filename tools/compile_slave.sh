@@ -7,11 +7,7 @@ export IDF_CCACHE_ENABLE=$CCACHE_ENABLE
 rm -rf dependencies.lock
 
 echo "* Installing/Updating ESP-IDF and all components..."
-# update components from git
-./tools/update-components.sh
-if [ $? -ne 0 ]; then exit 1; fi
 
-# install esp-idf
 source ./tools/install-esp-idf.sh
 if [ $? -ne 0 ]; then exit 1; fi
 
