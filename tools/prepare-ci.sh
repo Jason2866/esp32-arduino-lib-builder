@@ -12,5 +12,5 @@ brew install gawk
 brew install gperf
 #brew install ninja
 brew install ccache
-python -m pip install --upgrade pip
-pip install wheel future pyelftools
+python -m pip install uv
+uv pip install future pyelftools

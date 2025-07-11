@@ -22,6 +22,53 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.PUSH_TOKEN }}
         GIT_AUTHOR_EMAIL: ${{ secrets.PUSH_EMAIL }}
       run: bash ./build.sh
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: framework
+
+  build-slave_firmware:
+    name: Build Slave Firmware
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      run: bash ./tools/prepare-ci.sh
+    - name: Get current branch
+      run: |
+        echo "GIT_BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
+    - name: Build slave firmware
+      env:
+        GITHUB_TOKEN: ${{ secrets.PUSH_TOKEN }}
+        GIT_AUTHOR_EMAIL: ${{ secrets.PUSH_EMAIL }}
+      run: |
+        cd tools
+        bash ./compile_slave.sh
+        cd ..
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: framework
+
+  release_framework:
+    name: Release Framework
+    needs: [build-libs, build-slave_firmware]
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: framework
+
     - name: Release
       uses: jason2866/action-gh-release@v1.3
       with:
