@@ -74,7 +74,6 @@ jobs:
         unzip -q "$FRAMEWORK_ZIP" -d dist/unpacked
         cp -r wifi_copro_fw dist/unpacked/framework-arduinoespressif32/tools/slave_firmware
         (cd dist/unpacked && zip -qr ../$(basename "$FRAMEWORK_ZIP") .)
-        cp release-info.txt ./
     - name: Release
       uses: jason2866/action-gh-release@v1.3
       with:
