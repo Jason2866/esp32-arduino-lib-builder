@@ -1,0 +1,121 @@
+name: IDF v5.3 parallel build
+
+on:
+  workflow_dispatch:  # Manually start a workflow
+
+jobs:
+  build-libs:
+    name: Build Libs for ${{ matrix.target }}
+    runs-on: macos-14
+    strategy:
+      matrix:
+        target: [esp32, esp32s2, esp32s3, esp32c2, esp32c3, esp32c6, esp32h2, esp32p4]
+      fail-fast: true
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      run: bash ./tools/prepare-ci.sh
+    - name: Get current branch
+      run: |
+        echo "GIT_BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
+    - name: Build Libs for ${{ matrix.target }}
+      run: bash ./build.sh -e -t ${{ matrix.target }}
+    - name: Upload artifacts for ${{ matrix.target }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: artifacts-${{ matrix.target }}
+        path: dist
+
+  build-slave_firmware:
+    name: Build Slave Firmware
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      run: bash ./tools/prepare-ci.sh
+    - name: Build slave firmware
+      run: |
+        bash ./tools/compile_slave.sh
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: slave_firmware
+        path: wifi_copro_fw
+
+  combine-artifacts:
+    name: Combine artifacts and create framework
+    needs: [build-libs, build-slave_firmware]
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: dist
+        pattern: artifacts-*
+        merge-multiple: true
+    - name: Download slave firmware
+      uses: actions/download-artifact@v4
+      with:
+        name: slave_firmware
+        path: slave_firmware
+    - name: Create complete framework
+      run: |
+        mkdir -p out dist/framework-arduinoespressif32
+        # Combine all target builds
+        for zip_file in dist/artifacts-*/framework-arduinoespressif32-*.zip; do
+          echo "Processing $zip_file"
+          unzip -q "$zip_file" -d out
+        done
+        # Remove Arduino IDE specific files (not needed for PlatformIO)
+        rm -f out/package_esp32_index.template.json
+        # Copy framework files
+        cp -r out/* dist/framework-arduinoespressif32/
+        # Integrate slave firmware directly
+        mkdir -p dist/framework-arduinoespressif32/tools/slave_firmware
+        cp -r slave_firmware/* dist/framework-arduinoespressif32/tools/slave_firmware/
+        # Create final framework ZIP
+        (cd dist && zip -qr framework-arduinoespressif32.zip framework-arduinoespressif32)
+
+    - name: Upload framework artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: framework
+        path: |
+          dist/framework*
+          dist/release-info.txt
+
+  release_framework:
+    name: Release Framework
+    needs: combine-artifacts
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download complete framework
+      uses: actions/download-artifact@v4
+      with:
+        name: framework
+        path: dist
+    - name: Release
+      uses: jason2866/action-gh-release@v1.3
+      with:
+        tag_name: ${{ github.run_number }}
+        body_path: dist/release-info.txt
+        prerelease: true
+        files: |
+          dist/framework*
+          dist/release-info.txt
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
