@@ -4,7 +4,6 @@
 
 export IDF_CCACHE_ENABLE=$CCACHE_ENABLE
 
-mkdir -p dist
 rm -rf dependencies.lock
 
 echo "* Installing/Updating ESP-IDF and all components..."
