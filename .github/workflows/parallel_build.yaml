@@ -73,12 +73,14 @@ jobs:
         path: slave_firmware
     - name: Create complete framework
       run: |
-        mkdir -p out dist/framework-arduinoespressif32 
+        mkdir -p out dist/framework-arduinoespressif32
         # Combine all target builds
         for zip_file in dist/artifacts-*/framework-arduinoespressif32-*.zip; do
           echo "Processing $zip_file"
           unzip -q "$zip_file" -d out
-        done    
+        done
+        # Remove Arduino IDE specific files (not needed for PlatformIO)
+        rm -f out/package_esp32_index.template.json
         # Copy framework files
         cp -r out/* dist/framework-arduinoespressif32/
         # Integrate slave firmware directly
@@ -86,10 +88,7 @@ jobs:
         cp -r slave_firmware/* dist/framework-arduinoespressif32/tools/slave_firmware/
         # Create final framework ZIP
         (cd dist && zip -qr framework-arduinoespressif32.zip framework-arduinoespressif32)
-        # Create release info
-        echo "Framework built with parallel approach for all ESP32 targets" > dist/release-info.txt
-        echo "Targets: esp32, esp32s2, esp32s3, esp32c2, esp32c3, esp32c6, esp32h2, esp32p4" >> dist/release-info.txt
-        echo "Build date: $(date)" >> dist/release-info.txt
+
     - name: Upload framework artifact
       uses: actions/upload-artifact@v4
       with:
