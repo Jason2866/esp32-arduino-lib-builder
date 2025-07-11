@@ -2,7 +2,7 @@
 
 # This script is used to build the slave image for wifi_hosted
 
-export IDF_CCACHE_ENABLE=$CCACHE_ENABLE
+export IDF_CCACHE_ENABLE=${CCACHE_ENABLE:-1}
 
 rm -rf dependencies.lock
 
