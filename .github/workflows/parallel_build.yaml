@@ -6,7 +6,7 @@ on:
 jobs:
   build-libs:
     name: Build Libs for ${{ matrix.target }}
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         target: [esp32, esp32s2, esp32s3, esp32c2, esp32c3, esp32c6, esp32h2, esp32p4]
@@ -32,7 +32,7 @@ jobs:
 
   build-slave_firmware:
     name: Build Slave Firmware
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
@@ -53,7 +53,7 @@ jobs:
   combine-artifacts:
     name: Combine artifacts and create framework
     needs: [build-libs, build-slave_firmware]
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
@@ -96,7 +96,7 @@ jobs:
   release_framework:
     name: Release Framework
     needs: combine-artifacts
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Download complete framework
