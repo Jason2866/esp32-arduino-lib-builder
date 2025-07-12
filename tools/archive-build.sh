@@ -66,5 +66,6 @@ cd ../../../
 
 
 if [[ -z "$GITHUB_ACTIONS" ]]; then
+    echo "Creating PlatformIO Tasmota framework-arduinoespressif32"
     7z a -mx=9 -tzip -xr'!.*' ../$pio_zip_archive_path framework-arduinoespressif32/
 fi
