@@ -81,12 +81,12 @@ jobs:
         ls -la framework-arduinoespressif32/ || echo "framework-arduinoespressif32 directory not found"
         # Integrate slave firmware in framework
         mkdir -p framework-arduinoespressif32/tools/slave_firmware
-        mv -v slave_firmware/* framework-arduinoespressif32/tools/slave_firmware/
+        mv slave_firmware/* framework-arduinoespressif32/tools/slave_firmware/
         mv framework-arduinoespressif32/release-info.txt .
         # Create final framework ZIP
         zip -qr framework-arduinoespressif32.zip framework-arduinoespressif32
 
-    - name: Release fraamework-arduinoespressif32
+    - name: Release framework-arduinoespressif32
       uses: jason2866/action-gh-release@v1.3
       with:
         tag_name: ${{ github.run_number }}
