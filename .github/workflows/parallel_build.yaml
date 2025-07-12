@@ -77,8 +77,8 @@ jobs:
         mkdir -p framework-arduinoespressif32/tools/slave_firmware
         mv slave_firmware/* framework-arduinoespressif32/tools/slave_firmware/
         mv framework-arduinoespressif32/release-info.txt .
-        IDF_BRANCH=$(grep '^IDF_BRANCH=' framework-arduinoespressif32/release-info.txt | cut -d'=' -f2 | tr -d '"')
-        IDF_COMMIT=$(grep '^IDF_COMMIT=' framework-arduinoespressif32/release-info.txt | cut -d'=' -f2 | tr -d '"')
+        IDF_BRANCH=$(grep '^IDF_BRANCH=' release-info.txt | cut -d'=' -f2 | tr -d '"')
+        IDF_COMMIT=$(grep '^IDF_COMMIT=' release-info.txt | cut -d'=' -f2 | tr -d '"')
         idf_version_string="${IDF_BRANCH//\//_}-$IDF_COMMIT"
         7z a -mx=9 -tzip -xr'!.*' framework-arduinoespressif32-${idf_version_string}.zip framework-arduinoespressif32/
 
