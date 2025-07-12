@@ -87,6 +87,7 @@ jobs:
         # Create final framework ZIP
         cd framework-arduinoespressif32
         mv release-info.txt ..
+        cd ..
         zip -qr framework-arduinoespressif32.zip framework-arduinoespressif32
 
     - name: Release fraamework-arduinoespressif32
@@ -96,7 +97,7 @@ jobs:
         body_path: release-info.txt
         prerelease: true
         files: |
-          framework-arduinoespressif32/framework*.zip
+          framework-arduinoespressif32.zip
           release-info.txt
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
