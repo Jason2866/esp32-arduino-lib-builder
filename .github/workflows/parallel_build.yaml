@@ -23,7 +23,9 @@ jobs:
       run: |
         echo "GIT_BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
     - name: Build Libs for ${{ matrix.target }}
-      run: bash ./build.sh -e -t ${{ matrix.target }}
+      run: |
+        bash ./build.sh -e -t ${{ matrix.target }}
+        mv release-info.txt out/framework-arduinoespressif32
     - name: Upload artifacts for ${{ matrix.target }}
       uses: actions/upload-artifact@v4
       with:
@@ -63,7 +65,7 @@ jobs:
     - name: Download build artifacts
       uses: actions/download-artifact@v4
       with:
-        path: out
+        path: framework-arduinoespressif32
         pattern: artifacts-*
         merge-multiple: true
     - name: Download slave firmware
@@ -77,41 +79,24 @@ jobs:
         ls -la
         echo "Listing slave_firmware directory:"
         ls -la slave_firmware/ || echo "slave_firmware directory not found"
-        echo "Listing out directory:"
-        ls -la out/ || echo "out directory not found"
+        echo "Listing framework-arduinoespressif32 directory:"
+        ls -la framework-arduinoespressif32/ || echo "framework-arduinoespressif32 directory not found"
         # Integrate slave firmware directly
-        mkdir -p out/framework-arduinoespressif32/tools/slave_firmware
-        cp -r slave_firmware/* out/framework-arduinoespressif32/tools/slave_firmware/
+        mkdir -p framework-arduinoespressif32/tools/slave_firmware
+        cp -r slave_firmware/* framework-arduinoespressif32/tools/slave_firmware/
         # Create final framework ZIP
-        (cd dist && zip -qr framework-arduinoespressif32.zip framework-arduinoespressif32)
+        cd framework-arduinoespressif32
+        mv release-info.txt ..
+        zip -qr framework-arduinoespressif32.zip framework-arduinoespressif32
 
-    - name: Upload framework artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: framework
-        path: |
-          dist/framework*
-          dist/release-info.txt
-
-  release_framework:
-    name: Release Framework
-    needs: combine-artifacts
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Download complete framework
-      uses: actions/download-artifact@v4
-      with:
-        name: framework
-        path: dist
-    - name: Release
+    - name: Release fraamework-arduinoespressif32
       uses: jason2866/action-gh-release@v1.3
       with:
         tag_name: ${{ github.run_number }}
-        body_path: dist/release-info.txt
+        body_path: release-info.txt
         prerelease: true
         files: |
-          dist/framework*
-          dist/release-info.txt
+          framework-arduinoespressif32/framework*.zip
+          release-info.txt
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
