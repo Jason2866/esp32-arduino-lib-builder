@@ -77,17 +77,13 @@ jobs:
       run: |
         echo "Listing current directory:"
         ls -la
-        echo "Listing slave_firmware directory:"
-        ls -la slave_firmware/ || echo "slave_firmware directory not found"
         echo "Listing framework-arduinoespressif32 directory:"
         ls -la framework-arduinoespressif32/ || echo "framework-arduinoespressif32 directory not found"
-        # Integrate slave firmware directly
+        # Integrate slave firmware in framework
         mkdir -p framework-arduinoespressif32/tools/slave_firmware
-        cp -r slave_firmware/* framework-arduinoespressif32/tools/slave_firmware/
+        mv -v slave_firmware/* framework-arduinoespressif32/tools/slave_firmware/
+        mv framework-arduinoespressif32/release-info.txt .
         # Create final framework ZIP
-        cd framework-arduinoespressif32
-        mv release-info.txt ..
-        cd ..
         zip -qr framework-arduinoespressif32.zip framework-arduinoespressif32
 
     - name: Release fraamework-arduinoespressif32
