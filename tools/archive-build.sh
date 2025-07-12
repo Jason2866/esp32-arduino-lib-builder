@@ -64,4 +64,7 @@ cd ../tools/esp32-arduino-libs
 rm -rf **/flags
 cd ../../../
 
-# 7z a -mx=9 -tzip -xr'!.*' ../$pio_zip_archive_path framework-arduinoespressif32/
+
+if [[ -z "$GITHUB_ACTIONS" ]]; then
+    7z a -mx=9 -tzip -xr'!.*' ../$pio_zip_archive_path framework-arduinoespressif32/
+fi
