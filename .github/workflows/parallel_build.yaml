@@ -99,5 +99,5 @@ jobs:
       id: set_tag_name
       run: |
         IDF_VERSION=$(grep 'esp-idf branch' release-info.txt | sed -E 's/.*branch \[release\/v([0-9]+\.[0-9]+)\].*/\1/')
-        DATE=$(date +"%d.%m")
-        echo "tag_name=IDF${IDF_VERSION}-${DATE}" >> $GITHUB_OUTPUT
+        DATE=$(date +"%d%m-%H%M")
+        echo "tag_name=${DATE}-${IDF_VERSION}" >> $GITHUB_OUTPUT
