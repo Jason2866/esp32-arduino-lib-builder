@@ -28,7 +28,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: artifacts-${{ matrix.target }}
-        path: framework-arduinoespressif32
+        path: out/framework-arduinoespressif32
 
   build-slave_firmware:
     name: Build Slave Firmware
@@ -63,7 +63,7 @@ jobs:
     - name: Download build artifacts
       uses: actions/download-artifact@v4
       with:
-        path: dist
+        path: out
         pattern: artifacts-*
         merge-multiple: true
     - name: Download slave firmware
@@ -77,11 +77,11 @@ jobs:
         ls -la
         echo "Listing slave_firmware directory:"
         ls -la slave_firmware/ || echo "slave_firmware directory not found"
-        echo "Listing dist directory:"
-        ls -la dist/ || echo "dist directory not found"
+        echo "Listing out directory:"
+        ls -la out/ || echo "out directory not found"
         # Integrate slave firmware directly
-        mkdir -p dist/framework-arduinoespressif32/tools/slave_firmware
-        cp -r slave_firmware/* dist/framework-arduinoespressif32/tools/slave_firmware/
+        mkdir -p out/framework-arduinoespressif32/tools/slave_firmware
+        cp -r slave_firmware/* out/framework-arduinoespressif32/tools/slave_firmware/
         # Create final framework ZIP
         (cd dist && zip -qr framework-arduinoespressif32.zip framework-arduinoespressif32)
 
