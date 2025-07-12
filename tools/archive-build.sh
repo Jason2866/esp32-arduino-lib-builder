@@ -63,4 +63,12 @@ rm -rf **/examples
 cd ../tools/esp32-arduino-libs
 rm -rf **/flags
 cd ../../../
+
+echo "Listing current directory:"
+ls -la
+echo "Listing dist directory:"
+ls -la dist/ || echo "dist directory not found"
+echo "Listing framework-arduinoespressif32 directory:"
+ls -la framework-arduinoespressif32/ || echo "framework-arduinoespressif32 directory not found"
+
 # 7z a -mx=9 -tzip -xr'!.*' ../$pio_zip_archive_path framework-arduinoespressif32/
