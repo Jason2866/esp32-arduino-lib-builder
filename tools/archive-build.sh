@@ -10,7 +10,7 @@ pio_zip_archive_path="dist/framework-arduinoespressif32-$TARGET-$idf_version_str
 mkdir -p dist && rm -rf "$archive_path" "$build_archive_path"
 
 cd out
-echo "Creating PlatformIO Tasmota framework-arduinoespressif32"
+echo "Copying built MCU libs to framework"
 mkdir -p arduino-esp32/cores/esp32
 mkdir -p arduino-esp32/tools/partitions
 cp -rf ../components/arduino/tools arduino-esp32
@@ -61,8 +61,11 @@ mv arduino-esp32/ framework-arduinoespressif32/
 cd framework-arduinoespressif32/libraries
 rm -rf **/examples
 cd ../tools/esp32-arduino-libs
-# rm -rf **/flags
+rm -rf **/flags
 cd ../../../
-# If the framework is needed as tar.gz uncomment next line
-# tar --exclude=.* -zcf ../$pio_archive_path framework-arduinoespressif32/
-7z a -mx=9 -tzip -xr'!.*' ../$pio_zip_archive_path framework-arduinoespressif32/
+
+
+if [[ -z "$GITHUB_ACTIONS" ]]; then
+    echo "Creating PlatformIO Tasmota framework-arduinoespressif32"
+    7z a -mx=9 -tzip -xr'!.*' ../$pio_zip_archive_path framework-arduinoespressif32/
+fi
