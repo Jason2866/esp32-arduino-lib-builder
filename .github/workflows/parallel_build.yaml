@@ -85,7 +85,7 @@ jobs:
     - name: Release framework-arduinoespressif32
       uses: jason2866/action-gh-release@v1.3
       with:
-        tag_name: ${{ github.run_number }}
+        tag_name: ${{ steps.set_tag_name.outputs.tag_name }}
         body_path: release-info.txt
         prerelease: true
         files: |
@@ -93,3 +93,9 @@ jobs:
           release-info.txt
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Set tag name
+      id: set_tag_name
+      run: |
+        IDF_VERSION=$(grep '^IDF_VERSION=' release-info.txt | cut -d'=' -f2 | cut -d'.' -f1,2 | tr -d '"')
+        DATE=$(date +"%d.%m")
+        echo "tag_name=IDF${IDF_VERSION}-${DATE}" >> $GITHUB_OUTPUT
