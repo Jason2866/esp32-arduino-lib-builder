@@ -83,8 +83,11 @@ jobs:
         mkdir -p framework-arduinoespressif32/tools/slave_firmware
         mv slave_firmware/* framework-arduinoespressif32/tools/slave_firmware/
         mv framework-arduinoespressif32/release-info.txt .
+        IDF_BRANCH=$(grep '^IDF_BRANCH=' framework-arduinoespressif32/release-info.txt | cut -d'=' -f2 | tr -d '"')
+        IDF_COMMIT=$(grep '^IDF_COMMIT=' framework-arduinoespressif32/release-info.txt | cut -d'=' -f2 | tr -d '"')
+        idf_version_string="${IDF_BRANCH//\//_}-$IDF_COMMIT"
         # Create final framework ZIP
-        zip -qr framework-arduinoespressif32.zip framework-arduinoespressif32
+        zip -qr framework-arduinoespressif32-${idf_version_string}.zip framework-arduinoespressif32
 
     - name: Release framework-arduinoespressif32
       uses: jason2866/action-gh-release@v1.3
@@ -93,7 +96,7 @@ jobs:
         body_path: release-info.txt
         prerelease: true
         files: |
-          framework-arduinoespressif32.zip
+          framework-arduinoespressif32-*.zip
           release-info.txt
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
