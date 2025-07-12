@@ -6,7 +6,7 @@ on:
 jobs:
   build-libs:
     name: Build Libs for ${{ matrix.target }}
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         target: [esp32, esp32s2, esp32s3, esp32c2, esp32c3, esp32c6, esp32h2, esp32p4]
@@ -23,16 +23,18 @@ jobs:
       run: |
         echo "GIT_BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
     - name: Build Libs for ${{ matrix.target }}
-      run: bash ./build.sh -e -t ${{ matrix.target }}
+      run: |
+        bash ./build.sh -e -t ${{ matrix.target }}
+        mv release-info.txt out/framework-arduinoespressif32
     - name: Upload artifacts for ${{ matrix.target }}
       uses: actions/upload-artifact@v4
       with:
         name: artifacts-${{ matrix.target }}
-        path: framework-arduinoespressif32
+        path: out/framework-arduinoespressif32
 
   build-slave_firmware:
     name: Build Slave Firmware
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
@@ -42,8 +44,7 @@ jobs:
     - name: Install dependencies
       run: bash ./tools/prepare-ci.sh
     - name: Build slave firmware
-      run: |
-        bash ./tools/compile_slave.sh
+      run: bash ./tools/compile_slave.sh
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -53,7 +54,7 @@ jobs:
   combine-artifacts:
     name: Combine artifacts and create framework
     needs: [build-libs, build-slave_firmware]
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
@@ -63,7 +64,7 @@ jobs:
     - name: Download build artifacts
       uses: actions/download-artifact@v4
       with:
-        path: dist
+        path: framework-arduinoespressif32
         pattern: artifacts-*
         merge-multiple: true
     - name: Download slave firmware
@@ -73,45 +74,31 @@ jobs:
         path: slave_firmware
     - name: Create complete framework
       run: |
-        echo "Listing current directory:"
-        ls -la
-        echo "Listing slave_firmware directory:"
-        ls -la slave_firmware/ || echo "slave_firmware directory not found"
-        echo "Listing dist directory:"
-        ls -la dist/ || echo "dist directory not found"
-        # Integrate slave firmware directly
-        mkdir -p dist/framework-arduinoespressif32/tools/slave_firmware
-        cp -r slave_firmware/* dist/framework-arduinoespressif32/tools/slave_firmware/
-        # Create final framework ZIP
-        (cd dist && zip -qr framework-arduinoespressif32.zip framework-arduinoespressif32)
+        mkdir -p framework-arduinoespressif32/tools/slave_firmware
+        mv slave_firmware/* framework-arduinoespressif32/tools/slave_firmware/
+        mv framework-arduinoespressif32/release-info.txt .
+        IDF_BRANCH=$(grep 'esp-idf branch' release-info.txt | sed -E 's/.*branch \[([^]]+)\].*/\1/')
+        IDF_COMMIT=$(grep 'esp-idf branch' release-info.txt | sed -E 's/.*commit \[([^]]+)\].*/\1/')
+        echo "IDF_BRANCH=$IDF_BRANCH"
+        echo "IDF_COMMIT=$IDF_COMMIT"
+        idf_version_string="${IDF_BRANCH//\//_}-$IDF_COMMIT"
+        7z a -mx=9 -tzip -xr'!.*' framework-arduinoespressif32-${idf_version_string}.zip framework-arduinoespressif32/
 
-    - name: Upload framework artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: framework
-        path: |
-          dist/framework*
-          dist/release-info.txt
+    - name: Set tag name
+      id: set_tag_name
+      run: |
+        IDF_VERSION=$(grep 'esp-idf branch' release-info.txt | sed -E 's/.*branch \[release\/v([0-9]+\.[0-9]+)\].*/\1/')
+        DATE=$(date +"%d%m-%H%M")
+        echo "tag_name=${DATE}-${IDF_VERSION}" >> $GITHUB_OUTPUT
 
-  release_framework:
-    name: Release Framework
-    needs: combine-artifacts
-    runs-on: macos-14
-    steps:
-    - uses: actions/checkout@v4
-    - name: Download complete framework
-      uses: actions/download-artifact@v4
-      with:
-        name: framework
-        path: dist
-    - name: Release
+    - name: Release framework-arduinoespressif32
       uses: jason2866/action-gh-release@v1.3
       with:
-        tag_name: ${{ github.run_number }}
-        body_path: dist/release-info.txt
+        tag_name: ${{ steps.set_tag_name.outputs.tag_name }}
+        body_path: release-info.txt
         prerelease: true
         files: |
-          dist/framework*
-          dist/release-info.txt
+          framework-arduinoespressif32-*.zip
+          release-info.txt
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
