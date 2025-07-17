@@ -1,4 +1,4 @@
-name: IDF v5.5 parallel build
+name: IDF v5.5 clang build
 
 on:
   workflow_dispatch:  # Manually start a workflow
