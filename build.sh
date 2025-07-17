@@ -90,6 +90,7 @@ shift $((OPTIND -1))
 CONFIGS=$@
 
 export IDF_CCACHE_ENABLE=$CCACHE_ENABLE
+export IDF_TOOLCHAIN=clang
 
 # Output the TARGET array
 echo "TARGET(s): ${TARGET[@]}"
