@@ -98,7 +98,7 @@ jobs:
               # Remove existing CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET line if it exists
               sed -i '/^CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET/d' "$sdkconfig_path"
               # Add new CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET line
-              echo "CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET=$FIRMWARE_VERSION" >> "$sdkconfig_path"
+              echo "CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET=\"$FIRMWARE_VERSION\"" >> "$sdkconfig_path"
             else
               echo "Warning: sdkconfig file not found at $sdkconfig_path"
             fi
