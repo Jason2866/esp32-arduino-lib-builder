@@ -82,6 +82,31 @@ jobs:
         echo "IDF_BRANCH=$IDF_BRANCH"
         echo "IDF_COMMIT=$IDF_COMMIT"
         idf_version_string="${IDF_BRANCH//\//_}-$IDF_COMMIT"
+        
+        # Update sdkconfig files with slave firmware version
+        if [ -f "framework-arduinoespressif32/tools/slave_firmware/coprocessor_fw_version.txt" ]; then
+          FIRMWARE_VERSION=$(cat framework-arduinoespressif32/tools/slave_firmware/coprocessor_fw_version.txt)
+          echo "Found firmware version: $FIRMWARE_VERSION"
+          
+          # Array of MCU targets that need sdkconfig updates
+          mcu_targets=("esp32" "esp32s2" "esp32s3" "esp32c2" "esp32c3" "esp32c5" "esp32c6" "esp32h2" "esp32p4")
+          
+          for mcu in "${mcu_targets[@]}"; do
+            sdkconfig_path="framework-arduinoespressif32/tools/esp32-arduino-libs/$mcu/sdkconfig"
+            if [ -f "$sdkconfig_path" ]; then
+              echo "Updating $sdkconfig_path with firmware version: $FIRMWARE_VERSION"
+              # Remove existing CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET line if it exists
+              sed -i '/^CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET/d' "$sdkconfig_path"
+              # Add new CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET line
+              echo "CONFIG_ESP_HOSTED_IDF_SLAVE_TARGET=$FIRMWARE_VERSION" >> "$sdkconfig_path"
+            else
+              echo "Warning: sdkconfig file not found at $sdkconfig_path"
+            fi
+          done
+        else
+          echo "Warning: coprocessor_fw_version.txt not found"
+        fi
+        
         7z a -mx=9 -tzip -xr'!.*' framework-arduinoespressif32-${idf_version_string}.zip framework-arduinoespressif32/
 
     - name: Set tag name
