@@ -49,7 +49,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: slave_firmware
-        path: wifi_copro_fw
+        path: ./esp-hosted-mcu/slave/wifi_copro_fw
 
   combine-artifacts:
     name: Combine artifacts and create framework
