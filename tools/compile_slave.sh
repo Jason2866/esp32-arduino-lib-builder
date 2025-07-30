@@ -24,7 +24,6 @@ slave_targets=(
 )
 
 # idf.py create-project-from-example "espressif/esp_hosted:slave"
-idf.py build
 mkdir wifi_copro_fw
 
 echo "Found firmware version: $(<./main/coprocessor_fw_version.txt)"
