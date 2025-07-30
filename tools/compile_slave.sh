@@ -11,6 +11,8 @@ echo "* Installing/Updating ESP-IDF and all components..."
 source ./tools/install-esp-idf.sh
 if [ $? -ne 0 ]; then exit 1; fi
 
+git clone https://github.com/Jason2866/esp-hosted-mcu.git
+cd ./esp-hosted-mcu/slave
 
 slave_targets=(
     "esp32"
@@ -21,9 +23,10 @@ slave_targets=(
     "esp32c6"
 )
 
-idf.py create-project-from-example "espressif/esp_hosted:slave"
+# idf.py create-project-from-example "espressif/esp_hosted:slave"
+idf.pyy build
 mkdir wifi_copro_fw
-cd ./slave
+
 echo "Found firmware version: $(<./main/coprocessor_fw_version.txt)"
 
 for target in "${slave_targets[@]}"; do
