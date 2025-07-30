@@ -85,6 +85,11 @@ if [ ! -x $idf_was_installed ] || [ ! -x $commit_predefined ]; then
 	#patch -p1 -N -i $AR_PATCHES/esp32s2_i2c_ll_master_init.diff
 	#cd -
 
+ 	# Temporarily patch esp-hosted-mcu bt driver vhci_drv (missign define)
+  	cd $IDF_PATH
+  	patch -p1 -N -i $AR_PATCHES/hosted_mcu_vhci_drv.diff
+   	cd -
+
         # Get the exact IDF version from file "version.txt"
 	cd $IDF_PATH
 	export IDF_VERSION=$(<version.txt)
