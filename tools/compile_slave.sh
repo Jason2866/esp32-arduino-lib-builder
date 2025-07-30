@@ -12,7 +12,7 @@ source ./tools/install-esp-idf.sh
 if [ $? -ne 0 ]; then exit 1; fi
 
 git clone https://github.com/Jason2866/esp-hosted-mcu.git
-cd ./esp-hosted-mcu/slave
+cd esp-hosted-mcu/slave
 
 slave_targets=(
     "esp32"
@@ -25,7 +25,7 @@ slave_targets=(
 
 # idf.py create-project-from-example "espressif/esp_hosted:slave"
 mkdir wifi_copro_fw
-
+# cd ./slave
 echo "Found firmware version: $(<./main/coprocessor_fw_version.txt)"
 
 for target in "${slave_targets[@]}"; do
@@ -33,8 +33,34 @@ for target in "${slave_targets[@]}"; do
     idf.py set-target "$target"
     idf.py clean
     idf.py build
-    cp ./build/network_adapter.bin ../wifi_copro_fw/network_adapter_"$target".bin
+    cp ./build/network_adapter.bin ./wifi_copro_fw/network_adapter_"$target".bin
     echo "Build completed for target: $target"
 done
 
-cp ./main/coprocessor_fw_version.txt ../wifi_copro_fw/coprocessor_fw_version.txt
+INPUT_FILE="./main/coprocessor_fw_version.h"
+OUTPUT_FILE="./wifi_copro_fw/coprocessor_fw_version.txt"
+
+# Prüfen ob Eingabedatei existiert
+if [ ! -f "$INPUT_FILE" ]; then
+    echo "Fehler: Datei $INPUT_FILE nicht gefunden!"
+    exit 1
+fi
+
+# Versionsnummern extrahieren
+MAJOR=$(grep "PROJECT_VERSION_MAJOR_1" "$INPUT_FILE" | sed 's/.*PROJECT_VERSION_MAJOR_1 \([0-9]*\).*/\1/')
+MINOR=$(grep "PROJECT_VERSION_MINOR_1" "$INPUT_FILE" | sed 's/.*PROJECT_VERSION_MINOR_1 \([0-9]*\).*/\1/')
+PATCH=$(grep "PROJECT_VERSION_PATCH_1" "$INPUT_FILE" | sed 's/.*PROJECT_VERSION_PATCH_1 \([0-9]*\).*/\1/')
+
+# Prüfen ob alle Werte gefunden wurden
+if [ -z "$MAJOR" ] || [ -z "$MINOR" ] || [ -z "$PATCH" ]; then
+    echo "Fehler: Konnte nicht alle Versionsnummern extrahieren!"
+    echo "MAJOR: '$MAJOR', MINOR: '$MINOR', PATCH: '$PATCH'"
+    exit 1
+fi
+
+# Version zusammensetzen und in Datei schreiben
+VERSION="$MAJOR.$MINOR.$PATCH"
+echo "$VERSION" > "$OUTPUT_FILE"
+
+echo "Version $VERSION wurde in $OUTPUT_FILE geschrieben."
+
