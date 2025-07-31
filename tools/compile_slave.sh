@@ -37,7 +37,7 @@ done
 
 echo "Extracting firmware version from header…"
 
-INPUT_FILE="./main/coprocessor_fw_version.h"
+INPUT_FILE="./main/esp_hosted_coprocessor_fw_ver.h"
 OUTPUT_FILE="./wifi_copro_fw/coprocessor_fw_version.txt"
 
 if [ ! -f "$INPUT_FILE" ]; then
