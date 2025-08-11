@@ -11,8 +11,7 @@ echo "* Installing/Updating ESP-IDF and all components..."
 source ./tools/install-esp-idf.sh
 if [ $? -ne 0 ]; then exit 1; fi
 
-# use fork until upstream bugs are fixed
-git clone --depth 1 https://github.com/Jason2866/esp-hosted-mcu.git || {
+git clone --depth 1 https://github.com/espressif/esp-hosted-mcu.git || {
   echo "Failed to clone esp-hosted-mcu"; exit 1; }
 cd esp-hosted-mcu/slave || exit 1
 mkdir wifi_copro_fw
