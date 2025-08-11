@@ -1,9 +1,0 @@
-dependencies:
-  # Required IDF version
-  idf: ">=5.3"
-  espressif/esp_hosted:
-    version: "master"
-    git: https://github.com/Jason2866/esp-hosted-mcu.git
-    require: public
-    rules:
-      - if: "target in [esp32p4]"
