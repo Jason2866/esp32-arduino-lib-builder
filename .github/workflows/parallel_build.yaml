@@ -1,4 +1,4 @@
-name: IDF v5.5 parallel build
+name: IDF v5.5 based build
 
 on:
   workflow_dispatch:  # Manually start a workflow
