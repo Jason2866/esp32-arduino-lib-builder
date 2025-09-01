@@ -18,4 +18,7 @@ else
        git clean -ffdx
        cd -
 fi
+cd $TINYUSB_REPO_DIR
+patch -p1 -N -i $AR_PATCHES/dwc2_esp32_h.diff
+cd -
 if [ $? -ne 0 ]; then exit 1; fi
