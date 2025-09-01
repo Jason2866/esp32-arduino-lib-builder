@@ -35,7 +35,6 @@ rm -rf arduino-esp32/libraries/BluetoothSerial
 rm -rf arduino-esp32/libraries/WiFiProv
 rm -rf arduino-esp32/libraries/WiFiClientSecure
 rm -rf arduino-esp32/libraries/NetworkClientSecure
-rm -rf arduino-esp32/libraries/USB
 rm -rf arduino-esp32/libraries/ESP_SR
 rm -rf arduino-esp32/libraries/ESP_NOW
 rm -rf arduino-esp32/libraries/TFLiteMicro
