@@ -76,10 +76,6 @@ extern "C" {
 #   define CONFIG_TINYUSB_NCM_ENABLED 0
 #endif
 
-#if CONFIG_TINYUSB_ENABLED
-#	define CFG_TUD_ENABLED 1
-#endif
-
 /*                      */
 /* COMMON CONFIGURATION */
 /*                      */
@@ -165,27 +161,6 @@ extern "C" {
 // VENDOR FIFO size of TX and RX
 #define CFG_TUD_VENDOR_RX_BUFSIZE 	CONFIG_TINYUSB_VENDOR_RX_BUFSIZE
 #define CFG_TUD_VENDOR_TX_BUFSIZE 	CONFIG_TINYUSB_VENDOR_TX_BUFSIZE
-
-/*                      */
-/*  HOST CONFIGURATION  */
-/*                      */
-
-#define CFG_TUH_ENABLED             CFG_TUD_ENABLED
-#define CFG_TUSB_RHPORT1_MODE       OPT_MODE_HOST
-#define BOARD_TUH_RHPORT            1
-#define BOARD_TUH_MAX_SPEED         CFG_TUD_MAX_SPEED
-#define CFG_TUH_ENUMERATION_BUFSIZE 256
-
-#define CFG_TUH_HUB                 2 // number of supported hubs
-#define CFG_TUH_CDC                 1 // CDC ACM
-#define CFG_TUH_CDC_FTDI            1 // FTDI Serial.  FTDI is not part of CDC class, only to re-use CDC driver API
-#define CFG_TUH_CDC_CP210X          1 // CP210x Serial. CP210X is not part of CDC class, only to re-use CDC driver API
-#define CFG_TUH_CDC_CH34X           1 // CH340 or CH341 Serial. CH34X is not part of CDC class, only to re-use CDC driver API
-#define CFG_TUH_HID                 1 // typical keyboard + mouse device can have 3-4 HID interfaces
-#define CFG_TUH_MSC                 1
-//#define CFG_TUH_VENDOR              3
-
-#define CFG_TUH_DEVICE_MAX          (3*CFG_TUH_HUB + 1)
 
 //------------- HID -------------//
 #define CFG_TUH_HID_EPIN_BUFSIZE    64
