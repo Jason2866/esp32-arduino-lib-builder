@@ -76,9 +76,11 @@ extern "C" {
 #   define CONFIG_TINYUSB_NCM_ENABLED 0
 #endif
 
+/*
 #if CONFIG_TINYUSB_ENABLED
 #	define CFG_TUD_ENABLED 1
 #endif
+*/
 
 /*                      */
 /* COMMON CONFIGURATION */
