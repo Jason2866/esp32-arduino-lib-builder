@@ -77,7 +77,7 @@ extern "C" {
 #endif
 
 #if CONFIG_TINYUSB_ENABLED
-#	  define CFG_TUD_ENABLED 1
+#   define CFG_TUD_ENABLED 1
 #endif
 
 /*                      */
