@@ -57,7 +57,7 @@ menu "Arduino TinyUSB"
 
         config TINYUSB_MSC_ENABLED
             bool "Enable USB Mass Storage (MSC) TinyUSB driver"
-            default y
+            default n
             help
                 Enable USB Mass Storage (MSC) TinyUSB driver.
 
@@ -83,7 +83,7 @@ menu "Arduino TinyUSB"
 
         config TINYUSB_HID_ENABLED
             bool "Enable USB Human Interface (HID) TinyUSB driver"
-            default y
+            default n
             help
                 Enable USB Human Interface (HID) TinyUSB driver.
 
@@ -109,7 +109,7 @@ menu "Arduino TinyUSB"
 
         config TINYUSB_MIDI_ENABLED
             bool "Enable USB MIDI TinyUSB driver"
-            default y
+            default n
             help
                 Enable USB MIDI TinyUSB driver.
 
@@ -143,7 +143,7 @@ menu "Arduino TinyUSB"
 
         config TINYUSB_VIDEO_ENABLED
             bool "Enable USB VIDEO TinyUSB driver"
-            default y
+            default n
             help
                 Enable USB VIDEO TinyUSB driver.
 
@@ -177,7 +177,7 @@ menu "Arduino TinyUSB"
 
         config TINYUSB_DFU_RT_ENABLED
             bool "Enable USB DFU Runtime TinyUSB driver"
-            default y
+            default n
             help
                 Enable USB DFU Runtime TinyUSB driver.
 
@@ -195,7 +195,7 @@ menu "Arduino TinyUSB"
 
         config TINYUSB_DFU_ENABLED
             bool "Enable USB DFU TinyUSB driver"
-            default y
+            default n
             help
                 Enable USB DFU TinyUSB driver.
 
@@ -220,7 +220,7 @@ menu "Arduino TinyUSB"
 
         config TINYUSB_VENDOR_ENABLED
             bool "Enable USB VENDOR TinyUSB driver"
-            default y
+            default n
             help
                 Enable USB VENDOR TinyUSB driver.
 
