@@ -332,7 +332,7 @@ if [ "$IS_XTENSA" = "y" ]; then
 elif [ "$IDF_TARGET" = "esp32p4" ]; then
 	echo "        \"-march=rv32imafc_zicsr_zifencei_xesppie\"" >> "$AR_PLATFORMIO_PY"
 else
-	echo "        \"-march=rv32imc\"" >> "$AR_PLATFORMIO_PY"
+	echo "        \"-march=rv32imc_zicsr_zifencei\"" >> "$AR_PLATFORMIO_PY"
 fi
 echo "    ]," >> "$AR_PLATFORMIO_PY"
 echo "" >> "$AR_PLATFORMIO_PY"
