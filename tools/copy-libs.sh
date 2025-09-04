@@ -329,6 +329,8 @@ cat configs/pio_start.txt > "$AR_PLATFORMIO_PY"
 echo "    ASFLAGS=[" >> "$AR_PLATFORMIO_PY"
 if [ "$IS_XTENSA" = "y" ]; then
 	echo "        \"-mlongcalls\"" >> "$AR_PLATFORMIO_PY"
+elif [ "$IDF_TARGET" = "esp32p4" ]; then
+	echo "        \"-march=rv32imafc_zicsr_zifencei_xesppie\"" >> "$AR_PLATFORMIO_PY"
 else
 	echo "        \"-march=rv32imc\"" >> "$AR_PLATFORMIO_PY"
 fi
