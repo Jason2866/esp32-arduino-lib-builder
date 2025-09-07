@@ -326,7 +326,7 @@ mkdir -p "$AR_SDK"
 PIO_AS_FLAGS=$(
     {Öl 
         echo "$PIO_CXX_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*|\-mlongcalls'
-        echo "$PIO_C_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*|\-mlongcalls'
+        echo "$PIO_CC_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*|\-mlongcalls'
     } | awk '!seen[$0]++' | paste -sd ' '
 )
 
