@@ -322,6 +322,9 @@ done
 
 mkdir -p "$AR_SDK"
 
+# Extract AS flags with "-m"
+PIO_AS_FLAGS=$(echo "$AS_FLAGS" | grep -o '\-m[^[:space:]]*')
+
 # start generation of pioarduino-build.py
 AR_PLATFORMIO_PY="$AR_SDK/pioarduino-build.py"
 cat configs/pio_start.txt > "$AR_PLATFORMIO_PY"
