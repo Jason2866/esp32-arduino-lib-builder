@@ -75,6 +75,7 @@ LD_SCRIPT_DIRS=""
 PIO_CC_FLAGS="-flto=auto "
 PIO_C_FLAGS="-flto=auto "
 PIO_CXX_FLAGS="-flto=auto "
+# PIO_CXX_FLAGS="-flto=auto -std=gnu++2a "
 PIO_AS_FLAGS=""
 PIO_LD_FLAGS="-flto "
 PIO_LD_FUNCS=""
@@ -126,7 +127,7 @@ for item in "${@:2:${#@}-5}"; do
 			DEFINES+="$item "
 		fi
 	elif [ "$prefix" = "-O" ]; then
-		PIO_CC_FLAGS+="$item "
+                PIO_CC_FLAGS+="$item "
 	elif [[ "$item" != "-Wall" && "$item" != "-Werror=all"  && "$item" != "-Wextra" ]]; then
 		if [[ "${item:0:23}" != "-mfix-esp32-psram-cache" && "${item:0:18}" != "-fmacro-prefix-map" && "${item:0:20}" != "-fdiagnostics-color=" && "${item:0:19}" != "-fdebug-prefix-map=" && "${item:0:8}" != "-fno-lto" ]]; then
 			C_FLAGS+="$item "
@@ -312,24 +313,32 @@ for item; do
 	fi
 done
 
+# Remove -std=gnu++2b from PIO_CXX_FLAGS
+# PIO_CXX_FLAGS="${PIO_CXX_FLAGS/-std=gnu++2b/}"
+
 #
 # END OF DATA EXTRACTION FROM CMAKE
 #
 
 mkdir -p "$AR_SDK"
 
+# Keep only -march, -mabi and -mlongcalls flags for Assembler
+PIO_AS_FLAGS=$(
+    {
+        echo "$PIO_CXX_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*|\-mlongcalls'
+        echo "$PIO_CC_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*|\-mlongcalls'
+    } | awk '!seen[$0]++' | paste -sd ' '
+)
+
 # start generation of pioarduino-build.py
 AR_PLATFORMIO_PY="$AR_SDK/pioarduino-build.py"
 cat configs/pio_start.txt > "$AR_PLATFORMIO_PY"
 
 echo "    ASFLAGS=[" >> "$AR_PLATFORMIO_PY"
-if [ "$IS_XTENSA" = "y" ]; then
-	echo "        \"-mlongcalls\"" >> "$AR_PLATFORMIO_PY"
-elif [ "$IDF_TARGET" = "esp32p4" ]; then
-	echo "        \"-march=rv32imafc_zicsr_zifencei_xesppie\"" >> "$AR_PLATFORMIO_PY"
-else
-	echo "        \"-march=rv32imc_zicsr_zifencei\"" >> "$AR_PLATFORMIO_PY"
-fi
+set -- $PIO_AS_FLAGS
+for item; do
+	echo "        \"$item\"," >> "$AR_PLATFORMIO_PY"
+done
 echo "    ]," >> "$AR_PLATFORMIO_PY"
 echo "" >> "$AR_PLATFORMIO_PY"
 
