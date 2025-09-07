@@ -322,12 +322,12 @@ done
 
 mkdir -p "$AR_SDK"
 
-# Extract flags with "-m"
+# Keep only -march, -mabi and -mlongcalls flags for Assembler
 PIO_AS_FLAGS=$(
-    {
-        echo "$PIO_CXX_FLAGS" | grep -o '\-m[^[:space:]]*'
-        echo "$PIO_CC_FLAGS" | grep -o '\-m[^[:space:]]*'
-    } | awk '!seen[$0]++' | tr '\n' ' '
+    {Öl 
+        echo "$PIO_CXX_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*|\-mlongcalls'
+        echo "$PIO_C_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*|\-mlongcalls'
+    } | awk '!seen[$0]++' | paste -sd ' '
 )
 
 # start generation of pioarduino-build.py
