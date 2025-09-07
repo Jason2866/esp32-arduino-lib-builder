@@ -322,18 +322,23 @@ done
 
 mkdir -p "$AR_SDK"
 
+# Keep only -march, -mabi and -mlongcalls flags for Assembler
+PIO_AS_FLAGS=$(
+    {
+        echo "$PIO_CXX_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*|\-mlongcalls'
+        echo "$PIO_CC_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*|\-mlongcalls'
+    } | awk '!seen[$0]++' | paste -sd ' '
+)
+
 # start generation of pioarduino-build.py
 AR_PLATFORMIO_PY="$AR_SDK/pioarduino-build.py"
 cat configs/pio_start.txt > "$AR_PLATFORMIO_PY"
 
 echo "    ASFLAGS=[" >> "$AR_PLATFORMIO_PY"
-if [ "$IS_XTENSA" = "y" ]; then
-	echo "        \"-mlongcalls\"" >> "$AR_PLATFORMIO_PY"
-elif [ "$IDF_TARGET" = "esp32p4" ]; then
-	echo "        \"-march=rv32imafc_zicsr_zifencei_xesppie\"" >> "$AR_PLATFORMIO_PY"
-else
-	echo "        \"-march=rv32imc_zicsr_zifencei\"" >> "$AR_PLATFORMIO_PY"
-fi
+set -- $PIO_AS_FLAGS
+for item; do
+	echo "        \"$item\"," >> "$AR_PLATFORMIO_PY"
+done
 echo "    ]," >> "$AR_PLATFORMIO_PY"
 echo "" >> "$AR_PLATFORMIO_PY"
 
