@@ -4,7 +4,7 @@ idf_version_string=${IDF_BRANCH//\//_}"-$IDF_COMMIT"
 
 archive_path="dist/arduino-esp32-libs-$TARGET-$idf_version_string.tar.gz"
 build_archive_path="dist/arduino-esp32-build-$TARGET-$idf_version_string.tar.gz"
-pio_archive_path="dist/framework-arduinoespressif32-$TARGET-$idf_version_string.tar.gz"
+pio_archive_path="dist/framework-arduinoespressif32-$TARGET-$idf_version_string.tar.xz"
 pio_zip_archive_path="dist/framework-arduinoespressif32-$TARGET-$idf_version_string.zip"
 
 mkdir -p dist && rm -rf "$archive_path" "$build_archive_path"
@@ -67,5 +67,5 @@ cd ../../../
 
 if [[ -z "$GITHUB_ACTIONS" ]]; then
     echo "Creating PlatformIO Tasmota framework-arduinoespressif32"
-    7z a -mx=9 -tzip -xr'!.*' ../$pio_zip_archive_path framework-arduinoespressif32/
+    tar -Jcf ../$pio_archive_path framework-arduinoespressif32/ --exclude='.*'
 fi
