@@ -67,5 +67,5 @@ cd ../../../
 
 if [[ -z "$GITHUB_ACTIONS" ]]; then
     echo "Creating PlatformIO Tasmota framework-arduinoespressif32"
-    tar -Jcf ../$pio_archive_path framework-arduinoespressif32/ --exclude='.*'
+    tar --exclude=.* -Jcf ../$pio_archive_path framework-arduinoespressif32/
 fi
