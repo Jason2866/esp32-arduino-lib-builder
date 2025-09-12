@@ -134,11 +134,11 @@ jobs:
           IDF_VERSION="unknown"
         fi
         
-        # Datum im ISO Format (git-freundlich)
-        DATE=$(date +"%Y%m%d-%H%M")
+        # Datum im europäischen Format (Tag/Monat-Stunde-Minute)
+        DATE=$(date +"%d%m-%H%M")
         
-        # Tag name erstellen - alle Zeichen sind Git-kompatibel
-        TAG_NAME="v${DATE}-idf${IDF_VERSION}"
+        # Tag name ohne "v" Präfix
+        TAG_NAME="${DATE}-idf${IDF_VERSION}"
         
         echo "IDF_VERSION: $IDF_VERSION"
         echo "DATE: $DATE" 
