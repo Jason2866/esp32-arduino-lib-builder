@@ -138,7 +138,7 @@ jobs:
         DATE=$(date +"%d%m-%H%M")
         
         # Tag name ohne "v" Präfix
-        TAG_NAME="${DATE}-idf${IDF_VERSION}"
+        TAG_NAME="${DATE}-${IDF_VERSION}"
         
         echo "IDF_VERSION: $IDF_VERSION"
         echo "DATE: $DATE" 
