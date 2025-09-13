@@ -29,7 +29,7 @@ To use it, follow these steps:
   - Python 3.10 or later
   - All the dependencies listed in the previous section
 
-2. Install the required UI packages using `pip install -r tools/config_editor/requirements.txt`.
+2. Install the required UI packages using `uv pip install -r tools/config_editor/requirements.txt`.
 
 3. Execute the script `tools/config_editor/app.py` from any folder. It will automatically detect the path to the root of the repository.
 
