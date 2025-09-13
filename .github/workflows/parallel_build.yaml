@@ -89,7 +89,7 @@ jobs:
           echo "Found firmware version: $FIRMWARE_VERSION"
           
           # Array of MCU targets that need sdkconfig updates
-          mcu_targets=("esp32" "esp32s2" "esp32s3" "esp32c2" "esp32c3" "esp32c5" "esp32c6" "esp32h2" "esp32p4")
+          mcu_targets=("esp32" "esp32s2" "esp32s3" "esp32c2" "esp32c3" "esp32c6" "esp32h2" "esp32p4")
           
           for mcu in "${mcu_targets[@]}"; do
             sdkconfig_path="framework-arduinoespressif32/tools/esp32-arduino-libs/$mcu/sdkconfig"
@@ -110,9 +110,55 @@ jobs:
     - name: Set tag name
       id: set_tag_name
       run: |
-        IDF_VERSION=$(grep 'esp-idf branch' release-info.txt | sed -E 's/.*branch \[release\/v([0-9]+\.[0-9]+)\].*/\1/')
+        # Debug: Zeige den Inhalt von release-info.txt
+        echo "=== Content of release-info.txt ==="
+        cat release-info.txt
+        echo "================================="
+        
+        # Extrahiere IDF Version mit vollständigem Muster
+        # Erfasst: x.y, x.y.z, x.y_suffix, x.y.z_suffix, etc.
+        IDF_VERSION=$(grep 'esp-idf branch' release-info.txt | sed -E 's/.*branch \[release\/v([0-9]+\.[0-9]+(\.[0-9]+)?([_.-]?[a-zA-Z0-9]+)*)\].*/\1/' | head -1)
+        
+        # Fallback: Versuche ohne "release/" Präfix
+        if [ -z "$IDF_VERSION" ]; then
+          IDF_VERSION=$(grep 'esp-idf branch' release-info.txt | sed -E 's/.*branch \[v([0-9]+\.[0-9]+(\.[0-9]+)?([_.-]?[a-zA-Z0-9]+)*)\].*/\1/' | head -1)
+        fi
+        
+        # Fallback: Extrahiere beliebige Versionsnummer nach "v"
+        if [ -z "$IDF_VERSION" ]; then
+          IDF_VERSION=$(grep 'esp-idf branch' release-info.txt | sed -E 's/.*v([0-9]+\.[0-9]+[._-]?[a-zA-Z0-9]*).*/\1/' | head -1)
+        fi
+        
+        # Default falls nichts gefunden wird
+        if [ -z "$IDF_VERSION" ]; then
+          IDF_VERSION="unknown"
+        fi
+        
+        # Datum im europäischen Format (Tag/Monat-Stunde-Minute)
         DATE=$(date +"%d%m-%H%M")
-        echo "tag_name=${DATE}-${IDF_VERSION}" >> $GITHUB_OUTPUT
+        
+        # Tag name ohne "v" Präfix
+        TAG_NAME="${DATE}-${IDF_VERSION}"
+        
+        echo "IDF_VERSION: $IDF_VERSION"
+        echo "DATE: $DATE" 
+        echo "TAG_NAME: $TAG_NAME"
+        
+        # Validiere Tag-Name Format (erlaubt Punkte, Unterstriche, Bindestriche)
+        if [[ "$TAG_NAME" =~ ^[a-zA-Z0-9._-]+$ ]]; then
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+        else
+          echo "ERROR: Invalid tag name format: $TAG_NAME"
+          exit 1
+        fi
+
+    - name: Debug tag name
+      run: |
+        echo "Generated tag name: ${{ steps.set_tag_name.outputs.tag_name }}"
+        if [ -z "${{ steps.set_tag_name.outputs.tag_name }}" ]; then
+          echo "ERROR: tag_name is empty!"
+          exit 1
+        fi
 
     - name: Release framework-arduinoespressif32
       uses: jason2866/action-gh-release@v1.3
