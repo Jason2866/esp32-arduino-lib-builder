@@ -2,6 +2,7 @@ CONFIG_SPIRAM=y
 CONFIG_SPIRAM_MODE_OCT=y
 CONFIG_SPIRAM_IGNORE_NOTFOUND=y
 # CONFIG_SPIRAM_MEMTEST is not set
+CONFIG_LCD_RGB_ISR_IRAM_SAFE=y
 CONFIG_GDMA_CTRL_FUNC_IN_IRAM=y
 # bounce buffer mode relies on GDMA EOF interrupt to be service-able
 # I2S_ISR_IRAM_SAFE has to be set!! Done in common config
