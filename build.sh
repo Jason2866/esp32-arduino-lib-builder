@@ -236,11 +236,15 @@ for target_json in `jq -c '.targets[]' configs/builds.json`; do
     # Build Memory Variants
     for mem_conf in `echo "$target_json" | jq -c '.mem_variants[]'`; do
         mem_configs="$main_configs"
+        
+        # Extract frequency from mem_variant (element [1])
+        export MEM_VARIANT_FREQ=$(echo "$mem_conf" | jq -r '.[1]')
+        
         for defconf in `echo "$mem_conf" | jq -c '.[]' | tr -d '"'`; do
             mem_configs="$mem_configs;configs/defconfig.$defconf";
         done
 
-        echo "* Build Memory Variant: $mem_configs"
+        echo "* Build Memory Variant: $mem_configs (freq: $MEM_VARIANT_FREQ)"
         rm -rf build sdkconfig
         idf.py -DIDF_TARGET="$target" -DSDKCONFIG_DEFAULTS="$mem_configs" mem-variant
         if [ $? -ne 0 ]; then exit 1; fi

@@ -1,7 +1,6 @@
 #!/bin/bash
 IDF_TARGET=$1
 OCT_FLASH="$2"
-MEM_FREQ="$4"
 OCT_PSRAM=
 
 if [ "$3" = "y" ]; then
@@ -11,8 +10,10 @@ else
 fi
 
 MEMCONF=$OCT_FLASH"_$OCT_PSRAM"
-if [ "$IDF_TARGET" = "esp32s3" ] && [ -n "$MEM_FREQ" ]; then
-	MEMCONF=$MEMCONF"_$MEM_FREQ"
+
+# For esp32s3, add frequency from environment variable set by build.sh
+if [ "$IDF_TARGET" = "esp32s3" ] && [ -n "$MEM_VARIANT_FREQ" ]; then
+	MEMCONF=$MEMCONF"_$MEM_VARIANT_FREQ"
 fi
 
 source ./tools/config.sh
