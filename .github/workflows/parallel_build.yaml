@@ -1,4 +1,4 @@
-name: IDF v5.5 based build
+name: IDF v5.5 S3 120M
 
 on:
   workflow_dispatch:  # Manually start a workflow
