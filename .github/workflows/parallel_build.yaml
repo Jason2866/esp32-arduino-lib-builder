@@ -1,4 +1,4 @@
-name: IDF v5.5 S3 120M
+name: IDF v5.5 gcc15
 
 on:
   workflow_dispatch:  # Manually start a workflow
