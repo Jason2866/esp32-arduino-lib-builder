@@ -1,6 +1,7 @@
 #!/bin/bash
 IDF_TARGET=$1
 OCT_FLASH="$2"
+MEM_FREQ="$4"
 OCT_PSRAM=
 
 if [ "$3" = "y" ]; then
@@ -10,6 +11,9 @@ else
 fi
 
 MEMCONF=$OCT_FLASH"_$OCT_PSRAM"
+if [ -n "$MEM_FREQ" ]; then
+	MEMCONF=$MEMCONF"_$MEM_FREQ"
+fi
 
 source ./tools/config.sh
 

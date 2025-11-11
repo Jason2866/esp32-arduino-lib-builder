@@ -4,6 +4,7 @@
 IDF_TARGET=$1
 IS_XTENSA=$4
 OCT_FLASH="$2"
+MEM_FREQ="$5"
 OCT_PSRAM=
 
 if [ "$3" = "y" ]; then
@@ -12,6 +13,9 @@ else
 	OCT_PSRAM="qspi"
 fi
 MEMCONF=$OCT_FLASH"_$OCT_PSRAM"
+if [ -n "$MEM_FREQ" ]; then
+	MEMCONF=$MEMCONF"_$MEM_FREQ"
+fi
 
 source ./tools/config.sh
 
@@ -463,7 +467,7 @@ for item; do
 		fi
 	fi
 done
-echo "        join($PIO_SDK, board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\")), \"include\")," >> "$AR_PLATFORMIO_PY"
+echo "        join($PIO_SDK, board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi_\" + board_config.get(\"f_boot\", board_config.get(\"f_flash\", \"80000000L\")).rstrip(\"000000L\") + \"m\")), \"include\")," >> "$AR_PLATFORMIO_PY"
 echo "        join(FRAMEWORK_DIR, \"cores\", board_config.get(\"build.core\"))" >> "$AR_PLATFORMIO_PY"
 echo "    ]," >> "$AR_PLATFORMIO_PY"
 echo "" >> "$AR_PLATFORMIO_PY"
@@ -488,7 +492,7 @@ done
 echo "    LIBPATH=[" >> "$AR_PLATFORMIO_PY"
 echo "        join($PIO_SDK, \"lib\")," >> "$AR_PLATFORMIO_PY"
 echo "        join($PIO_SDK, \"ld\")," >> "$AR_PLATFORMIO_PY"
-echo "        join($PIO_SDK, board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\")))" >> "$AR_PLATFORMIO_PY"
+echo "        join($PIO_SDK, board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi_\" + board_config.get(\"f_boot\", board_config.get(\"f_flash\", \"80000000L\")).rstrip(\"000000L\") + \"m\")))" >> "$AR_PLATFORMIO_PY"
 echo "    ]," >> "$AR_PLATFORMIO_PY"
 echo "" >> "$AR_PLATFORMIO_PY"
 
