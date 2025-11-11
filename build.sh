@@ -211,11 +211,17 @@ for target_json in `jq -c '.targets[]' configs/builds.json`; do
 
     # Build IDF Libs
     idf_libs_configs="$main_configs"
+    
+    # Extract frequency from idf_libs (element [1]) for esp32s3
+    if [ "$target" = "esp32s3" ]; then
+        export MEM_VARIANT_FREQ=$(echo "$target_json" | jq -r '.idf_libs[1]')
+    fi
+    
     for defconf in `echo "$target_json" | jq -c '.idf_libs[]' | tr -d '"'`; do
         idf_libs_configs="$idf_libs_configs;configs/defconfig.$defconf"
     done
 
-    echo "* Build IDF-Libs: $idf_libs_configs"
+    echo "* Build IDF-Libs: $idf_libs_configs (freq: $MEM_VARIANT_FREQ)"
     rm -rf build sdkconfig
     idf.py -DIDF_TARGET="$target" -DSDKCONFIG_DEFAULTS="$idf_libs_configs" idf-libs
     if [ $? -ne 0 ]; then exit 1; fi
