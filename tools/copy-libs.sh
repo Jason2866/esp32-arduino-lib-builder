@@ -468,7 +468,7 @@ for item; do
 		fi
 	fi
 done
-echo "        join($PIO_SDK, board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\" + (\"_\" + board_config.get(\"f_boot\", board_config.get(\"f_flash\", \"80000000L\")).rstrip(\"000000L\") + \"m\" if board_config.get(\"build.mcu\") == \"esp32s3\" else \"\"))), \"include\")," >> "$AR_PLATFORMIO_PY"
+echo "        join($PIO_SDK, (board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\")) + (\"_\" + board_config.get(\"f_boot\", board_config.get(\"f_flash\", \"80000000L\")).rstrip(\"000000L\") + \"m\" if board_config.get(\"build.mcu\") == \"esp32s3\" else \"\")), \"include\")," >> "$AR_PLATFORMIO_PY"
 echo "        join(FRAMEWORK_DIR, \"cores\", board_config.get(\"build.core\"))" >> "$AR_PLATFORMIO_PY"
 echo "    ]," >> "$AR_PLATFORMIO_PY"
 echo "" >> "$AR_PLATFORMIO_PY"
@@ -493,7 +493,7 @@ done
 echo "    LIBPATH=[" >> "$AR_PLATFORMIO_PY"
 echo "        join($PIO_SDK, \"lib\")," >> "$AR_PLATFORMIO_PY"
 echo "        join($PIO_SDK, \"ld\")," >> "$AR_PLATFORMIO_PY"
-echo "        join($PIO_SDK, board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\" + (\"_\" + board_config.get(\"f_boot\", board_config.get(\"f_flash\", \"80000000L\")).rstrip(\"000000L\") + \"m\" if board_config.get(\"build.mcu\") == \"esp32s3\" else \"\"))))" >> "$AR_PLATFORMIO_PY"
+echo "        join($PIO_SDK, (board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\")) + (\"_\" + board_config.get(\"f_boot\", board_config.get(\"f_flash\", \"80000000L\")).rstrip(\"000000L\") + \"m\" if board_config.get(\"build.mcu\") == \"esp32s3\" else \"\")))" >> "$AR_PLATFORMIO_PY"
 echo "    ]," >> "$AR_PLATFORMIO_PY"
 echo "" >> "$AR_PLATFORMIO_PY"
 
