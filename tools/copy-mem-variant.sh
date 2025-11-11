@@ -11,7 +11,7 @@ else
 fi
 
 MEMCONF=$OCT_FLASH"_$OCT_PSRAM"
-if [ -n "$MEM_FREQ" ]; then
+if [ "$IDF_TARGET" = "esp32s3" ] && [ -n "$MEM_FREQ" ]; then
 	MEMCONF=$MEMCONF"_$MEM_FREQ"
 fi
 
