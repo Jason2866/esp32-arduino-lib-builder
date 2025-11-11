@@ -13,6 +13,11 @@ else
 fi
 MEMCONF=$OCT_FLASH"_$OCT_PSRAM"
 
+# For esp32s3, add frequency from environment variable set by build.sh
+if [ "$IDF_TARGET" = "esp32s3" ] && [ -n "$MEM_VARIANT_FREQ" ]; then
+	MEMCONF=$MEMCONF"_$MEM_VARIANT_FREQ"
+fi
+
 source ./tools/config.sh
 
 echo "IDF_TARGET: $IDF_TARGET, MEMCONF: $MEMCONF, PWD: $PWD, OUT: $AR_SDK"
@@ -463,7 +468,7 @@ for item; do
 		fi
 	fi
 done
-echo "        join($PIO_SDK, board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\")), \"include\")," >> "$AR_PLATFORMIO_PY"
+echo "        join($PIO_SDK, (board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\")) + (\"_\" + board_config.get(\"build.f_boot\", board_config.get(\"build.f_flash\", \"80000000L\")).replace(\"000000L\", \"m\") if board_config.get(\"build.mcu\") == \"esp32s3\" else \"\")), \"include\")," >> "$AR_PLATFORMIO_PY"
 echo "        join(FRAMEWORK_DIR, \"cores\", board_config.get(\"build.core\"))" >> "$AR_PLATFORMIO_PY"
 echo "    ]," >> "$AR_PLATFORMIO_PY"
 echo "" >> "$AR_PLATFORMIO_PY"
@@ -488,7 +493,7 @@ done
 echo "    LIBPATH=[" >> "$AR_PLATFORMIO_PY"
 echo "        join($PIO_SDK, \"lib\")," >> "$AR_PLATFORMIO_PY"
 echo "        join($PIO_SDK, \"ld\")," >> "$AR_PLATFORMIO_PY"
-echo "        join($PIO_SDK, board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\")))" >> "$AR_PLATFORMIO_PY"
+echo "        join($PIO_SDK, (board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\")) + (\"_\" + board_config.get(\"build.f_boot\", board_config.get(\"build.f_flash\", \"80000000L\")).replace(\"000000L\", \"m\") if board_config.get(\"build.mcu\") == \"esp32s3\" else \"\")))" >> "$AR_PLATFORMIO_PY"
 echo "    ]," >> "$AR_PLATFORMIO_PY"
 echo "" >> "$AR_PLATFORMIO_PY"
 
