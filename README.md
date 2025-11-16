@@ -6,8 +6,11 @@ Tested on Ubuntu and MacOS.
 
 ### Build on Ubuntu
 ```bash
-sudo apt-get install git wget curl libssl-dev libncurses-dev flex bison gperf python python-pip python-setuptools python-serial python-click python-cryptography python-future python-pyparsing python-pyelftools cmake ninja-build ccache jq
-sudo pip install --upgrade pip
+sudo apt update
+sudo apt install -y git wget curl libssl-dev libncurses-dev flex bison gperf python-setuptools gperf cmake ninja-build ccache jq xz-utils
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv venv
+uv pip install future pyelftools
 git clone https://github.com/espressif/esp32-arduino-lib-builder
 cd esp32-arduino-lib-builder
 ./build.sh
@@ -26,7 +29,7 @@ To use it, follow these steps:
   - Python 3.10 or later
   - All the dependencies listed in the previous section
 
-2. Install the required UI packages using `pip install -r tools/config_editor/requirements.txt`.
+2. Install the required UI packages using `uv pip install -r tools/config_editor/requirements.txt`.
 
 3. Execute the script `tools/config_editor/app.py` from any folder. It will automatically detect the path to the root of the repository.
 
