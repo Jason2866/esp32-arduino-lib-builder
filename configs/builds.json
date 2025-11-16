@@ -53,15 +53,12 @@
 		{
 			"target": "esp32p4",
 			"features":["qio_ram"],
-			"idf_libs":["qio","80m"],
+			"idf_libs":["qio","200m"],
 			"bootloaders":[
-				["qio","80m"],
-				["dio","80m"],
-				["qio","40m"],
-				["dio","40m"]
+				["qio","200m"]
 			],
 			"mem_variants":[
-				["dio","80m"]
+				[]
 			]
 		},
 		{
