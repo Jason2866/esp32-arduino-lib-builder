@@ -5,8 +5,8 @@ It allows the user to select the targets to compile, change the configuration op
 It has mouse support and can be pre-configured using command line arguments.
 
 ## Requirements
-  - Python 3.9 or later
-  - Install the required packages using `pip install -r requirements.txt`
+  - Python 3.10 or later
+  - Install the required packages using `uv pip install -r requirements.txt`
   - The requirements from esp32-arduino-lib-builder
 
 ## Troubleshooting
