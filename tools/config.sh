@@ -6,7 +6,7 @@ if [ -z $IDF_PATH ]; then
 fi
 
 if [ -z $IDF_BRANCH ]; then
-    export IDF_BRANCH="release/v5.3"
+    export IDF_BRANCH="release/v5.3_orig"
 fi
 
 # Arduino branch to use
@@ -23,6 +23,10 @@ if [ -z $IDF_TARGET ]; then
     else
         IDF_TARGET="esp32"
     fi
+fi
+
+if [ -z "$CHIP_VARIANT" ]; then
+    CHIP_VARIANT="$IDF_TARGET"
 fi
 
 # Owner of the target ESP32 Arduino repository
@@ -55,8 +59,8 @@ AR_TOOLS="$AR_OUT/tools"
 AR_PATCHES="$AR_ROOT/patches"
 AR_PLATFORM_TXT="$AR_OUT/platform.txt"
 AR_GEN_PART_PY="$AR_TOOLS/gen_esp32part.py"
-AR_SDK="$AR_TOOLS/esp32-arduino-libs/$IDF_TARGET"
-PIO_SDK="FRAMEWORK_SDK_DIR, \"$IDF_TARGET\""
+AR_SDK="$AR_TOOLS/esp32-arduino-libs/$CHIP_VARIANT"
+PIO_SDK="FRAMEWORK_SDK_DIR, \"$CHIP_VARIANT\""
 TOOLS_JSON_OUT="$AR_TOOLS/esp32-arduino-libs"
 IDF_LIBS_DIR="$AR_ROOT/../esp32-arduino-libs"
 

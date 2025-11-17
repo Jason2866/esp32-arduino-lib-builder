@@ -79,11 +79,11 @@ if [ ! -x $idf_was_installed ] || [ ! -x $commit_predefined ]; then
 	echo "Installing ESP-IDF..."
 	$IDF_PATH/install.sh > /dev/null
 
-	# Temporarily patch the ESP32-S2 I2C LL driver to keep the clock source
-    # Temporarily fix for mmu map and late init of psram https://github.com/espressif/arduino-esp32/issues/9936
-#	cd $IDF_PATH
-#	patch -p1 -N -i $AR_PATCHES/esp32s2_i2c_ll_master_init.diff
-#	cd -
+	# 1) Temporarily patch the ESP32-S2 I2C LL driver to keep the clock source
+        # 2) Temporarily fix for mmu map and late init of psram https://github.com/espressif/arduino-esp32/issues/9936
+	#cd $IDF_PATH
+	#patch -p1 -N -i $AR_PATCHES/esp32s2_i2c_ll_master_init.diff
+	#cd -
 
         # Get the exact IDF version from file "version.txt"
 	cd $IDF_PATH
