@@ -65,6 +65,18 @@
 			]
 		},
 		{
+			"chip_variant": "esp32p4_es",
+			"target": "esp32p4",
+			"features":["qio_ram"],
+			"idf_libs":["qio","200m"],
+			"bootloaders":[
+				["qio","200m"]
+			],
+			"mem_variants":[
+				[]
+			]
+		},
+		{
 			"target": "esp32p4",
 			"features":["qio_ram"],
 			"idf_libs":["qio","200m"],
