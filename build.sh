@@ -125,11 +125,12 @@ if [ "$BUILD_TYPE" != "all" ]; then
     # Target Features Configs
     for target_json in `jq -c '.targets[]' configs/builds.json`; do
         target=$(echo "$target_json" | jq -c '.target' | tr -d '"')
+        export CHIP_VARIANT=$(echo "$target_json" | jq -c '.chip_variant // "'$target'"' | tr -d '"')
 
-        # Check if $target is in the $TARGET array
+        # Check if $CHIP_VARIANT is in the $TARGET array
         target_in_array=false
         for item in "${TARGET[@]}"; do
-            if [ "$item" = "$target" ]; then
+            if [ "$item" = "$CHIP_VARIANT" ]; then
                 target_in_array=true
                 break
             fi
@@ -140,12 +141,12 @@ if [ "$BUILD_TYPE" != "all" ]; then
             continue
         fi
 
-        configs="configs/defconfig.common;configs/defconfig.$target"
+        configs="configs/defconfig.common;configs/defconfig.$CHIP_VARIANT"
         for defconf in `echo "$target_json" | jq -c '.features[]' | tr -d '"'`; do
             configs="$configs;configs/defconfig.$defconf"
         done
 
-        echo "* Building for $target"
+        echo "* Building for target: '$target', variant: '$CHIP_VARIANT'"
 
         # Configs From Arguments
         for conf in $CONFIGS; do
@@ -175,21 +176,22 @@ echo "Framework built from
 #targets_count=`jq -c '.targets[] | length' configs/builds.json`
 for target_json in `jq -c '.targets[]' configs/builds.json`; do
     target=$(echo "$target_json" | jq -c '.target' | tr -d '"')
+    export CHIP_VARIANT=$(echo "$target_json" | jq -c '.chip_variant // "'$target'"' | tr -d '"')
     target_skip=$(echo "$target_json" | jq -c '.skip // 0')
 
-    # Check if $target is in the $TARGET array if not "all"
+    # Check if $CHIP_VARIANT is in the $TARGET array if not "all"
     if [ "$TARGET" != "all" ]; then
         target_in_array=false
         for item in "${TARGET[@]}"; do
-            if [ "$item" = "$target" ]; then
+            if [ "$item" = "$CHIP_VARIANT" ]; then
                 target_in_array=true
                 break
             fi
         done
 
-        # If $target is not in the $TARGET array, skip processing
+        # If $CHIP_VARIANT is not in the $TARGET array, skip processing
         if [ "$target_in_array" = false ]; then
-            echo "* Skipping Target: $target"
+            echo "* Skipping Target: $CHIP_VARIANT"
             continue
         fi
     fi
@@ -197,14 +199,14 @@ for target_json in `jq -c '.targets[]' configs/builds.json`; do
     # Skip chips that should not be a part of the final libs
     # WARNING!!! this logic needs to be updated when cron builds are split into jobs
     if [ "$TARGET" = "all" ] && [ $target_skip -eq 1 ]; then
-        echo "* Skipping Target: $target"
+        echo "* Skipping Target: $CHIP_VARIANT"
         continue
     fi
 
-    echo "* Target: $target"
+    echo "* Target: '$target', Variant: '$CHIP_VARIANT'"
 
     # Build Main Configs List
-    main_configs="configs/defconfig.common;configs/defconfig.$target"
+    main_configs="configs/defconfig.common;configs/defconfig.$CHIP_VARIANT"
     for defconf in `echo "$target_json" | jq -c '.features[]' | tr -d '"'`; do
         main_configs="$main_configs;configs/defconfig.$defconf"
     done
