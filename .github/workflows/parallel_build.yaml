@@ -1,4 +1,4 @@
-name: IDF v5.3 based build
+name: IDF v5.3 gcc 15.1
 
 on:
   workflow_dispatch:  # Manually start a workflow
