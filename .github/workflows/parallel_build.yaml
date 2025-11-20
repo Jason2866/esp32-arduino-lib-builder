@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [esp32, esp32s2, esp32s3, esp32c2, esp32c3, esp32c5, esp32c6, esp32h2, esp32p4, esp32p4_es, esp32c61]
+        target: [esp32, esp32u, esp32s2, esp32s3, esp32c2, esp32c3, esp32c5, esp32c6, esp32h2, esp32p4, esp32p4_es, esp32c61]
       fail-fast: true
     steps:
     - uses: actions/checkout@v4
@@ -89,7 +89,7 @@ jobs:
           echo "Found firmware version: $FIRMWARE_VERSION"
           
           # Array of MCU targets that need sdkconfig updates
-          mcu_targets=("esp32" "esp32s2" "esp32s3" "esp32c2" "esp32c3" "esp32c5" "esp32c6" "esp32h2" "esp32p4" "esp32c61")
+          mcu_targets=("esp32" "esp32u" "esp32s2" "esp32s3" "esp32c2" "esp32c3" "esp32c5" "esp32c6" "esp32c61" "esp32h2" "esp32p4" "esp32p4_es")
           
           for mcu in "${mcu_targets[@]}"; do
             sdkconfig_path="framework-arduinoespressif32/tools/esp32-arduino-libs/$mcu/sdkconfig"
