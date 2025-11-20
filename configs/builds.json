@@ -172,6 +172,21 @@
 			]
 		},
 		{
+			"chip_variant": "esp32u",
+			"target": "esp32",
+			"features":[],
+			"idf_libs":["dio","40m"],
+			"bootloaders":[
+				["qio","80m"],
+				["dio","80m"],
+				["qio","40m"],
+				["dio","40m"]
+			],
+			"mem_variants":[
+				["qio","80m"]
+			]
+		},
+		{
 			"target": "esp32s2",
 			"features":["qio_ram"],
 			"idf_libs":["qio","80m"],
