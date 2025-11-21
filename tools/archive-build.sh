@@ -61,7 +61,7 @@ mv arduino-esp32/ framework-arduinoespressif32/
 cd framework-arduinoespressif32/libraries
 rm -rf **/examples
 cd ../tools/esp32-arduino-libs
-rm -rf **/flags
+# rm -rf **/flags
 cd ../../../
 
 
