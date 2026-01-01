@@ -37,24 +37,4 @@ board_config = env.BoardConfig()
 
 flatten_cppdefines = env.Flatten(env['CPPDEFINES'])
 
-#
-# zigbee libs
-#
-if "ZIGBEE_MODE_ZCZR" in flatten_cppdefines:
-    env.Append(
-        LIBS=[
-            "-lesp_zb_api.zczr",
-            "-lzboss_stack.zczr",
-            "-lzboss_port.native"
-        ]
-    )
-if "ZIGBEE_MODE_ED" in flatten_cppdefines:
-    env.Append(
-        LIBS=[
-            "-lesp_zb_api.ed",
-            "-lzboss_stack.ed",
-            "-lzboss_port.native"
-        ]
-    )
-
 env.Append(
