@@ -459,8 +459,10 @@ for item; do
 			soc_name=$(echo "$out_sub" | sed -n 's|/include/\\(esp32[^/]*\\)/include$|\1|p')
 			echo "Copying bt config file for soc: $soc_name"
 			if [ -n "$soc_name" ] && [ -f "$ipath/controller/$soc_name/esp_bt_cfg.h" ]; then
+				mkdir -p "$AR_SDK/include/$fname/controller/$soc_name"
+				cp -n "$ipath/controller/$soc_name/esp_bt_cfg.h" "$AR_SDK/include/$fname/controller/$soc_name/esp_bt_cfg.h"
+				# esp_bredr_cfg.h goes to a different location due to include path ../../../../controller/
 				mkdir -p "$AR_SDK/include/controller/$soc_name"
-				cp -n "$ipath/controller/$soc_name/esp_bt_cfg.h" "$AR_SDK/include/controller/$soc_name/esp_bt_cfg.h"
 				[ -f "$ipath/controller/$soc_name/esp_bredr_cfg.h" ] && \
 					cp -n "$ipath/controller/$soc_name/esp_bredr_cfg.h" "$AR_SDK/include/controller/$soc_name/esp_bredr_cfg.h"
 			fi
