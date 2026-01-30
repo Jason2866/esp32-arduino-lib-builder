@@ -401,9 +401,6 @@ echo "" >> "$AR_PLATFORMIO_PY"
 REL_INC=""
 echo "    CPPPATH=[" >> "$AR_PLATFORMIO_PY"
 
-# Store bt component base path for later use
-BT_COMPONENT_PATH=""
-
 set -- $INCLUDES
 
 for item; do
@@ -424,11 +421,6 @@ for item; do
 		fi
 		if [[ "$fname" == "config" ]]; then
 			continue
-		fi
-
-		# Store bt component base path when we encounter it
-		if [[ "$fname" == "bt" && -z "$BT_COMPONENT_PATH" ]]; then
-			BT_COMPONENT_PATH="$ipath"
 		fi
 
 		out_sub="${item#*$ipath}"
@@ -466,12 +458,11 @@ for item; do
 		if [[ "$fname" == "bt" && "$out_sub" =~ ^/include/esp32[^/]+/include$ ]]; then
 			soc_name=$(echo "$out_sub" | sed -n 's|/include/\\(esp32[^/]*\\)/include$|\1|p')
 			echo "Copying bt config file for soc: $soc_name"
-			# Use the stored BT_COMPONENT_PATH instead of ipath
-			if [ -n "$soc_name" ] && [ -n "$BT_COMPONENT_PATH" ] && [ -f "$BT_COMPONENT_PATH/controller/$soc_name/esp_bt_cfg.h" ]; then
+			if [ -n "$soc_name" ] && [ -f "$ipath/controller/$soc_name/esp_bt_cfg.h" ]; then
 				mkdir -p "$AR_SDK/include/controller/$soc_name"
-				cp -n "$BT_COMPONENT_PATH/controller/$soc_name/esp_bt_cfg.h" "$AR_SDK/include/controller/$soc_name/esp_bt_cfg.h"
-				[ -f "$BT_COMPONENT_PATH/controller/$soc_name/esp_bredr_cfg.h" ] && \
-					cp -n "$BT_COMPONENT_PATH/controller/$soc_name/esp_bredr_cfg.h" "$AR_SDK/include/controller/$soc_name/esp_bredr_cfg.h"
+				cp -n "$ipath/controller/$soc_name/esp_bt_cfg.h" "$AR_SDK/include/controller/$soc_name/esp_bt_cfg.h"
+				[ -f "$ipath/controller/$soc_name/esp_bredr_cfg.h" ] && \
+					cp -n "$ipath/controller/$soc_name/esp_bredr_cfg.h" "$AR_SDK/include/controller/$soc_name/esp_bredr_cfg.h"
 			fi
 		fi
 	fi
