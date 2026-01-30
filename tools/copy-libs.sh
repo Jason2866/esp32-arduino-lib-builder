@@ -461,6 +461,7 @@ for item; do
 			if [ -n "$soc_name" ] && [ -f "$ipath/controller/$soc_name/esp_bt_cfg.h" ]; then
 				mkdir -p "$AR_SDK/include/$fname/controller/$soc_name"
 				cp -n "$ipath/controller/$soc_name/esp_bt_cfg.h" "$AR_SDK/include/$fname/controller/$soc_name/esp_bt_cfg.h"
+				cp -n "$ipath/controller/$soc_name/esp_bredr_cfg.h" "$AR_SDK/include/$fname/controller/$soc_name/esp_bredr_cfg.h"
 			fi
 		fi
 	fi
