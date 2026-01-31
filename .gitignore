@@ -1,5 +1,6 @@
 .DS_Store
 .vscode
+.cache
 managed_components/
 components/arduino/
 components/esp-dl/
