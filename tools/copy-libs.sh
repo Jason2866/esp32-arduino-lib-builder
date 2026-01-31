@@ -461,10 +461,10 @@ for item; do
 			if [ -n "$soc_name" ] && [ -f "$ipath/controller/$soc_name/esp_bt_cfg.h" ]; then
 				mkdir -p "$AR_SDK/include/$fname/controller/$soc_name"
 				cp -n "$ipath/controller/$soc_name/esp_bt_cfg.h" "$AR_SDK/include/$fname/controller/$soc_name/esp_bt_cfg.h"
-				# esp_bredr_cfg.h goes to a different location due to include path ../../../../controller/
-				mkdir -p "$AR_SDK/$fname/controller/$soc_name"
+				# esp_bredr_cfg.h goes to include/bt/controller/$soc_name for correct relative include
+				mkdir -p "$AR_SDK/include/$fname/controller/$soc_name"
 				[ -f "$ipath/controller/$soc_name/esp_bredr_cfg.h" ] && \
-					cp -n "$ipath/controller/$soc_name/esp_bredr_cfg.h" "$AR_SDK/$fname/controller/$soc_name/esp_bredr_cfg.h"
+					cp -n "$ipath/controller/$soc_name/esp_bredr_cfg.h" "$AR_SDK/include/$fname/controller/$soc_name/esp_bredr_cfg.h"
 			fi
 		fi
 	fi
