@@ -452,6 +452,19 @@ for item; do
 			cp -n $f "$out_cpath$rel_p/"
 		done
 
+		# Copy all esp_bredr_cfg.h for all SoCs in bt/controller (search for bt/controller like for esp_bt_cfg.h)
+		if [[ "$fname" == "bt" ]]; then
+			for bt_base in $(find "$item" -type d -path '*/bt/controller'); do
+				for bredr_file in "$bt_base"/*/esp_bredr_cfg.h; do
+					if [ -f "$bredr_file" ]; then
+						soc_dir=$(basename $(dirname "$bredr_file"))
+						mkdir -p "$AR_SDK/include/$fname/controller/$soc_dir"
+						cp -n "$bredr_file" "$AR_SDK/include/$fname/controller/$soc_dir/esp_bredr_cfg.h"
+					fi
+				done
+			done
+		fi
+
 		# Copy the the files in /include/esp32*/include for the soc found in bt
 		# This is necessary as there might be cross soc dependencies in the bt component.
 		# For example, the esp32c61 requires the esp_bt_cfg.h and esp_bt.h from the esp32c6.
@@ -461,13 +474,6 @@ for item; do
 			if [ -n "$soc_name" ] && [ -f "$ipath/controller/$soc_name/esp_bt_cfg.h" ]; then
 				mkdir -p "$AR_SDK/include/$fname/controller/$soc_name"
 				cp -n "$ipath/controller/$soc_name/esp_bt_cfg.h" "$AR_SDK/include/$fname/controller/$soc_name/esp_bt_cfg.h"
-			fi
-			# esp_bredr_cfg.h goes to include/bt/controller/$soc_name for correct relative include
-			# Try to copy esp_bredr_cfg.h from IDF_PATH
-			SRC_BREDR_CFG_IDF="$IDF_PATH/components/bt/controller/$soc_name/esp_bredr_cfg.h"
-			if [ -f "$SRC_BREDR_CFG_IDF" ]; then
-				mkdir -p "$AR_SDK/include/$fname/controller/$soc_name"
-				cp -n "$SRC_BREDR_CFG_IDF" "$AR_SDK/include/$fname/controller/$soc_name/esp_bredr_cfg.h"
 			fi
 		fi
 	fi
