@@ -461,15 +461,13 @@ for item; do
 			if [ -n "$soc_name" ] && [ -f "$ipath/controller/$soc_name/esp_bt_cfg.h" ]; then
 				mkdir -p "$AR_SDK/include/$fname/controller/$soc_name"
 				cp -n "$ipath/controller/$soc_name/esp_bt_cfg.h" "$AR_SDK/include/$fname/controller/$soc_name/esp_bt_cfg.h"
-				   # esp_bredr_cfg.h goes to include/bt/controller/$soc_name for correct relative include
-				   mkdir -p "$AR_SDK/include/$fname/controller/$soc_name"
-				   # Try to copy esp_bredr_cfg.h for any SoC from IDF_PATH first, then fallback to local source
-				   SRC_BREDR_CFG_IDF="$IDF_PATH/components/bt/controller/$soc_name/esp_bredr_cfg.h"
-				   if [ -f "$SRC_BREDR_CFG_IDF" ]; then
-					   cp -n "$SRC_BREDR_CFG_IDF" "$AR_SDK/include/$fname/controller/$soc_name/esp_bredr_cfg.h"
-				   elif [ -f "$ipath/controller/$soc_name/esp_bredr_cfg.h" ]; then
-					   cp -n "$ipath/controller/$soc_name/esp_bredr_cfg.h" "$AR_SDK/include/$fname/controller/$soc_name/esp_bredr_cfg.h"
-				   fi
+			fi
+			# esp_bredr_cfg.h goes to include/bt/controller/$soc_name for correct relative include
+			# Try to copy esp_bredr_cfg.h from IDF_PATH
+			SRC_BREDR_CFG_IDF="$IDF_PATH/components/bt/controller/$soc_name/esp_bredr_cfg.h"
+			if [ -f "$SRC_BREDR_CFG_IDF" ]; then
+				mkdir -p "$AR_SDK/include/$fname/controller/$soc_name"
+				cp -n "$SRC_BREDR_CFG_IDF" "$AR_SDK/include/$fname/controller/$soc_name/esp_bredr_cfg.h"
 			fi
 		fi
 	fi
