@@ -452,14 +452,16 @@ for item; do
 			cp -n $f "$out_cpath$rel_p/"
 		done
 
-		# Copy all esp_bredr_cfg.h for all SoCs in bt/controller
+		# Copy all esp_bredr_cfg.h for all SoCs in bt/controller (search for bt/controller like for esp_bt_cfg.h)
 		if [[ "$fname" == "bt" ]]; then
-			for bredr_file in "$IDF_PATH/components/bt/controller"/*/esp_bredr_cfg.h; do
-				if [ -f "$bredr_file" ]; then
-					soc_dir=$(basename $(dirname "$bredr_file"))
-					mkdir -p "$AR_SDK/include/$fname/controller/$soc_dir"
-					cp -n "$bredr_file" "$AR_SDK/include/$fname/controller/$soc_dir/esp_bredr_cfg.h"
-				fi
+			for bt_base in $(find "$item" -type d -path '*/bt/controller'); do
+				for bredr_file in "$bt_base"/*/esp_bredr_cfg.h; do
+					if [ -f "$bredr_file" ]; then
+						soc_dir=$(basename $(dirname "$bredr_file"))
+						mkdir -p "$AR_SDK/include/$fname/controller/$soc_dir"
+						cp -n "$bredr_file" "$AR_SDK/include/$fname/controller/$soc_dir/esp_bredr_cfg.h"
+					fi
+				done
 			done
 		fi
 
