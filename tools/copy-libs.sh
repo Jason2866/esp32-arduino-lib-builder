@@ -452,6 +452,17 @@ for item; do
 			cp -n $f "$out_cpath$rel_p/"
 		done
 
+		# Copy all esp_bredr_cfg.h for all SoCs in bt/controller
+		if [[ "$fname" == "bt" ]]; then
+			for bredr_file in "$IDF_PATH/components/bt/controller"/*/esp_bredr_cfg.h; do
+				if [ -f "$bredr_file" ]; then
+					soc_dir=$(basename $(dirname "$bredr_file"))
+					mkdir -p "$AR_SDK/include/$fname/controller/$soc_dir"
+					cp -n "$bredr_file" "$AR_SDK/include/$fname/controller/$soc_dir/esp_bredr_cfg.h"
+				fi
+			done
+		fi
+
 		# Copy the the files in /include/esp32*/include for the soc found in bt
 		# This is necessary as there might be cross soc dependencies in the bt component.
 		# For example, the esp32c61 requires the esp_bt_cfg.h and esp_bt.h from the esp32c6.
