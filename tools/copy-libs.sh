@@ -452,55 +452,6 @@ for item; do
 			cp -n $f "$out_cpath$rel_p/"
 		done
 
-for item; do
-	if [[ "$item" != $PWD ]]; then
-		ipath="$item"
-		fname=`basename "$ipath"`
-		dname=`basename $(dirname "$ipath")`
-		if [[ "$fname" == "main" && "$dname" == $(basename "$PWD") ]]; then
-			continue
-		fi
-		while [[ "$dname" != "components" && "$dname" != "managed_components" && "$dname" != "build" ]]; do
-			ipath=`dirname "$ipath"`
-			fname=`basename "$ipath"`
-			dname=`basename $(dirname "$ipath")`
-		done
-		if [[ "$fname" == "arduino" ]]; then
-			continue
-		fi
-		if [[ "$fname" == "config" ]]; then
-			continue
-		fi
-
-		out_sub="${item#*$ipath}"
-		out_cpath="$AR_SDK/include/$fname$out_sub"
-		REL_INC+="-iwithprefixbefore $fname$out_sub "
-		if [ "$out_sub" = "" ]; then
-			echo "        join($PLATFORMIO_SDK, \"include\", \"$fname\")," >> "$AR_PLATFORMIO_PY"
-		else
-			pioarduino_sub="${out_sub:1}"
-			pioarduino_sub=`echo $pioarduino_sub | sed 's/\//\\", \\"/g'`
-			echo "        join($PLATFORMIO_SDK, \"include\", \"$fname\", \"$pioarduino_sub\")," >> "$AR_PLATFORMIO_PY"
-		fi
-		for f in `find "$item" -name '*.h'`; do
-			rel_f=${f#*$item}
-			rel_p=${rel_f%/*}
-			mkdir -p "$out_cpath$rel_p"
-			cp -n $f "$out_cpath$rel_p/"
-		done
-		for f in `find "$item" -name '*.hpp'`; do
-			rel_f=${f#*$item}
-			rel_p=${rel_f%/*}
-			mkdir -p "$out_cpath$rel_p"
-			cp -n $f "$out_cpath$rel_p/"
-		done
-		for f in `find "$item" -name '*.inc'`; do
-			rel_f=${f#*$item}
-			rel_p=${rel_f%/*}
-			mkdir -p "$out_cpath$rel_p"
-			cp -n $f "$out_cpath$rel_p/"
-		done
-
 		# ---------------------------------------------------------------
 		# Auto-resolve relative #include paths
 		# ---------------------------------------------------------------
