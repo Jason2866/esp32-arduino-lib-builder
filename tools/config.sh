@@ -110,6 +110,7 @@ AR_OS=`get_os`
 export SED="sed"
 export AWK="awk"
 export SSTAT="stat -c %s"
+export REALPATH="realpath"
 
 if [[ "$AR_OS" == "macos" ]]; then
     if ! [ -x "$(command -v gsed)" ]; then
@@ -120,9 +121,14 @@ if [[ "$AR_OS" == "macos" ]]; then
         echo "ERROR: gawk is not installed! Please install gawk first. ex. brew install gawk"
         exit 1
     fi
+    if ! command -v grealpath >/dev/null; then
+        echo "ERROR: grealpath not installed (try: brew install coreutils)" >&2
+        exit 1
+    fi
     export SED="gsed"
     export AWK="gawk"
     export SSTAT="stat -f %z"
+	export REALPATH="grealpath"
 fi
 
 function github_commit_exists(){ #github_commit_exists <repo-path> <branch-name> <commit-message>
