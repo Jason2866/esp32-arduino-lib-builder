@@ -7,6 +7,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     brew install gperf || true
     brew install ninja || true
     brew install ccache || true
+    brew install coreutils || true
     brew install xz || true
     brew install uv || true
     uv venv
