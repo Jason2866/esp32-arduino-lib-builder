@@ -3,17 +3,8 @@ name: ESP32 Arduino Libs CI
 on:
   push:
     branches:
-    - master
+    - ble-only-esp32
   pull_request:
-    paths:
-      - "**"
-      - "!**.md"
-      - "!.github/workflows/cron_build.yml"
-      - "!.github/workflows/cron.yml"
-      - "!.github/workflows/docker.yml"
-      - "!.github/workflows/repository_dispatch.yml"
-      - "!tools/config_editor/**"
-      - "!tools/docker/**"
 
 concurrency:
   group: esp-idf-libs-${{github.event.pull_request.number || github.ref}}
@@ -21,63 +12,75 @@ concurrency:
 
 jobs:
   build-libs:
-    name: Build Libs for ${{ matrix.target }}
+    name: Build ESP32 Libs (BLE-only)
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target: [esp32, esp32s2, esp32s3, esp32c2, esp32c3, esp32c6, esp32h2, esp32p4]
-      fail-fast: false
     steps:
     - name: Checkout repository
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      uses: actions/checkout@v4
 
     - name: Install dependencies
       run: bash ./tools/prepare-ci.sh
 
-    - name: Build Libs for ${{ matrix.target }}
-      run: bash ./build.sh -e -t ${{ matrix.target }}
+    - name: Build Libs for ESP32
+      run: bash ./build.sh -e -t esp32
 
-    - name: Upload build
+    - name: Upload build (on failure)
       if: failure()
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      uses: actions/upload-artifact@v4
       with:
-        name: build-${{ matrix.target }}
+        name: build-esp32
         path: build
 
     - name: Upload archive
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      uses: actions/upload-artifact@v4
       with:
-        name: artifacts-${{ matrix.target }}
+        name: esp32-arduino-libs
         path: dist
 
-  combine-artifacts:
-    name: Combine artifacts
+  release:
+    name: Create Release
     needs: build-libs
+    if: github.event_name == 'push' && github.ref == 'refs/heads/ble-only-esp32'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
-        with:
-          path: dist
-          pattern: artifacts-*
-          merge-multiple: true
-
-      - shell: bash
-        run: |
-          mkdir -p out
-          find dist -name 'arduino-esp32-libs-esp*.tar.gz' -exec tar zxvf {} -C out \;
-          cd out/tools/esp32-arduino-libs && tar zcf ../../../dist/esp32-arduino-libs.tar.gz * && cd ../../..
-          cp out/package_esp32_index.template.json dist/package_esp32_index.template.json
-
-      - name: Upload full esp32-arduino-libs archive
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/download-artifact@v4
         with:
           name: esp32-arduino-libs
-          path: dist/esp32-arduino-libs.tar.gz
+          path: dist
 
-      - name: Upload package_esp32_index.template.json
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - name: Create release zip
+        run: |
+          cd dist
+          # The archive-build.sh creates a tar.gz per target
+          # Repackage as a zip for platformio compatibility
+          mkdir -p out
+          for f in *.tar.gz; do
+            tar xzf "$f" -C out
+          done
+          cd out/tools/esp32-arduino-libs
+          zip -r ../../../esp32-arduino-libs-ble-only.zip *
+          cd ../../..
+
+      - name: Generate tag
+        id: tag
+        run: echo "tag=ble-only-$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: package-esp32-index-json
-          path: dist/package_esp32_index.template.json
-
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: "ESP32 BLE-only libs (${{ steps.tag.outputs.tag }})"
+          body: |
+            Custom ESP32 Arduino libs built from IDF v5.4 with memory optimizations:
+            - BLE-only mode (CONFIG_BTDM_CTRL_MODE_BLE_ONLY) - saves ~31KB DRAM
+            - Classic BT disabled (A2DP, SPP, HFP removed)
+            - WiFi static RX buffers reduced (4 from 8)
+            - WiFi dynamic buffers reduced (16 from 32)
+            - SPIRAM WiFi/LWIP allocation enabled
+            - Asymmetric TLS content length (4KB TX / 16KB RX)
+            - BLE Mesh, Matter, Zigbee, PPP, CSI, SoftAP disabled
+          files: |
+            dist/esp32-arduino-libs-ble-only.zip
