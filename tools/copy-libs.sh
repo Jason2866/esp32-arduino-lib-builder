@@ -431,7 +431,7 @@ PIO_AS_FLAGS=$(
 # Add -march and -mabi flags to linker flags
 for flag in $(echo "$PIO_CC_FLAGS $PIO_C_FLAGS $PIO_CXX_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*' | awk '!seen[$0]++'); do
     if [[ $PIO_LD_FLAGS != *"$flag"* ]]; then
-        PIO_LD_FLAGS+="$flag "
+        PIO_LD_FLAGS+=" $flag"
     fi
 done
 
