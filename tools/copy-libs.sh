@@ -94,10 +94,33 @@ else
 	TOOLCHAIN="riscv32-esp-elf"
 fi
 
+# Resolve GCC response file (@"path") to its contained flags
+resolve_response_file() {
+	local token="$1"
+	# Strip leading @ and surrounding quotes
+	local rfile="${token#@}"
+	rfile="${rfile#\"}"
+	rfile="${rfile%\"}"
+	if [ -f "$rfile" ]; then
+		cat "$rfile"
+	fi
+}
+
 #collect includes, defines and c-flags
 str=`cat build/compile_commands.json | grep arduino-lib-builder-gcc.c | grep command | cut -d':' -f2 | cut -d',' -f1`
 str="${str:2:${#str}-1}" #remove leading space and quotes
 str=`printf '%b' "$str"` #unescape the string
+# Expand response files inline
+expanded_str=""
+set -- $str
+for item; do
+	if [ "${item:0:1}" = "@" ]; then
+		expanded_str+="$(resolve_response_file "$item") "
+	else
+		expanded_str+="$item "
+	fi
+done
+str="$expanded_str"
 set -- $str
 for item in "${@:2:${#@}-5}"; do
 	prefix="${item:0:2}"
@@ -134,6 +157,17 @@ done
 str=`cat build/compile_commands.json | grep arduino-lib-builder-as.S | grep command | cut -d':' -f2 | cut -d',' -f1`
 str="${str:2:${#str}-1}" #remove leading space and quotes
 str=`printf '%b' "$str"` #unescape the string
+# Expand response files inline
+expanded_str=""
+set -- $str
+for item; do
+	if [ "${item:0:1}" = "@" ]; then
+		expanded_str+="$(resolve_response_file "$item") "
+	else
+		expanded_str+="$item "
+	fi
+done
+str="$expanded_str"
 set -- $str
 for item in "${@:2:${#@}-5}"; do
 	prefix="${item:0:2}"
@@ -153,6 +187,17 @@ done
 str=`cat build/compile_commands.json | grep arduino-lib-builder-cpp.cpp | grep command | cut -d':' -f2 | cut -d',' -f1`
 str="${str:2:${#str}-1}" #remove leading space and quotes
 str=`printf '%b' "$str"` #unescape the string
+# Expand response files inline
+expanded_str=""
+set -- $str
+for item; do
+	if [ "${item:0:1}" = "@" ]; then
+		expanded_str+="$(resolve_response_file "$item") "
+	else
+		expanded_str+="$item "
+	fi
+done
+str="$expanded_str"
 set -- $str
 for item in "${@:2:${#@}-5}"; do
 	prefix="${item:0:2}"
@@ -350,7 +395,7 @@ echo "    CFLAGS=[" >> "$AR_PLATFORMIO_PY"
 set -- $PIO_C_FLAGS
 last_item="${@: -1}"
 for item in "${@:0:${#@}}"; do
-	if [ "${item:0:1}" != "/" ]; then
+	if [[ "${item:0:1}" != "/" && "${item:0:1}" != "@" ]]; then
 		echo "        \"$item\"," >> "$AR_PLATFORMIO_PY"
 	fi
 done
@@ -362,7 +407,7 @@ echo "    CXXFLAGS=[" >> "$AR_PLATFORMIO_PY"
 set -- $PIO_CXX_FLAGS
 last_item="${@: -1}"
 for item in "${@:0:${#@}}"; do
-	if [ "${item:0:1}" != "/" ]; then
+	if [[ "${item:0:1}" != "/" && "${item:0:1}" != "@" ]]; then
 		echo "        \"$item\"," >> "$AR_PLATFORMIO_PY"
 	fi
 done
@@ -373,7 +418,9 @@ echo "" >> "$AR_PLATFORMIO_PY"
 echo "    CCFLAGS=[" >> "$AR_PLATFORMIO_PY"
 set -- $PIO_CC_FLAGS
 for item; do
-	echo "        \"$item\"," >> "$AR_PLATFORMIO_PY"
+	if [ "${item:0:1}" != "@" ]; then
+		echo "        \"$item\"," >> "$AR_PLATFORMIO_PY"
+	fi
 done
 echo "        \"-MMD\"" >> "$AR_PLATFORMIO_PY"
 echo "    ]," >> "$AR_PLATFORMIO_PY"
@@ -382,7 +429,9 @@ echo "" >> "$AR_PLATFORMIO_PY"
 echo "    LINKFLAGS=[" >> "$AR_PLATFORMIO_PY"
 set -- $PIO_LD_FLAGS
 for item; do
-	echo "        \"$item\"," >> "$AR_PLATFORMIO_PY"
+	if [ "${item:0:1}" != "@" ]; then
+		echo "        \"$item\"," >> "$AR_PLATFORMIO_PY"
+	fi
 done
 set -- $PIO_LD_SCRIPTS
 for item; do
