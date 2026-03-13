@@ -419,6 +419,13 @@ PIO_AS_FLAGS=$(
     } | awk '!seen[$0]++' | paste -sd ' '
 )
 
+# Add -march and -mabi flags to linker flags
+for flag in $(echo "$PIO_CC_FLAGS $PIO_C_FLAGS $PIO_CXX_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*' | awk '!seen[$0]++'); do
+    if [[ $PIO_LD_FLAGS != *"$flag"* ]]; then
+        PIO_LD_FLAGS+="$flag "
+    fi
+done
+
 # start generation of pioarduino-build.py
 AR_PLATFORMIO_PY="$AR_SDK/pioarduino-build.py"
 cat configs/pio_start.txt > "$AR_PLATFORMIO_PY"
