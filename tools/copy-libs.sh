@@ -360,6 +360,45 @@ done
 # END OF DATA EXTRACTION FROM CMAKE
 #
 
+# IDF 5.5+ stores compiler flags in toolchain response files.
+# Read them directly to ensure -march, -mabi and other flags are captured.
+IDF_TOOLCHAIN_DIR="build/toolchain"
+if [ -d "$IDF_TOOLCHAIN_DIR" ]; then
+	for rf_item in $(cat "$IDF_TOOLCHAIN_DIR/cflags" 2>/dev/null); do
+		if [[ $C_FLAGS != *"$rf_item"* && $PIO_CC_FLAGS != *"$rf_item"* && $PIO_C_FLAGS != *"$rf_item"* ]]; then
+			C_FLAGS+="$rf_item "
+		fi
+	done
+	for rf_item in $(cat "$IDF_TOOLCHAIN_DIR/cxxflags" 2>/dev/null); do
+		if [[ $CPP_FLAGS != *"$rf_item"* && $PIO_CC_FLAGS != *"$rf_item"* && $PIO_CXX_FLAGS != *"$rf_item"* ]]; then
+			CPP_FLAGS+="$rf_item "
+		fi
+	done
+
+	# Determine which flags are shared (in both C and C++) → PIO_CC_FLAGS
+	# and which are language-specific → PIO_C_FLAGS / PIO_CXX_FLAGS
+	if [ -f "$IDF_TOOLCHAIN_DIR/cflags" ] && [ -f "$IDF_TOOLCHAIN_DIR/cxxflags" ]; then
+		for rf_item in $(cat "$IDF_TOOLCHAIN_DIR/cflags"); do
+			if grep -qxF "$rf_item" "$IDF_TOOLCHAIN_DIR/cxxflags" 2>/dev/null; then
+				if [[ $PIO_CC_FLAGS != *"$rf_item"* ]]; then
+					PIO_CC_FLAGS+="$rf_item "
+				fi
+			else
+				if [[ $PIO_C_FLAGS != *"$rf_item"* ]]; then
+					PIO_C_FLAGS+="$rf_item "
+				fi
+			fi
+		done
+		for rf_item in $(cat "$IDF_TOOLCHAIN_DIR/cxxflags"); do
+			if ! grep -qxF "$rf_item" "$IDF_TOOLCHAIN_DIR/cflags" 2>/dev/null; then
+				if [[ $PIO_CXX_FLAGS != *"$rf_item"* ]]; then
+					PIO_CXX_FLAGS+="$rf_item "
+				fi
+			fi
+		done
+	fi
+fi
+
 mkdir -p "$AR_SDK"
 
 # Deduplicate flags preserving order
