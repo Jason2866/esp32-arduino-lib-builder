@@ -376,12 +376,14 @@ if [ -d "$IDF_TOOLCHAIN_DIR" ]; then
 	done
 
 	# Read linker flags from ldflags response file (includes --specs=nano.specs, etc.)
-	for rf_item in $(cat "$IDF_TOOLCHAIN_DIR/ldflags" 2>/dev/null); do
-		if [[ $LD_FLAGS != *"$rf_item"* && $PIO_LD_FLAGS != *"$rf_item"* ]]; then
-			LD_FLAGS+="$rf_item "
-			PIO_LD_FLAGS+="$rf_item "
-		fi
-	done
+	if [ -f "$IDF_TOOLCHAIN_DIR/ldflags" ]; then
+		while IFS= read -r rf_item; do
+			if [[ -n "$rf_item" && $LD_FLAGS != *"$rf_item"* && $PIO_LD_FLAGS != *"$rf_item"* ]]; then
+				LD_FLAGS+="$rf_item "
+				PIO_LD_FLAGS+="$rf_item "
+			fi
+		done < "$IDF_TOOLCHAIN_DIR/ldflags"
+	fi
 
 	# Determine which flags are shared (in both C and C++) → PIO_CC_FLAGS
 	# and which are language-specific → PIO_C_FLAGS / PIO_CXX_FLAGS
@@ -411,7 +413,7 @@ mkdir -p "$AR_SDK"
 
 # Deduplicate flags preserving order
 dedup_flags() {
-    echo "$1" | tr ' ' '\n' | awk 'NF && !seen[$0]++' | paste -sd ' '
+    echo "$1" | tr ' ' '\n' | awk 'NF && !seen[$0]++' | tr '\n' ' ' | sed 's/ $//'
 }
 
 PIO_CC_FLAGS=$(dedup_flags "$PIO_CC_FLAGS")
