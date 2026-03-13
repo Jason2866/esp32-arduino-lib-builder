@@ -375,6 +375,14 @@ if [ -d "$IDF_TOOLCHAIN_DIR" ]; then
 		fi
 	done
 
+	# Read linker flags from ldflags response file (includes --specs=nano.specs, etc.)
+	for rf_item in $(cat "$IDF_TOOLCHAIN_DIR/ldflags" 2>/dev/null); do
+		if [[ $LD_FLAGS != *"$rf_item"* && $PIO_LD_FLAGS != *"$rf_item"* ]]; then
+			LD_FLAGS+="$rf_item "
+			PIO_LD_FLAGS+="$rf_item "
+		fi
+	done
+
 	# Determine which flags are shared (in both C and C++) → PIO_CC_FLAGS
 	# and which are language-specific → PIO_C_FLAGS / PIO_CXX_FLAGS
 	if [ -f "$IDF_TOOLCHAIN_DIR/cflags" ] && [ -f "$IDF_TOOLCHAIN_DIR/cxxflags" ]; then
@@ -409,6 +417,7 @@ dedup_flags() {
 PIO_CC_FLAGS=$(dedup_flags "$PIO_CC_FLAGS")
 PIO_C_FLAGS=$(dedup_flags "$PIO_C_FLAGS")
 PIO_CXX_FLAGS=$(dedup_flags "$PIO_CXX_FLAGS")
+PIO_LD_FLAGS=$(dedup_flags "$PIO_LD_FLAGS")
 
 # Keep only -march, -mabi and -mlongcalls flags for Assembler
 PIO_AS_FLAGS=$(
