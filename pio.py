@@ -39,13 +39,13 @@ flatten_cppdefines = env.Flatten(env['CPPDEFINES'])
 
 env.Append(
     ASFLAGS=[
+        "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xespv_xesploop",
         "-mabi=ilp32f",
-        "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv2p1",
     ],
 
     ASPPFLAGS=[
+        "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xespv_xesploop",
         "-mabi=ilp32f",
-        "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv2p1",
         "-x", "assembler-with-cpp"
     ],
 
@@ -55,28 +55,24 @@ env.Append(
         "-Wno-old-style-declaration",
         "-fzero-init-padding-bits=all",
         "-fno-malloc-dce",
-        "-Wno-enum-int-mismatch",
-        "-mabi=ilp32f",
-        "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv2p1",
-        "-mtune=esp-base"
+        "-Wno-enum-int-mismatch"
     ],
 
     CXXFLAGS=[
         "-flto=auto",
         "-std=gnu++2b",
         "-fno-exceptions",
+        "-fno-rtti",
         "-Wno-self-move",
         "-Wno-dangling-reference",
-        "-fuse-cxa-atexit",
-        "-mabi=ilp32f",
-        "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv2p1",
-        "-mtune=esp-base",
-        "-fno-rtti"
+        "-fuse-cxa-atexit"
     ],
 
     CCFLAGS=[
         "-flto=auto",
         "-Os",
+        "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xespv_xesploop",
+        "-mabi=ilp32f",
         "-ffunction-sections",
         "-fdata-sections",
         "-Wno-error=unused-function",
@@ -89,6 +85,7 @@ env.Append(
         "-Wno-enum-conversion",
         "-gdwarf-4",
         "-ggdb",
+        "-nostartfiles",
         "-freorder-blocks",
         "-msave-restore",
         "-Wno-address",
@@ -103,9 +100,13 @@ env.Append(
 
     LINKFLAGS=[
         "-flto",
+        "-nostartfiles",
+        "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xespv_xesploop",
+        "-mabi=ilp32f",
         "-Wl,--cref",
         "-Wl,--defsym=IDF_TARGET_ESP32P4=0",
         "-Wl,--no-warn-rwx-segments",
+        "-fno-rtti",
         "-Wl,--gc-sections",
         "-Wl,--warn-common",
         "-Wl,--wrap=esp_log_write",
@@ -113,11 +114,8 @@ env.Append(
         "-Wl,--enable-non-contiguous-regions",
         "-Wl,--whole-archive",
         "-Wl,--no-whole-archive",
-        "-Wl,--wrap=mbedtls_ecdsa_verify",
-        "-Wl,--wrap=mbedtls_ecdsa_verify_restartable",
-        "-Wl,--wrap=mbedtls_ecdsa_read_signature",
-        "-Wl,--wrap=mbedtls_ecdsa_read_signature_restartable",
         "-Wl,--undefined=FreeRTOS_openocd_params",
+        "--specs=nano.specs",
         "-Wl,--wrap=__register_frame_info_bases",
         "-Wl,--wrap=__register_frame_info",
         "-Wl,--wrap=__register_frame",
@@ -157,6 +155,7 @@ env.Append(
         "-T", "esp32p4.rom.systimer.ld",
         "-T", "esp32p4.rom.version.ld",
         "-T", "esp32p4.rom.libc.ld",
+        "-T", "esp32p4.rom.libc-suboptimal_for_misaligned_mem.ld",
         "-T", "esp32p4.rom.newlib.ld",
         "-T", "memory.ld",
         "-T", "sections.ld",
@@ -183,13 +182,6 @@ env.Append(
         "-u", "esp_system_include_startup_funcs",
         "-u", "esp_security_init_include_impl",
         "-u", "app_main",
-        "-u", "esp_libc_include_memcpy_impl",
-        "-u", "esp_libc_include_memmove_impl",
-        "-u", "esp_libc_include_memcmp_impl",
-        "-u", "esp_libc_include_strcpy_impl",
-        "-u", "esp_libc_include_strncpy_impl",
-        "-u", "esp_libc_include_strncmp_impl",
-        "-u", "esp_libc_include_strcmp_impl",
         "-u", "esp_libc_include_heap_impl",
         "-u", "esp_libc_include_reent_syscalls_impl",
         "-u", "esp_libc_include_syscalls_impl",
@@ -495,7 +487,7 @@ env.Append(
         "ESP32_ARDUINO_LIB_BUILDER",
         ("ESP_MDNS_VERSION_NUMBER", '\\"1.10.1\\"'),
         "ESP_PLATFORM",
-        ("IDF_VER", '\\"5.5.3.260313\\"'),
+        ("IDF_VER", '\\"5.5.3\\"'),
         "LFS_MULTIVERSION",
         ("MBEDTLS_CONFIG_FILE", '\\"mbedtls/esp_config.h\\"'),
         ("SOC_MMU_PAGE_SIZE", 'CONFIG_MMU_PAGE_SIZE'),
