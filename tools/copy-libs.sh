@@ -376,14 +376,12 @@ if [ -d "$IDF_TOOLCHAIN_DIR" ]; then
 	done
 
 	# Read linker flags from ldflags response file (includes --specs=nano.specs, etc.)
-	if [ -f "$IDF_TOOLCHAIN_DIR/ldflags" ]; then
-		while IFS= read -r rf_item; do
-			if [[ -n "$rf_item" && $LD_FLAGS != *"$rf_item"* && $PIO_LD_FLAGS != *"$rf_item"* ]]; then
-				LD_FLAGS+="$rf_item "
-				PIO_LD_FLAGS+="$rf_item "
-			fi
-		done < "$IDF_TOOLCHAIN_DIR/ldflags"
-	fi
+	for rf_item in $(cat "$IDF_TOOLCHAIN_DIR/ldflags" 2>/dev/null); do
+		if [[ $LD_FLAGS != *"$rf_item"* && $PIO_LD_FLAGS != *"$rf_item"* ]]; then
+			LD_FLAGS+="$rf_item "
+			PIO_LD_FLAGS+="$rf_item "
+		fi
+	done
 
 	# Determine which flags are shared (in both C and C++) → PIO_CC_FLAGS
 	# and which are language-specific → PIO_C_FLAGS / PIO_CXX_FLAGS
