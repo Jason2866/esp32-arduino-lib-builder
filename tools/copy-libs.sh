@@ -362,9 +362,19 @@ done
 
 mkdir -p "$AR_SDK"
 
+# Deduplicate flags preserving order
+dedup_flags() {
+    echo "$1" | tr ' ' '\n' | awk 'NF && !seen[$0]++' | paste -sd ' '
+}
+
+PIO_CC_FLAGS=$(dedup_flags "$PIO_CC_FLAGS")
+PIO_C_FLAGS=$(dedup_flags "$PIO_C_FLAGS")
+PIO_CXX_FLAGS=$(dedup_flags "$PIO_CXX_FLAGS")
+
 # Keep only -march, -mabi and -mlongcalls flags for Assembler
 PIO_AS_FLAGS=$(
     {
+        echo "$PIO_C_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*|\-mlongcalls'
         echo "$PIO_CXX_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*|\-mlongcalls'
         echo "$PIO_CC_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*|\-mlongcalls'
     } | awk '!seen[$0]++' | paste -sd ' '
