@@ -154,7 +154,7 @@ for item in "${@:2:${#@}-5}"; do
 			PIO_AS_FLAGS+="$xitem "
 		done
 	elif [[ "$prefix" != "-I" && "$prefix" != "-D" && "$item" != "-Wall" && "$item" != "-Werror=all"  && "$item" != "-Wextra" && "$item" != "-fno-lto" && "$prefix" != "-O" ]]; then
-		if [[ "${item:0:23}" != "-mfix-esp32-psram-cache" && "${item:0:18}" != "-fmacro-prefix-map" && "${item:0:20}" != "-fdiagnostics-color=" && "${item:0:19}" != "-fdebug-prefix-map=" ]]; then
+		if [[ "${item:0:23}" != "-mfix-esp32-psram-cache" && "${item:0:18}" != "-fmacro-prefix-map" && "${item:0:20}" != "-fdiagnostics-color=" && "${item:0:19}" != "-fdebug-prefix-map=" && "${item:0:6}" != "-mtune" && "${item:0:6}" != "-specs" ]]; then
 			AS_FLAGS+="$item "
 			if [[ $C_FLAGS == *"$item"* ]]; then
 				PIO_CC_FLAGS+="$item "
