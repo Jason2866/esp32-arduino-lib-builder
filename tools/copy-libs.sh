@@ -94,17 +94,6 @@ else
 	TOOLCHAIN="riscv32-esp-elf"
 fi
 
-# copy zigbee + zboss lib
-if [ -d "managed_components/espressif__esp-zigbee-lib/lib/$IDF_TARGET/" ]; then
-	cp -r "managed_components/espressif__esp-zigbee-lib/lib/$IDF_TARGET"/* "$AR_SDK/lib/"
-	EXCLUDE_LIBS+="esp_zb_api.ed;esp_zb_api.zczr;"
-fi
-
-if [ -d "managed_components/espressif__esp-zboss-lib/lib/$IDF_TARGET/" ]; then
-	cp -r "managed_components/espressif__esp-zboss-lib/lib/$IDF_TARGET"/* "$AR_SDK/lib/"
-	EXCLUDE_LIBS+="zboss_stack.ed;zboss_stack.zczr;zboss_port.native;zboss_port.native.debug;zboss_port.remote;zboss_port.remote.debug;"
-fi
-
 #collect includes, defines and c-flags
 str=`cat build/compile_commands.json | grep arduino-lib-builder-gcc.c | grep command | cut -d':' -f2 | cut -d',' -f1`
 str="${str:2:${#str}-1}" #remove leading space and quotes
@@ -112,7 +101,15 @@ str=`printf '%b' "$str"` #unescape the string
 set -- $str
 for item in "${@:2:${#@}-5}"; do
 	prefix="${item:0:2}"
-	if [ "$prefix" = "-I" ]; then
+	if [ "${item:0:1}" = "@" ]; then
+		xfile="${item:3:${#item}-5}"
+		echo "Parse CC file '$xfile'"
+		for xitem in `cat "$xfile"`; do
+			echo "Add CC flag '$xitem'"
+			C_FLAGS+="$xitem "
+			PIO_LD_FLAGS+="$xitem "
+		done
+	elif [ "$prefix" = "-I" ]; then
 		item="${item:2}"
 		if [ "${item:0:1}" = "/" ]; then
 			item=`get_actual_path $item`
@@ -148,8 +145,18 @@ str=`printf '%b' "$str"` #unescape the string
 set -- $str
 for item in "${@:2:${#@}-5}"; do
 	prefix="${item:0:2}"
-	if [[ "$prefix" != "-I" && "$prefix" != "-D" && "$item" != "-Wall" && "$item" != "-Werror=all"  && "$item" != "-Wextra" && "$item" != "-fno-lto" && "$prefix" != "-O" ]]; then
-		if [[ "${item:0:23}" != "-mfix-esp32-psram-cache" && "${item:0:18}" != "-fmacro-prefix-map" && "${item:0:20}" != "-fdiagnostics-color=" && "${item:0:19}" != "-fdebug-prefix-map=" ]]; then
+	if [ "${item:0:1}" = "@" ]; then
+		xfile="${item:3:${#item}-5}"
+		echo "Parse AS file '$xfile'"
+		for xitem in `cat "$xfile"`; do
+			if [[ "${xitem:0:6}" != "-mtune" && "${xitem:0:6}" != "-specs" ]]; then
+				echo "Add AS flag '$xitem'"
+				AS_FLAGS+="$xitem "
+				PIO_AS_FLAGS+="$xitem "
+			fi
+		done
+	elif [[ "$prefix" != "-I" && "$prefix" != "-D" && "$item" != "-Wall" && "$item" != "-Werror=all"  && "$item" != "-Wextra" && "$item" != "-fno-lto" && "$prefix" != "-O" ]]; then
+		if [[ "${item:0:23}" != "-mfix-esp32-psram-cache" && "${item:0:18}" != "-fmacro-prefix-map" && "${item:0:20}" != "-fdiagnostics-color=" && "${item:0:19}" != "-fdebug-prefix-map=" && "${item:0:6}" != "-mtune" && "${item:0:6}" != "-specs" ]]; then
 			AS_FLAGS+="$item "
 			if [[ $C_FLAGS == *"$item"* ]]; then
 				PIO_CC_FLAGS+="$item "
@@ -167,7 +174,15 @@ str=`printf '%b' "$str"` #unescape the string
 set -- $str
 for item in "${@:2:${#@}-5}"; do
 	prefix="${item:0:2}"
-	if [[ "$prefix" != "-I" && "$prefix" != "-D" && "$item" != "-Wall" && "$item" != "-Werror=all"  && "$item" != "-Wextra" && "$item" != "-fno-lto" && "$prefix" != "-O" ]]; then
+	if [ "${item:0:1}" = "@" ]; then
+		xfile="${item:3:${#item}-5}"
+		echo "Parse CXX file '$xfile'"
+		for xitem in `cat "$xfile"`; do
+			echo "Add CXX flag '$xitem'"
+			CPP_FLAGS+="$xitem "
+			PIO_CXX_FLAGS+="$xitem "
+		done
+	elif [[ "$prefix" != "-I" && "$prefix" != "-D" && "$item" != "-Wall" && "$item" != "-Werror=all"  && "$item" != "-Wextra" && "$item" != "-fno-lto" && "$prefix" != "-O" ]]; then
 		if [[ "${item:0:23}" != "-mfix-esp32-psram-cache" && "${item:0:18}" != "-fmacro-prefix-map" && "${item:0:20}" != "-fdiagnostics-color=" && "${item:0:19}" != "-fdebug-prefix-map=" ]]; then
 			CPP_FLAGS+="$item "
 			if [[ $PIO_CC_FLAGS != *"$item"* ]]; then
@@ -312,6 +327,14 @@ for item; do
 				fi
 			elif [[ "${item:${#item}-4:4}" = ".obj" || "${item:${#item}-4:4}" = ".elf" || "${item:${#item}-4:4}" = "-g++" ]]; then
 				item="$item"
+			elif [ "${item:0:1}" = "@" ]; then
+				xfile="${item:2:${#item}-3}"
+				echo "Parse LD file '$xfile'"
+				for xitem in `cat "$xfile"`; do
+					echo "Add LD flag '$xitem'"
+					LD_FLAGS+="$xitem "
+					PIO_LD_FLAGS+="$xitem "
+				done
 			else
 				echo "*** BAD LD ITEM: $item ${item:${#item}-2:2}"
 			fi
@@ -319,22 +342,11 @@ for item; do
 	fi
 done
 
-# Remove -std=gnu++2b from PIO_CXX_FLAGS
-# PIO_CXX_FLAGS="${PIO_CXX_FLAGS/-std=gnu++2b/}"
-
 #
 # END OF DATA EXTRACTION FROM CMAKE
 #
 
 mkdir -p "$AR_SDK"
-
-# Keep only -march, -mabi and -mlongcalls flags for Assembler
-PIO_AS_FLAGS=$(
-    {
-        echo "$PIO_CXX_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*|\-mlongcalls'
-        echo "$PIO_CC_FLAGS" | grep -oE '\-march=[^[:space:]]*|\-mabi=[^[:space:]]*|\-mlongcalls'
-    } | awk '!seen[$0]++' | paste -sd ' '
-)
 
 # start generation of pioarduino-build.py
 AR_PLATFORMIO_PY="$AR_SDK/pioarduino-build.py"
@@ -463,17 +475,121 @@ for item; do
 			cp -n $f "$out_cpath$rel_p/"
 		done
 
-		# Copy the the files in /include/esp32*/include for the soc found in bt
-		# This is necessary as there might be cross soc dependencies in the bt component.
-		# For example, the esp32c61 requires the esp_bt_cfg.h and esp_bt.h from the esp32c6.
-		if [[ "$fname" == "bt" && "$out_sub" =~ ^/include/esp32[^/]+/include$ ]]; then
-			soc_name=$(echo "$out_sub" | sed -n 's|/include/\(esp32[^/]*\)/include$|\1|p')
-			echo "Copying bt config file for soc: $soc_name"
-			if [ -n "$soc_name" ] && [ -f "$ipath/controller/$soc_name/esp_bt_cfg.h" ]; then
-				mkdir -p "$AR_SDK/include/$fname/controller/$soc_name"
-				cp -n "$ipath/controller/$soc_name/esp_bt_cfg.h" "$AR_SDK/include/$fname/controller/$soc_name/esp_bt_cfg.h"
+		# ---------------------------------------------------------------
+		# Auto-resolve relative #include paths
+		# ---------------------------------------------------------------
+		# Some copied headers use relative paths with "../" to reference
+		# files that live elsewhere in the component source tree and were
+		# not part of any include directory (so they were never copied).
+		#
+		# Example from the bt component:
+		#   esp_bt.h contains:
+		#     #include "../../../../controller/esp32/esp_bredr_cfg.h"
+		#
+		# This block scans the just-copied headers, extracts every
+		# #include ".../.../path" directive, resolves where the compiler
+		# would expect the file in the output SDK, locates the actual
+		# source file in the IDF tree, and copies it over.
+		#
+		# It loops to handle transitive dependencies (a newly copied
+		# header may itself contain relative includes). Circular deps
+		# are safe: already-existing files are skipped, so the loop
+		# naturally terminates.
+		#
+		# Key variables coming from the outer loop:
+		#   $item     - the IDF include directory currently being processed
+		#   $out_cpath - corresponding output directory in the SDK
+		#   $ipath    - root of the IDF component (e.g. esp-idf/components/bt)
+		#   $fname    - component name (e.g. "bt")
+		# ---------------------------------------------------------------
+
+		# Canonicalize the SDK path so string comparisons work even when
+		# the OS has symlinks (e.g. macOS: /var -> /private/var).
+		_canonical_sdk=$($REALPATH -m "$AR_SDK" 2>/dev/null)
+
+		# Seed the scan lists with headers we just copied into $out_cpath.
+		# _scan_out  - output file paths (in the SDK) to scan
+		# _scan_srcdir - matching source directories (in the IDF tree)
+		_scan_out=()
+		_scan_srcdir=()
+		while IFS= read -r -d '' _f; do
+			_fdir=$(dirname "$_f")
+			_scan_out+=("$_f")
+			# Map the output dir back to the source dir:
+			# strip the $out_cpath prefix, then prepend $item.
+			_scan_srcdir+=("$item${_fdir#$out_cpath}")
+		done < <(find "$out_cpath" \( -name '*.h' -o -name '*.hpp' -o -name '*.inc' \) -print0 2>/dev/null)
+
+		while [ ${#_scan_out[@]} -gt 0 ]; do
+			_next_out=()
+			_next_srcdir=()
+
+			for _idx in "${!_scan_out[@]}"; do
+				_f="${_scan_out[$_idx]}"
+				_srcdir="${_scan_srcdir[$_idx]}"
+				_outdir=$(dirname "$_f")
+
+				# Extract relative include paths (containing "../") from
+				# the header. The grep matches #include "path", the sed
+				# strips the #include " prefix and trailing ".
+				while IFS= read -r _rel_include; do
+
+					# Resolve where the compiler would look for this file
+					# relative to the header's location in the output SDK.
+					_resolved_out=$($REALPATH -m "$_outdir/$_rel_include" 2>/dev/null)
+
+					# Skip if: resolution failed, target is outside the
+					# SDK (safety), or the file already exists (handles
+					# duplicates and circular dependencies).
+					if [ -z "$_resolved_out" ] || [[ "$_resolved_out" != "$_canonical_sdk/"* ]] || [ -f "$_resolved_out" ]; then
+						continue
+					fi
+
+					# Locate the actual source file in the IDF tree.
+					# Method 1: resolve the same relative path from the
+					# header's original source directory. This works well
+					# for transitive deps whose source location is known.
+					_resolved_src=$($REALPATH -m "$_srcdir/$_rel_include" 2>/dev/null)
+
+					# Method 2 (fallback): when the "../" chain escapes
+					# above the include subdir, method 1 resolves to a
+					# path that doesn't exist. In that case, strip the
+					# leading "../" segments to get the tail (e.g.
+					# "controller/esp32/file.h") and look for it under
+					# the component root ($ipath).
+					if [ -z "$_resolved_src" ] || [ ! -f "$_resolved_src" ]; then
+						_tail=$(echo "$_rel_include" | sed 's|^\(\.\./\)*||')
+						_resolved_src="$ipath/$_tail"
+					fi
+
+					if [ -f "$_resolved_src" ]; then
+						# Only copy header/include files, skip source
+						# files (.c, .cpp, .S, etc.) that happen to be
+						# referenced via relative includes.
+						case "$_resolved_src" in
+							*.h|*.hpp|*.inc) ;;
+							*) continue ;;
+						esac
+						mkdir -p "$(dirname "$_resolved_out")"
+						cp -n "$_resolved_src" "$_resolved_out"
+						echo "Auto-copied missing relative include: $_rel_include (from $(basename "$_f"))"
+						# Queue the newly copied file for scanning in the
+						# next iteration (transitive dependency resolution).
+						_next_out+=("$_resolved_out")
+						_next_srcdir+=("$(dirname "$_resolved_src")")
+					fi
+
+				done < <(grep -o '#include *"[^"]*\.\./[^"]*"' "$_f" 2>/dev/null | sed 's/#include *"//;s/"$//')
+			done
+
+			# If nothing new was copied this iteration, all transitive
+			# dependencies have been resolved -- we're done.
+			if [ ${#_next_out[@]} -eq 0 ]; then
+				break
 			fi
-		fi
+			_scan_out=("${_next_out[@]}")
+			_scan_srcdir=("${_next_srcdir[@]}")
+		done
 	fi
 done
 echo "        join($PIO_SDK, (board_config.get(\"build.arduino.memory_type\", (board_config.get(\"build.flash_mode\", \"dio\") + \"_qspi\")) + (\"_\" + board_config.get(\"build.f_boot\", board_config.get(\"build.f_flash\", \"80000000L\")).replace(\"000000L\", \"m\") if board_config.get(\"build.mcu\") == \"esp32s3\" else \"\")), \"include\")," >> "$AR_PLATFORMIO_PY"
