@@ -1,3 +1,7 @@
+# picolib has smallest flash footprint
+CONFIG_LIBC_PICOLIBC=y
+# CONFIG_LIBC_NEWLIB_NANO_FORMAT is not set
+
 CONFIG_SPIRAM=y
 
 # Enable LP Core
