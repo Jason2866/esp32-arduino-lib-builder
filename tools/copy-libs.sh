@@ -107,7 +107,6 @@ for item in "${@:2:${#@}-5}"; do
 		for xitem in `cat "$xfile"`; do
 			echo "Add CC flag '$xitem'"
 			C_FLAGS+="$xitem "
-			PIO_CC_FLAGS+="$xitem "
 			PIO_LD_FLAGS+="$xitem "
 		done
 	elif [ "$prefix" = "-I" ]; then
