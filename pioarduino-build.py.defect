@@ -41,43 +41,39 @@ env.Append(
     ASFLAGS=[
         "-mabi=ilp32f",
         "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv2p1",
-        "-mtune=esp-base",
-        "-specs=picolibc.specs",
     ],
 
     ASPPFLAGS=[
         "-mabi=ilp32f",
         "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv2p1",
-        "-mtune=esp-base",
-        "-specs=picolibc.specs",
         "-x", "assembler-with-cpp"
     ],
 
     CFLAGS=[
         "-flto=auto",
-        "-mabi=ilp32f",
-        "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv2p1",
-        "-mtune=esp-base",
-        "-specs=picolibc.specs",
         "-std=gnu17",
         "-Wno-old-style-declaration",
         "-fzero-init-padding-bits=all",
         "-fno-malloc-dce",
-        "-Wno-enum-int-mismatch"
+        "-Wno-enum-int-mismatch",
+        "-mabi=ilp32f",
+        "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv2p1",
+        "-mtune=esp-base",
+        "-specs=picolibc.specs"
     ],
 
     CXXFLAGS=[
         "-flto=auto",
-        "-mabi=ilp32f",
-        "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv2p1",
-        "-mtune=esp-base",
-        "-specs=picolibc.specs",
-        "-fno-rtti",
         "-std=gnu++2b",
         "-fno-exceptions",
         "-Wno-self-move",
         "-Wno-dangling-reference",
-        "-fuse-cxa-atexit"
+        "-fuse-cxa-atexit",
+        "-mabi=ilp32f",
+        "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv2p1",
+        "-mtune=esp-base",
+        "-specs=picolibc.specs",
+        "-fno-rtti"
     ],
 
     CCFLAGS=[
@@ -109,12 +105,6 @@ env.Append(
 
     LINKFLAGS=[
         "-flto",
-        "-mabi=ilp32f",
-        "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv2p1",
-        "-mtune=esp-base",
-        "-specs=picolibc.specs",
-        "-nostartfiles",
-        "-fno-rtti",
         "-Wl,--cref",
         "-Wl,--defsym=IDF_TARGET_ESP32P4=0",
         "-Wl,--no-warn-rwx-segments",
@@ -160,6 +150,11 @@ env.Append(
         "-Wl,--wrap=__gxx_personality_v0",
         "-Wl,--wrap=__cxa_throw",
         "-Wl,--wrap=__cxa_allocate_exception",
+        "-nostartfiles",
+        "-fno-rtti",
+        "-mabi=ilp32f",
+        "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv2p1",
+        "-specs=picolibc.specs",
         "-T", "rom.api.ld",
         "-T", "esp32p4.peripherals.ld",
         "-T", "esp32p4.rom.ld",
