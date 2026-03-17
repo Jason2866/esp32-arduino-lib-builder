@@ -124,6 +124,8 @@ env.Append(
     ],
 
     LINKFLAGS=[
+        "-mabi=ilp32f",
+        "-march=rv32imafc_zicsr_zifencei_xesploop_xespv",
         "-nostartfiles",
         "-fno-rtti",
         "-Wl,--cref",
@@ -438,8 +440,8 @@ env.Append(
         join(FRAMEWORK_SDK_DIR, "esp32p4", "include", "espressif__esp-nn", "src", "common"),
         join(FRAMEWORK_SDK_DIR, "esp32p4", "include", "chmorgan__esp-libhelix-mp3", "libhelix-mp3", "pub"),
         join(FRAMEWORK_SDK_DIR, "esp32p4", "include", "espressif__esp-modbus", "freemodbus", "common", "include"),
-        join(FRAMEWORK_SDK_DIR, "esp32p4", "include", "espressif__libsodium", "libsodium", "src", "libsodium", "include"),
         join(FRAMEWORK_SDK_DIR, "esp32p4", "include", "espressif__libsodium", "port_include"),
+        join(FRAMEWORK_SDK_DIR, "esp32p4", "include", "espressif__libsodium", "libsodium", "src", "libsodium", "include"),
         join(FRAMEWORK_SDK_DIR, "esp32p4", "include", "espressif__mdns", "include"),
         join(FRAMEWORK_SDK_DIR, "esp32p4", "include", "espressif__esp-dsp", "modules", "dotprod", "include"),
         join(FRAMEWORK_SDK_DIR, "esp32p4", "include", "espressif__esp-dsp", "modules", "support", "include"),
