@@ -103,10 +103,11 @@ for item in "${@:2:${#@}-5}"; do
 	prefix="${item:0:2}"
 	if [ "${item:0:1}" = "@" ]; then
 		xfile="${item:3:${#item}-5}"
+		if [ ! -f "$xfile" ]; then echo "File '$xfile' does not exist!"; exit 1; fi
 		echo "Parse CC file '$xfile'"
 		for xitem in `cat "$xfile"`; do
-			echo "Add CC flag '$xitem'"
 			C_FLAGS+="$xitem "
+			LD_FLAGS+="$xitem "
 			PIO_LD_FLAGS+="$xitem "
 		done
 	elif [ "$prefix" = "-I" ]; then
@@ -147,9 +148,9 @@ for item in "${@:2:${#@}-5}"; do
 	prefix="${item:0:2}"
 	if [ "${item:0:1}" = "@" ]; then
 		xfile="${item:3:${#item}-5}"
+		if [ ! -f "$xfile" ]; then echo "File '$xfile' does not exist!"; exit 1; fi
 		echo "Parse AS file '$xfile'"
 		for xitem in `cat "$xfile"`; do
-			echo "Add AS flag '$xitem'"
 			AS_FLAGS+="$xitem "
 			if [[ "${xitem:0:6}" != "-mtune" && "${xitem:0:6}" != "-specs" ]]; then
 				PIO_AS_FLAGS+="$xitem "
@@ -178,9 +179,9 @@ for item in "${@:2:${#@}-5}"; do
 	prefix="${item:0:2}"
 	if [ "${item:0:1}" = "@" ]; then
 		xfile="${item:3:${#item}-5}"
+		if [ ! -f "$xfile" ]; then echo "File '$xfile' does not exist!"; exit 1; fi
 		echo "Parse CXX file '$xfile'"
 		for xitem in `cat "$xfile"`; do
-			echo "Add CXX flag '$xitem'"
 			CPP_FLAGS+="$xitem "
 			PIO_CXX_FLAGS+="$xitem "
 		done
@@ -331,9 +332,9 @@ for item; do
 				item="$item"
 			elif [ "${item:0:1}" = "@" ]; then
 				xfile="${item:2:${#item}-3}"
+				if [ ! -f "$xfile" ]; then echo "File '$xfile' does not exist!"; exit 1; fi
 				echo "Parse LD file '$xfile'"
 				for xitem in `cat "$xfile"`; do
-					echo "Add LD flag '$xitem'"
 					LD_FLAGS+="$xitem "
 					PIO_LD_FLAGS+="$xitem "
 				done
