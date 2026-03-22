@@ -1,6 +1,11 @@
 # C6 has full Newlib in Rom
 # CONFIG_NEWLIB_NANO_FORMAT is not set
 
+# picolib has smallest flash footprint
+# test: compare against ROM Newlib
+CONFIG_LIBC_PICOLIBC=y
+# CONFIG_LIBC_PICOLIBC_NEWLIB_COMPATIBILITY is not set
+
 CONFIG_COMPILER_FLOAT_LIB_FROM_RVFPLIB=y
 
 # v0.0 C6 has reg i2c rom bug 
