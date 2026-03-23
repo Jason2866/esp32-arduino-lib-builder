@@ -356,7 +356,7 @@ mkdir -p "$AR_SDK"
 PIO_CC_FLAGS=$(echo "$PIO_CC_FLAGS" | sed 's|-specs=[^ ]*/|-specs=|g')
 PIO_C_FLAGS=$(echo "$PIO_C_FLAGS" | sed 's|-specs=[^ ]*/|-specs=|g')
 PIO_CXX_FLAGS=$(echo "$PIO_CXX_FLAGS" | sed 's|-specs=[^ ]*/|-specs=|g')
-PIO_AS_FLAGS=$(echo "$PIO_AS_FLAGS" | sed 's|-specs=[^ ]*/|-specs=|g')
+PIO_AS_FLAGS=$(echo "$PIO_AS_FLAGS" | sed 's/ *-specs=[^ ]*//g')
 PIO_LD_FLAGS=$(echo "$PIO_LD_FLAGS" | sed 's|-specs=[^ ]*/|-specs=|g')
 
 # start generation of pioarduino-build.py
