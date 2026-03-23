@@ -94,6 +94,17 @@ else
 	TOOLCHAIN="riscv32-esp-elf"
 fi
 
+# Normalize a -specs= flag for PIO use: strip absolute path, keep basename only.
+# Sets the global _pio_item. All other flags are passed through unchanged.
+# For ASFLAGS/ASPPFLAGS the AS loop already skips -specs entirely.
+function normalize_specs() {
+	if [[ "${1:0:7}" = "-specs=" ]]; then
+		_pio_item="-specs=$(basename "${1:7}")"
+	else
+		_pio_item="$1"
+	fi
+}
+
 #collect includes, defines and c-flags
 str=`cat build/compile_commands.json | grep arduino-lib-builder-gcc.c | grep command | cut -d':' -f2 | cut -d',' -f1`
 str="${str:2:${#str}-1}" #remove leading space and quotes
@@ -108,7 +119,7 @@ for item in "${@:2:${#@}-5}"; do
 		for xitem in `cat "$xfile"`; do
 			C_FLAGS+="$xitem "
 			LD_FLAGS+="$xitem "
-			PIO_LD_FLAGS+="$xitem "
+			normalize_specs "$xitem"; PIO_LD_FLAGS+="$_pio_item "
 		done
 	elif [ "$prefix" = "-I" ]; then
 		item="${item:2}"
@@ -183,13 +194,13 @@ for item in "${@:2:${#@}-5}"; do
 		echo "Parse CXX file '$xfile'"
 		for xitem in `cat "$xfile"`; do
 			CPP_FLAGS+="$xitem "
-			PIO_CXX_FLAGS+="$xitem "
+			normalize_specs "$xitem"; PIO_CXX_FLAGS+="$_pio_item "
 		done
 	elif [[ "$prefix" != "-I" && "$prefix" != "-D" && "$item" != "-Wall" && "$item" != "-Werror=all"  && "$item" != "-Wextra" && "$item" != "-fno-lto" && "$prefix" != "-O" ]]; then
 		if [[ "${item:0:23}" != "-mfix-esp32-psram-cache" && "${item:0:18}" != "-fmacro-prefix-map" && "${item:0:20}" != "-fdiagnostics-color=" && "${item:0:19}" != "-fdebug-prefix-map=" ]]; then
 			CPP_FLAGS+="$item "
 			if [[ $PIO_CC_FLAGS != *"$item"* ]]; then
-				PIO_CXX_FLAGS+="$item "
+				normalize_specs "$item"; PIO_CXX_FLAGS+="$_pio_item "
 			fi
 		fi
 	fi
@@ -198,7 +209,7 @@ done
 set -- $C_FLAGS
 for item; do
 	if [[ $PIO_CC_FLAGS != *"$item"* ]]; then
-		PIO_C_FLAGS+="$item "
+		normalize_specs "$item"; PIO_C_FLAGS+="$_pio_item "
 	fi
 done
 
@@ -260,7 +271,7 @@ for item; do
 				is_dir=0
 			elif [[ "${item:0:23}" != "-mfix-esp32-psram-cache" && "${item:0:18}" != "-fmacro-prefix-map" && "${item:0:19}" != "-fdebug-prefix-map=" && "${item:0:8}" != "-fno-lto" && "${item:0:17}" != "-Wl,--start-group" && "${item:0:15}" != "-Wl,--end-group" ]]; then
 				LD_FLAGS+="$item "
-				PIO_LD_FLAGS+="$item "
+				normalize_specs "$item"; PIO_LD_FLAGS+="$_pio_item "
 			fi
 		fi
 	else
@@ -350,16 +361,6 @@ done
 #
 
 mkdir -p "$AR_SDK"
-
-# normalize -specs= flags:
-# - for AS flags: remove entirely (not valid for assembler)
-# - for C/CXX/CC/LD flags: strip surrounding quotes and absolute path prefix
-#   e.g. "-specs=/home/runner/.../picolibc.specs" -> -specs=picolibc.specs
-PIO_AS_FLAGS=$(echo "$PIO_AS_FLAGS" | sed 's/ *"*-specs=[^ "]*"*//g')
-PIO_CC_FLAGS=$(echo "$PIO_CC_FLAGS" | sed 's/"*-specs=\([^ "]*\/\)*\([^ "/]*\)"*/-specs=\2/g')
-PIO_C_FLAGS=$(echo "$PIO_C_FLAGS" | sed 's/"*-specs=\([^ "]*\/\)*\([^ "/]*\)"*/-specs=\2/g')
-PIO_CXX_FLAGS=$(echo "$PIO_CXX_FLAGS" | sed 's/"*-specs=\([^ "]*\/\)*\([^ "/]*\)"*/-specs=\2/g')
-PIO_LD_FLAGS=$(echo "$PIO_LD_FLAGS" | sed 's/"*-specs=\([^ "]*\/\)*\([^ "/]*\)"*/-specs=\2/g')
 
 # start generation of pioarduino-build.py
 AR_PLATFORMIO_PY="$AR_SDK/pioarduino-build.py"
