@@ -351,13 +351,15 @@ done
 
 mkdir -p "$AR_SDK"
 
-# normalize -specs= flags: strip absolute path prefix so only the bare filename remains
-# e.g. -specs=/home/runner/.../picolibc.specs -> -specs=picolibc.specs
-PIO_CC_FLAGS=$(echo "$PIO_CC_FLAGS" | sed 's|-specs=[^ ]*/|-specs=|g')
-PIO_C_FLAGS=$(echo "$PIO_C_FLAGS" | sed 's|-specs=[^ ]*/|-specs=|g')
-PIO_CXX_FLAGS=$(echo "$PIO_CXX_FLAGS" | sed 's|-specs=[^ ]*/|-specs=|g')
-PIO_AS_FLAGS=$(echo "$PIO_AS_FLAGS" | sed 's/ *-specs=[^ ]*//g')
-PIO_LD_FLAGS=$(echo "$PIO_LD_FLAGS" | sed 's|-specs=[^ ]*/|-specs=|g')
+# normalize -specs= flags:
+# - for AS flags: remove entirely (not valid for assembler)
+# - for C/CXX/CC/LD flags: strip surrounding quotes and absolute path prefix
+#   e.g. "-specs=/home/runner/.../picolibc.specs" -> -specs=picolibc.specs
+PIO_AS_FLAGS=$(echo "$PIO_AS_FLAGS" | sed 's/ *"*-specs=[^ "]*"*//g')
+PIO_CC_FLAGS=$(echo "$PIO_CC_FLAGS" | sed 's/"*-specs=\([^ "]*\/\)*\([^ "/]*\)"*/-specs=\2/g')
+PIO_C_FLAGS=$(echo "$PIO_C_FLAGS" | sed 's/"*-specs=\([^ "]*\/\)*\([^ "/]*\)"*/-specs=\2/g')
+PIO_CXX_FLAGS=$(echo "$PIO_CXX_FLAGS" | sed 's/"*-specs=\([^ "]*\/\)*\([^ "/]*\)"*/-specs=\2/g')
+PIO_LD_FLAGS=$(echo "$PIO_LD_FLAGS" | sed 's/"*-specs=\([^ "]*\/\)*\([^ "/]*\)"*/-specs=\2/g')
 
 # start generation of pioarduino-build.py
 AR_PLATFORMIO_PY="$AR_SDK/pioarduino-build.py"
