@@ -94,13 +94,15 @@ else
 	TOOLCHAIN="riscv32-esp-elf"
 fi
 
-# Strip absolute path from -specs=/path/file.specs -> -specs=file.specs
-# All other flags are passed through unchanged.
+# Strip surrounding quotes and absolute path from -specs=/path/file.specs -> -specs=file.specs
+# All other flags are passed through unchanged (quotes stripped).
 function pio_flag() {
-	if [[ "${1:0:7}" = "-specs=" ]]; then
-		echo "-specs=$(basename "${1:7}")"
+	local flag="${1%\"}"  # strip trailing "
+	flag="${flag#\"}"     # strip leading "
+	if [[ "${flag:0:7}" = "-specs=" ]]; then
+		echo "-specs=$(basename "${flag:7}")"
 	else
-		echo "$1"
+		echo "$flag"
 	fi
 }
 
