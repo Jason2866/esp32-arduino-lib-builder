@@ -94,14 +94,13 @@ else
 	TOOLCHAIN="riscv32-esp-elf"
 fi
 
-# Normalize a -specs= flag for PIO use: strip absolute path, keep basename only.
-# Sets the global _pio_item. All other flags are passed through unchanged.
-# For ASFLAGS/ASPPFLAGS the AS loop already skips -specs entirely.
-function normalize_specs() {
+# Strip absolute path from -specs=/path/file.specs -> -specs=file.specs
+# All other flags are passed through unchanged.
+function pio_flag() {
 	if [[ "${1:0:7}" = "-specs=" ]]; then
-		_pio_item="-specs=$(basename "${1:7}")"
+		echo "-specs=$(basename "${1:7}")"
 	else
-		_pio_item="$1"
+		echo "$1"
 	fi
 }
 
@@ -119,7 +118,7 @@ for item in "${@:2:${#@}-5}"; do
 		for xitem in `cat "$xfile"`; do
 			C_FLAGS+="$xitem "
 			LD_FLAGS+="$xitem "
-			normalize_specs "$xitem"; PIO_LD_FLAGS+="$_pio_item "
+			PIO_LD_FLAGS+="$(pio_flag "$xitem") "
 		done
 	elif [ "$prefix" = "-I" ]; then
 		item="${item:2}"
@@ -163,14 +162,14 @@ for item in "${@:2:${#@}-5}"; do
 		echo "Parse AS file '$xfile'"
 		for xitem in `cat "$xfile"`; do
 			AS_FLAGS+="$xitem "
-			if [[ "${xitem:0:6}" != "-mtune" && "${xitem:0:6}" != "-specs" ]]; then
+			if [[ "$xitem" != *"-mtune"* && "$xitem" != *"-specs"* ]]; then
 				PIO_AS_FLAGS+="$xitem "
 			fi
 		done
 	elif [[ "$prefix" != "-I" && "$prefix" != "-D" && "$item" != "-Wall" && "$item" != "-Werror=all"  && "$item" != "-Wextra" && "$item" != "-fno-lto" && "$prefix" != "-O" ]]; then
 		if [[ "${item:0:23}" != "-mfix-esp32-psram-cache" && "${item:0:18}" != "-fmacro-prefix-map" && "${item:0:20}" != "-fdiagnostics-color=" && "${item:0:19}" != "-fdebug-prefix-map=" ]]; then
 			AS_FLAGS+="$item "
-			if [[ "${item:0:6}" != "-mtune" && "${item:0:6}" != "-specs" ]]; then
+			if [[ "$item" != *"-mtune"* && "$item" != *"-specs"* ]]; then
 				if [[ $C_FLAGS == *"$item"* ]]; then
 					PIO_CC_FLAGS+="$item "
 				else
@@ -194,13 +193,13 @@ for item in "${@:2:${#@}-5}"; do
 		echo "Parse CXX file '$xfile'"
 		for xitem in `cat "$xfile"`; do
 			CPP_FLAGS+="$xitem "
-			normalize_specs "$xitem"; PIO_CXX_FLAGS+="$_pio_item "
+			PIO_CXX_FLAGS+="$(pio_flag "$xitem") "
 		done
 	elif [[ "$prefix" != "-I" && "$prefix" != "-D" && "$item" != "-Wall" && "$item" != "-Werror=all"  && "$item" != "-Wextra" && "$item" != "-fno-lto" && "$prefix" != "-O" ]]; then
 		if [[ "${item:0:23}" != "-mfix-esp32-psram-cache" && "${item:0:18}" != "-fmacro-prefix-map" && "${item:0:20}" != "-fdiagnostics-color=" && "${item:0:19}" != "-fdebug-prefix-map=" ]]; then
 			CPP_FLAGS+="$item "
 			if [[ $PIO_CC_FLAGS != *"$item"* ]]; then
-				normalize_specs "$item"; PIO_CXX_FLAGS+="$_pio_item "
+				PIO_CXX_FLAGS+="$(pio_flag "$item") "
 			fi
 		fi
 	fi
@@ -209,7 +208,7 @@ done
 set -- $C_FLAGS
 for item; do
 	if [[ $PIO_CC_FLAGS != *"$item"* ]]; then
-		normalize_specs "$item"; PIO_C_FLAGS+="$_pio_item "
+		PIO_C_FLAGS+="$(pio_flag "$item") "
 	fi
 done
 
@@ -271,7 +270,7 @@ for item; do
 				is_dir=0
 			elif [[ "${item:0:23}" != "-mfix-esp32-psram-cache" && "${item:0:18}" != "-fmacro-prefix-map" && "${item:0:19}" != "-fdebug-prefix-map=" && "${item:0:8}" != "-fno-lto" && "${item:0:17}" != "-Wl,--start-group" && "${item:0:15}" != "-Wl,--end-group" ]]; then
 				LD_FLAGS+="$item "
-				normalize_specs "$item"; PIO_LD_FLAGS+="$_pio_item "
+				PIO_LD_FLAGS+="$(pio_flag "$item") "
 			fi
 		fi
 	else
@@ -347,7 +346,7 @@ for item; do
 				echo "Parse LD file '$xfile'"
 				for xitem in `cat "$xfile"`; do
 					LD_FLAGS+="$xitem "
-					PIO_LD_FLAGS+="$xitem "
+					PIO_LD_FLAGS+="$(pio_flag "$xitem") "
 				done
 			else
 				echo "*** BAD LD ITEM: $item ${item:${#item}-2:2}"
