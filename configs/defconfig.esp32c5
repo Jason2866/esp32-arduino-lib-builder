@@ -53,6 +53,9 @@ CONFIG_RTC_CLK_CAL_CYCLES=576
 # CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU0 is not set
 CONFIG_FREERTOS_IDLE_TASK_STACKSIZE=2304
 
+# Workaround for kconfig bug which generates wrong entry with value 0
+CONFIG_LWIP_TCP_OOSEQ_MAX_PBUFS=4
+
 # This Enables RISCV LP - but it can't be used within Arduino at this time. 
 #CONFIG_ULP_COPROC_ENABLED=y
 #CONFIG_ULP_COPROC_LP_CORE=y
