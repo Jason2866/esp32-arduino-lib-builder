@@ -1,6 +1,5 @@
-# picolib has smallest flash footprint
-CONFIG_LIBC_PICOLIBC=y
-# CONFIG_LIBC_NEWLIB_NANO_FORMAT is not set
+# picolib does crash with the S2 when using serial
+CONFIG_LIBC_NEWLIB_NANO_FORMAT=y
 
 CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
 CONFIG_SPIRAM=y
