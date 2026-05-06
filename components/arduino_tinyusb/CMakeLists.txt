@@ -32,12 +32,12 @@ if(CONFIG_TINYUSB_ENABLED)
       "${COMPONENT_DIR}/tinyusb/src/tusb.c"
       "${COMPONENT_DIR}/tinyusb/src/common/tusb_fifo.c"
       # device
-      "${COMPONENT_DIR}/tinyusb/src/device/usbd_control.c"
       "${COMPONENT_DIR}/tinyusb/src/device/usbd.c"
       "${COMPONENT_DIR}/tinyusb/src/class/cdc/cdc_device.c"
       "${COMPONENT_DIR}/tinyusb/src/class/hid/hid_device.c"
       "${COMPONENT_DIR}/tinyusb/src/class/midi/midi_device.c"
       "${COMPONENT_DIR}/tinyusb/src/class/msc/msc_device.c"
+      "${COMPONENT_DIR}/tinyusb/src/class/audio/audio_device.c"
       "${COMPONENT_DIR}/tinyusb/src/class/video/video_device.c"
       "${COMPONENT_DIR}/tinyusb/src/class/dfu/dfu_rt_device.c"
       "${COMPONENT_DIR}/tinyusb/src/class/dfu/dfu_device.c"
