@@ -36,7 +36,7 @@ add_custom_target(mem-variant DEPENDS "mem_variant")
 
 idf_build_set_property(COMPILE_DEFINITIONS "-DESP32_ARDUINO_LIB_BUILDER" APPEND)
 
-# Wrap std::__throw_* functions to abort immediately, eliminating ~3KB of
+# Wrap std::__throw_* functions to abort immediately, eliminating ~2KB of
 # exception class overhead. Implementation lives in components/throw_stubs.
 # ESP-IDF already compiles with -fno-exceptions, so this code was dead anyway.
 # Apply directly on the project elf so the flags end up in
