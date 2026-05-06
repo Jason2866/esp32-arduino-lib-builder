@@ -39,15 +39,18 @@ idf_build_set_property(COMPILE_DEFINITIONS "-DESP32_ARDUINO_LIB_BUILDER" APPEND)
 # Wrap std::__throw_* functions to abort immediately, eliminating ~3KB of
 # exception class overhead. Implementation lives in components/throw_stubs.
 # ESP-IDF already compiles with -fno-exceptions, so this code was dead anyway.
-# These flags must be on the top-level link so they end up in the elf link
-# command (extracted by tools/copy-libs.sh into pioarduino-build.py LINKFLAGS).
+# Apply directly on the project elf so the flags end up in
+# build/CMakeFiles/${CMAKE_PROJECT_NAME}.elf.dir/link.txt and get picked up by
+# tools/copy-libs.sh into pioarduino-build.py LINKFLAGS / flags/ld_flags.
 
-idf_build_set_property(LINK_OPTIONS "-Wl,--wrap=_ZSt20__throw_length_errorPKc" APPEND)
-idf_build_set_property(LINK_OPTIONS "-Wl,--wrap=_ZSt19__throw_logic_errorPKc" APPEND)
-idf_build_set_property(LINK_OPTIONS "-Wl,--wrap=_ZSt20__throw_out_of_rangePKc" APPEND)
-idf_build_set_property(LINK_OPTIONS "-Wl,--wrap=_ZSt24__throw_out_of_range_fmtPKcz" APPEND)
-idf_build_set_property(LINK_OPTIONS "-Wl,--wrap=_ZSt17__throw_bad_allocv" APPEND)
-idf_build_set_property(LINK_OPTIONS "-Wl,--wrap=_ZSt25__throw_bad_function_callv" APPEND)
-# Keep at least one __wrap_* symbol referenced so the object is pulled from
-# the static archive during the user sketch link.
-idf_build_set_property(LINK_OPTIONS "-u__wrap__ZSt17__throw_bad_allocv" APPEND)
+target_link_options(${CMAKE_PROJECT_NAME}.elf PRIVATE
+    "-Wl,--wrap=_ZSt20__throw_length_errorPKc"
+    "-Wl,--wrap=_ZSt19__throw_logic_errorPKc"
+    "-Wl,--wrap=_ZSt20__throw_out_of_rangePKc"
+    "-Wl,--wrap=_ZSt24__throw_out_of_range_fmtPKcz"
+    "-Wl,--wrap=_ZSt17__throw_bad_allocv"
+    "-Wl,--wrap=_ZSt25__throw_bad_function_callv"
+    # Keep at least one __wrap_* symbol referenced so the object is pulled
+    # from libthrow_stubs.a during the user sketch link.
+    "-u__wrap__ZSt17__throw_bad_allocv"
+)
