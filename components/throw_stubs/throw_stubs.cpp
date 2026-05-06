@@ -37,7 +37,7 @@ void __wrap__ZSt19__throw_logic_errorPKc(const char *) { esp_system_abort("std::
 // std::__throw_out_of_range(char const*) - called by at() when index is out of bounds
 void __wrap__ZSt20__throw_out_of_rangePKc(const char *) { esp_system_abort("std::out_of_range"); }
 
-// std::__throw_out_of_range_fmt(char const*, ...) - called by bitset::to_ulong when value doesn't fit
+// std::__throw_out_of_range_fmt(char const*, ...) - variadic form called by container at() with formatted messages
 void __wrap__ZSt24__throw_out_of_range_fmtPKcz(const char *, ...) { esp_system_abort("std::out_of_range"); }
 
 // std::__throw_bad_alloc() - called when operator new fails
