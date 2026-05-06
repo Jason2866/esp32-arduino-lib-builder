@@ -4,7 +4,7 @@
  * ESP-IDF compiles with -fno-exceptions, so C++ exceptions always abort.
  * However, ESP-IDF only wraps low-level functions (__cxa_throw, etc.),
  * not the std::__throw_* functions that construct exception objects first.
- * This pulls in ~3KB of dead exception class code that can never run.
+ * This pulls in ~2KB of dead exception class code that can never run.
  *
  * These stubs abort immediately with a descriptive message, allowing
  * the linker to dead-code eliminate the exception class infrastructure.
