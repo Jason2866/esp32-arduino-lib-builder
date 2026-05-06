@@ -40,9 +40,8 @@ idf_build_set_property(COMPILE_DEFINITIONS "-DESP32_ARDUINO_LIB_BUILDER" APPEND)
 # exception class overhead. Implementation lives in components/throw_stubs.
 # ESP-IDF already compiles with -fno-exceptions, so this code was dead anyway.
 # These flags must be on the top-level link so they end up in the elf link
-# command (extracted by tools/copy-libs.sh into pioarduino-build.py LINKFLAGS
-# and flags/ld_flags for downstream Arduino/PlatformIO sketches).
-# Source: https://github.com/esphome/esphome/blob/dev/esphome/components/esp32/throw_stubs.cpp
+# command (extracted by tools/copy-libs.sh into pioarduino-build.py LINKFLAGS).
+
 idf_build_set_property(LINK_OPTIONS "-Wl,--wrap=_ZSt20__throw_length_errorPKc" APPEND)
 idf_build_set_property(LINK_OPTIONS "-Wl,--wrap=_ZSt19__throw_logic_errorPKc" APPEND)
 idf_build_set_property(LINK_OPTIONS "-Wl,--wrap=_ZSt20__throw_out_of_rangePKc" APPEND)

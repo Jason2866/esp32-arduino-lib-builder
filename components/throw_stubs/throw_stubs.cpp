@@ -6,10 +6,6 @@
  * not the std::__throw_* functions that construct exception objects first.
  * This pulls in ~3KB of dead exception class code that can never run.
  *
- * ESP8266 Arduino already solved this: their toolchain rebuilds libstdc++
- * with throw functions that just call abort(). We achieve the same result
- * using linker --wrap without requiring toolchain changes.
- *
  * These stubs abort immediately with a descriptive message, allowing
  * the linker to dead-code eliminate the exception class infrastructure.
  *
