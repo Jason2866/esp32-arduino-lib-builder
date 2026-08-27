@@ -95,12 +95,15 @@ else
 fi
 
 # Strip surrounding quotes and absolute path from -specs=/path/file.specs -> -specs=file.specs
+# Handles both single-dash (-specs=) and double-dash (--specs=) forms.
 # All other flags are passed through unchanged (quotes stripped).
 function pio_flag() {
 	local flag="${1%\"}"  # strip trailing "
 	flag="${flag#\"}"     # strip leading "
 	if [[ "${flag:0:7}" = "-specs=" ]]; then
 		echo "-specs=$(basename "${flag:7}")"
+	elif [[ "${flag:0:8}" = "--specs=" ]]; then
+		echo "--specs=$(basename "${flag:8}")"
 	else
 		echo "$flag"
 	fi
