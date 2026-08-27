@@ -94,6 +94,17 @@ else
 	TOOLCHAIN="riscv32-esp-elf"
 fi
 
+# Extract the file path from a GCC response file token.
+# Handles all quoting forms: @/path, @"/path", @\"/path\"
+function get_atfile_path() {
+	local tok="${1#@}"      # strip leading @
+	tok="${tok#\\\"}"      # strip leading \"
+	tok="${tok#\"}"        # strip leading "
+	tok="${tok%\\\"}"      # strip trailing \"
+	tok="${tok%\"}"        # strip trailing "
+	printf '%s' "$tok"
+}
+
 # Strip surrounding quotes and absolute path from -specs=/path/file.specs -> -specs=file.specs
 # Handles both single-dash (-specs=) and double-dash (--specs=) forms.
 # All other flags are passed through unchanged (quotes stripped).
@@ -117,7 +128,7 @@ set -- $str
 for item in "${@:2:${#@}-5}"; do
 	prefix="${item:0:2}"
 	if [ "${item:0:1}" = "@" ]; then
-		xfile="${item:3:${#item}-5}"
+		xfile="$(get_atfile_path "$item")"
 		if [ ! -f "$xfile" ]; then echo "File '$xfile' does not exist!"; exit 1; fi
 		echo "Parse CC file '$xfile'"
 		for xitem in `cat "$xfile"`; do
@@ -162,7 +173,7 @@ set -- $str
 for item in "${@:2:${#@}-5}"; do
 	prefix="${item:0:2}"
 	if [ "${item:0:1}" = "@" ]; then
-		xfile="${item:3:${#item}-5}"
+		xfile="$(get_atfile_path "$item")"
 		if [ ! -f "$xfile" ]; then echo "File '$xfile' does not exist!"; exit 1; fi
 		echo "Parse AS file '$xfile'"
 		for xitem in `cat "$xfile"`; do
@@ -193,7 +204,7 @@ set -- $str
 for item in "${@:2:${#@}-5}"; do
 	prefix="${item:0:2}"
 	if [ "${item:0:1}" = "@" ]; then
-		xfile="${item:3:${#item}-5}"
+		xfile="$(get_atfile_path "$item")"
 		if [ ! -f "$xfile" ]; then echo "File '$xfile' does not exist!"; exit 1; fi
 		echo "Parse CXX file '$xfile'"
 		for xitem in `cat "$xfile"`; do
@@ -346,7 +357,7 @@ for item; do
 			elif [[ "${item:${#item}-4:4}" = ".obj" || "${item:${#item}-4:4}" = ".elf" || "${item:${#item}-4:4}" = "-g++" ]]; then
 				item="$item"
 			elif [ "${item:0:1}" = "@" ]; then
-				xfile="${item:2:${#item}-3}"
+				xfile="$(get_atfile_path "$item")"
 				if [ ! -f "$xfile" ]; then echo "File '$xfile' does not exist!"; exit 1; fi
 				echo "Parse LD file '$xfile'"
 				for xitem in `cat "$xfile"`; do
