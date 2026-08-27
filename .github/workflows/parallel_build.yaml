@@ -92,19 +92,10 @@ jobs:
         cat release-info.txt
         echo "================================="
         
-        # Extrahiere IDF Version mit vollständigem Muster
-        # Erfasst: x.y, x.y.z, x.y_suffix, x.y.z_suffix, etc.
-        IDF_VERSION=$(grep 'esp-idf branch' release-info.txt | sed -E 's/.*branch \[release\/v([0-9]+\.[0-9]+(\.[0-9]+)?([_.-]?[a-zA-Z0-9]+)*)\].*/\1/' | head -1)
-        
-        # Fallback: Versuche ohne "release/" Präfix
-        if [ -z "$IDF_VERSION" ]; then
-          IDF_VERSION=$(grep 'esp-idf branch' release-info.txt | sed -E 's/.*branch \[v([0-9]+\.[0-9]+(\.[0-9]+)?([_.-]?[a-zA-Z0-9]+)*)\].*/\1/' | head -1)
-        fi
-        
-        # Fallback: Extrahiere beliebige Versionsnummer nach "v"
-        if [ -z "$IDF_VERSION" ]; then
-          IDF_VERSION=$(grep 'esp-idf branch' release-info.txt | sed -E 's/.*v([0-9]+\.[0-9]+[._-]?[a-zA-Z0-9]*).*/\1/' | head -1)
-        fi
+        # Extract the version from either release/vX.Y[.Z] or vX.Y[.Z] branches.
+        IDF_VERSION=$(grep 'esp-idf branch' release-info.txt | sed -nE 's/.*branch \[((release\/)?v[0-9]+\.[0-9]+(\.[0-9]+)?([_.-]?[a-zA-Z0-9]+)*)\].*/\1/p' | head -1)
+        IDF_VERSION="${IDF_VERSION#release/}"
+        IDF_VERSION="${IDF_VERSION#v}"
         
         # Default falls nichts gefunden wird
         if [ -z "$IDF_VERSION" ]; then
