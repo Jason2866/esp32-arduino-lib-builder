@@ -113,7 +113,7 @@ extern "C" {
 #endif
 #endif
 
-#if CONFIG_IDF_TARGET_ESP32P4
+#if CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32S31
 #define CFG_TUD_MAX_SPEED OPT_MODE_HIGH_SPEED
 #else
 #define CFG_TUD_MAX_SPEED OPT_MODE_FULL_SPEED
@@ -177,7 +177,7 @@ extern "C" {
 #define CFG_TUD_AUDIO_MAX_N_CHANNELS              2  // Stereo
 #define CFG_TUD_AUDIO_MAX_N_BYTES_PER_SAMPLE      4  // 24bit/32bit
 
-#if CONFIG_IDF_TARGET_ESP32P4
+#if CONFIG_IDF_TARGET_ESP32P4 || CONFIG_IDF_TARGET_ESP32S31
 #define CFG_TUD_AUDIO_ENABLE_INTERRUPT_EP         1  // Allow volume controlled by on-baord button (UAC2)
 #define CFG_TUD_AUDIO_MAX_SAMPLE_RATE             192000
 #define CFG_TUD_AUDIO_FUNC_1_EP_IN_SZ_MAX         TUD_AUDIO_EP_SIZE(true, CFG_TUD_AUDIO_MAX_SAMPLE_RATE, CFG_TUD_AUDIO_MAX_N_BYTES_PER_SAMPLE, CFG_TUD_AUDIO_MAX_N_CHANNELS)
@@ -206,7 +206,8 @@ extern "C" {
 #define CFG_TUH_CDC_FTDI            1 // FTDI Serial.  FTDI is not part of CDC class, only to re-use CDC driver API
 #define CFG_TUH_CDC_CP210X          1 // CP210x Serial. CP210X is not part of CDC class, only to re-use CDC driver API
 #define CFG_TUH_CDC_CH34X           1 // CH340 or CH341 Serial. CH34X is not part of CDC class, only to re-use CDC driver API
-#define CFG_TUH_HID                 1 // typical keyboard + mouse device can have 3-4 HID interfaces
+/* Max simultaneous HID interfaces (TinyUSB hid_host.c: _hidh_itf[CFG_TUH_HID]). Value 1 allows only one iface stack-wide. */
+#define CFG_TUH_HID                 (3*CFG_TUH_DEVICE_MAX) // typical keyboard + mouse device can have 3-4 HID interfaces
 #define CFG_TUH_MSC                 1
 #define CFG_TUH_MIDI                1 // MIDI host driver; midi_host.c is already compiled, this enables it
 //#define CFG_TUH_VENDOR              3
