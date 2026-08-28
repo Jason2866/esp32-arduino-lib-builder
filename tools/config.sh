@@ -12,7 +12,7 @@ fi
 
 # Arduino branch to use
 if [ -z $AR_BRANCH ]; then
-    AR_BRANCH="main"
+    AR_BRANCH="release/v4.0.x"
 fi
 
 if [ -z $IDF_TARGET ]; then
