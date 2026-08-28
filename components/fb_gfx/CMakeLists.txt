@@ -1,5 +1,3 @@
-set(idf_version "${IDF_VERSION_MAJOR}.${IDF_VERSION_MINOR}.${IDF_VERSION_PATCH}")
-set(min_v6_idf_version "6.0.0")
 set(COMPONENT_SRCS "fb_gfx.c")
 set(COMPONENT_ADD_INCLUDEDIRS "include")
 set(COMPONENT_PRIV_INCLUDEDIRS "")
