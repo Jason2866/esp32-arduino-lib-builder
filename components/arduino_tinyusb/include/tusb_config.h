@@ -25,7 +25,9 @@
  */
 
 #pragma once
-#include "tusb_option.h"
+/* Do not include tusb_option.h here: TinyUSB includes this file FROM tusb_option.h
+ * after OPT_* are defined. Including tusb_option.h first causes CFG_* defaults then
+ * redefinition warnings (CFG_TUD_ENABLED, CFG_TUSB_OS, CFG_TUD_MAX_SPEED, ...). */
 #include "sdkconfig.h"
 
 #ifdef __cplusplus
@@ -170,8 +172,6 @@ extern "C" {
 // VENDOR FIFO size of TX and RX
 #define CFG_TUD_VENDOR_RX_BUFSIZE 	CONFIG_TINYUSB_VENDOR_RX_BUFSIZE
 #define CFG_TUD_VENDOR_TX_BUFSIZE 	CONFIG_TINYUSB_VENDOR_TX_BUFSIZE
-
-#define CFG_TUD_VENDOR_TXRX_BUFFERED  CONFIG_TINYUSB_VENDOR_TXRX_BUFFERED
 
 // AUDIO configuration
 #define CFG_TUD_AUDIO_ENABLE_EP_IN                1  // TX
