@@ -5,9 +5,9 @@ if [ -z $IDF_PATH ]; then
     export IDF_PATH="$PWD/esp-idf"
 fi
 
+# IDF branch to use
 if [ -z $IDF_BRANCH ]; then
-    # use taged IDF release v6.1.0
-    export IDF_BRANCH="v6.1.0"
+    export IDF_BRANCH="release/v6.1"
 fi
 
 # Arduino branch to use
