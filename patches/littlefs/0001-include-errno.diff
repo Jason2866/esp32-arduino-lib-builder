@@ -1,0 +1,10 @@
+--- a/src/esp_littlefs.c
++++ b/src/esp_littlefs.c
+@@ -20,6 +20,7 @@
+ #include <inttypes.h>
+ #include <dirent.h>
+ #include <sys/dirent.h>
++#include <errno.h>
+ #include <sys/errno.h>
+ #include <sys/fcntl.h>
+ #include <sys/lock.h>
