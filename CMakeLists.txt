@@ -6,23 +6,27 @@ include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(arduino-lib-builder)
 
 # Managed components are only downloaded during project(), so patch them here, before anything compiles.
-set(LITTLEFS_DIR "${CMAKE_SOURCE_DIR}/managed_components/joltwallet__littlefs")
-file(GLOB LITTLEFS_PATCHES "${CMAKE_SOURCE_DIR}/patches/littlefs/*.diff")
-foreach(patch ${LITTLEFS_PATCHES})
-    if(NOT EXISTS "${LITTLEFS_DIR}")
-        break()
-    endif()
-    execute_process(COMMAND git apply --reverse --check "${patch}"
-        WORKING_DIRECTORY "${LITTLEFS_DIR}" RESULT_VARIABLE already_applied OUTPUT_QUIET ERROR_QUIET)
-    if(NOT already_applied EQUAL 0)
-        message(STATUS "Patching littlefs with ${patch}")
-        execute_process(COMMAND git apply "${patch}"
-            WORKING_DIRECTORY "${LITTLEFS_DIR}" RESULT_VARIABLE apply_result)
-        if(NOT apply_result EQUAL 0)
-            message(FATAL_ERROR "Failed to apply ${patch}")
+function(apply_patches dir patch_dir)
+    file(GLOB patches "${patch_dir}/*.diff")
+    foreach(patch ${patches})
+        if(NOT EXISTS "${dir}")
+            break()
         endif()
-    endif()
-endforeach()
+        execute_process(COMMAND git apply --reverse --check "${patch}"
+            WORKING_DIRECTORY "${dir}" RESULT_VARIABLE already_applied OUTPUT_QUIET ERROR_QUIET)
+        if(NOT already_applied EQUAL 0)
+            message(STATUS "Patching ${dir} with ${patch}")
+            execute_process(COMMAND git apply "${patch}"
+                WORKING_DIRECTORY "${dir}" RESULT_VARIABLE apply_result)
+            if(NOT apply_result EQUAL 0)
+                message(FATAL_ERROR "Failed to apply ${patch}")
+            endif()
+        endif()
+    endforeach()
+endfunction()
+
+apply_patches("${CMAKE_SOURCE_DIR}/managed_components/joltwallet__littlefs" "${CMAKE_SOURCE_DIR}/patches/littlefs")
+apply_patches("${CMAKE_SOURCE_DIR}/components/arduino" "${CMAKE_SOURCE_DIR}/patches/arduino")
 
 idf_build_get_property(elf EXECUTABLE GENERATOR_EXPRESSION)
 
