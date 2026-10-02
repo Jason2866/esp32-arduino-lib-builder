@@ -35,16 +35,3 @@ for patch in "$TINYUSB_PATCH_DIR"/*.diff; do
     git -C "$TINYUSB_REPO_DIR" apply "$patch"
     if [ $? -ne 0 ]; then exit 1; fi
 done
-
-# Fixes for managed components, see patches/littlefs; the component is only present once a previous build has fetched it.
-LITTLEFS_DIR="$AR_MANAGED_COMPS/joltwallet__littlefs"
-for patch in "$AR_PATCHES"/littlefs/*.diff; do
-    [ -e "$patch" ] && [ -d "$LITTLEFS_DIR" ] || continue
-    if git -C "$LITTLEFS_DIR" apply --reverse --check "$patch" 2>/dev/null; then
-        echo "Skipping $(basename "$patch"), already in littlefs..."
-        continue
-    fi
-    echo "Patching littlefs with $(basename "$patch")..."
-    git -C "$LITTLEFS_DIR" apply "$patch"
-    if [ $? -ne 0 ]; then exit 1; fi
-done
