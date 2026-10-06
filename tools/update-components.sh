@@ -10,7 +10,10 @@ TINYUSB_REPO_URL="https://github.com/hathach/tinyusb.git"
 TINYUSB_REPO_DIR="$AR_COMPS/arduino_tinyusb/tinyusb"
 TINYUSB_PATCH_DIR="$AR_PATCHES/tinyusb"
 if [ ! -d "$TINYUSB_REPO_DIR" ]; then
-       git clone -b master --depth 1 "$TINYUSB_REPO_URL" "$TINYUSB_REPO_DIR"
+       git clone -b master "$TINYUSB_REPO_URL" "$TINYUSB_REPO_DIR"
+       cd "$TINYUSB_REPO_DIR"
+       git checkout 99c53f32c20654348cfd0cd7fc87d94543674c81
+       cd -
 else
        # The clone is build output, not a workspace: drop the patches of the previous run,
        # and anything they left behind, so pull --ff-only does not trip over them.
