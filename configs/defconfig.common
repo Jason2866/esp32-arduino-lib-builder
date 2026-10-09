@@ -1,3 +1,7 @@
+#
+# Arduino Configuration
+#
+CONFIG_AUTOSTART_ARDUINO=y
 # CONFIG_WS2812_LED_ENABLE is not set
 
 #
@@ -49,11 +53,6 @@ CONFIG_BOOT_ROM_LOG_ALWAYS_OFF=y
 #
 CONFIG_ESPTOOLPY_FLASHMODE_QIO=y
 # end of Serial flasher config
-
-#
-# Arduino Configuration
-#
-CONFIG_AUTOSTART_ARDUINO=y
 
 #
 # Debug Log Configuration
