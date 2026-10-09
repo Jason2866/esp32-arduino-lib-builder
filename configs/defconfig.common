@@ -49,12 +49,6 @@ CONFIG_BOOT_ROM_LOG_ALWAYS_OFF=y
 # end of Boot ROM Behavior
 
 #
-# Serial flasher config
-#
-CONFIG_ESPTOOLPY_FLASHMODE_QIO=y
-# end of Serial flasher config
-
-#
 # Debug Log Configuration
 #
 CONFIG_ARDUHAL_LOG_DEFAULT_LEVEL_NONE=y
