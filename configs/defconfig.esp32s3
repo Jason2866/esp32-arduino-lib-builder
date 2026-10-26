@@ -27,7 +27,8 @@ CONFIG_BOOTLOADER_FLASH_DC_AWARE=y
 #
 # S3 Display shift fix -> https://espressif-docs.readthedocs-hosted.com/projects/esp-faq/en/latest/software-framework/peripherals/lcd.html
 #
-CONFIG_LCD_RGB_RESTART_IN_VSYNC=y
+# Tasmota PR https://github.com/arendst/Tasmota/pull/25194
+# CONFIG_LCD_RGB_RESTART_IN_VSYNC is not set
 
 #
 # Bluetooth
