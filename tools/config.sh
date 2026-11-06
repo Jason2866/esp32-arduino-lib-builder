@@ -6,8 +6,7 @@ if [ -z $IDF_PATH ]; then
 fi
 
 if [ -z $IDF_BRANCH ]; then
-    # use taged IDF release v5.5.5
-    export IDF_BRANCH="v5.5.5"
+    export IDF_BRANCH="release/v5.5_gcc153"
 fi
 
 # Arduino branch to use
