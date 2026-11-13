@@ -83,6 +83,7 @@ PIO_C_FLAGS="-flto=auto "
 PIO_CXX_FLAGS="-flto=auto "
 # PIO_CXX_FLAGS="-flto=auto -std=gnu++2a "
 PIO_AS_FLAGS=""
+PIO_ASPP_FLAGS=""
 PIO_LD_FLAGS="-flto "
 PIO_LD_FUNCS=""
 PIO_LD_SCRIPTS=""
@@ -118,6 +119,27 @@ function pio_flag() {
 	else
 		echo "$flag"
 	fi
+}
+
+# Route assembler preprocessor defines to ASPPFLAGS, never ASFLAGS.
+# Also handle the less common two-token form: -D NAME=value.
+AS_DEFINE_VALUE_PENDING=0
+function collect_as_define() {
+	local item="$1"
+	if [ "$AS_DEFINE_VALUE_PENDING" = "1" ]; then
+		PIO_ASPP_FLAGS+="$item "
+		AS_DEFINE_VALUE_PENDING=0
+		return 0
+	fi
+	if [ "$item" = "-D" ]; then
+		PIO_ASPP_FLAGS+="$item "
+		AS_DEFINE_VALUE_PENDING=1
+		return 0
+	elif [[ "$item" = -D* ]]; then
+		PIO_ASPP_FLAGS+="$item "
+		return 0
+	fi
+	return 1
 }
 
 #collect includes, defines and c-flags
@@ -177,15 +199,22 @@ for item in "${@:2:${#@}-5}"; do
 		if [ ! -f "$xfile" ]; then echo "File '$xfile' does not exist!"; exit 1; fi
 		echo "Parse AS file '$xfile'"
 		for xitem in `cat "$xfile"`; do
+			if collect_as_define "$xitem"; then
+				continue
+			fi
 			AS_FLAGS+="$xitem "
 			if [[ "$xitem" != *"-mtune"* && "$xitem" != *"-specs"* ]]; then
 				PIO_AS_FLAGS+="$xitem "
+				PIO_ASPP_FLAGS+="$xitem "
 			fi
 		done
+	elif collect_as_define "$item"; then
+		continue
 	elif [[ "$prefix" != "-I" && "$prefix" != "-D" && "$item" != "-Wall" && "$item" != "-Werror=all"  && "$item" != "-Wextra" && "$item" != "-fno-lto" && "$prefix" != "-O" ]]; then
 		if [[ "${item:0:23}" != "-mfix-esp32-psram-cache" && "${item:0:18}" != "-fmacro-prefix-map" && "${item:0:20}" != "-fdiagnostics-color=" && "${item:0:19}" != "-fdebug-prefix-map=" ]]; then
 			AS_FLAGS+="$item "
 			if [[ "$item" != *"-mtune"* && "$item" != *"-specs"* ]]; then
+				PIO_ASPP_FLAGS+="$item "
 				if [[ $C_FLAGS == *"$item"* ]]; then
 					PIO_CC_FLAGS+="$item "
 				else
@@ -390,7 +419,7 @@ echo "    ]," >> "$AR_PLATFORMIO_PY"
 echo "" >> "$AR_PLATFORMIO_PY"
 
 echo "    ASPPFLAGS=[" >> "$AR_PLATFORMIO_PY"
-set -- $PIO_AS_FLAGS
+set -- $PIO_ASPP_FLAGS
 for item; do
 	echo "        \"$item\"," >> "$AR_PLATFORMIO_PY"
 done
